@@ -387,7 +387,7 @@
                 
               
 
-              <time title="创建时间：2019-08-03 11:46:47 / 修改时间：12:11:12" itemprop="dateCreated datePublished" datetime="2019-08-03T11:46:47+08:00">2019-08-03</time>
+              <time title="创建时间：2019-08-03 11:46:47 / 修改时间：15:39:43" itemprop="dateCreated datePublished" datetime="2019-08-03T11:46:47+08:00">2019-08-03</time>
             </span>
           
 
@@ -448,23 +448,19 @@
       
         
           
-            <p>#tensorflow2入门教程（-）</p>
-<p>###导入TensorFlow2.0</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
+            <h1 id="tensorflow2入门教程（-）"><a href="#tensorflow2入门教程（-）" class="headerlink" title="tensorflow2入门教程（-）"></a>tensorflow2入门教程（-）</h1><h3 id="导入TensorFlow2-0"><a href="#导入TensorFlow2-0" class="headerlink" title="导入TensorFlow2.0"></a>导入TensorFlow2.0</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
 
 <p>MNIST数据集是一个手写数据集，其中有60,000张训练图片, 和10,000张训练图片，是深度学习常被用来入门的数据集</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#加载mnist数据</span></span><br><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取训练数据和测试数据，将样本从整数转换为浮点数</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
 
-<p>###构建深度学习模型</p>
-<p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
+<h3 id="构建深度学习模型"><a href="#构建深度学习模型" class="headerlink" title="构建深度学习模型"></a>构建深度学习模型</h3><p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
 <p>softmax用于多分类过程中，它将多个神经元的输出，映射到（0,1）区间内，可以看成概率来理解，从而来进行多分类！</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#tf.keras.models.Sequential为Keras提供的层叠模型</span></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">  <span class="comment">#输入层，输入的shape是28X28（图片大小是28X28）  </span></span><br><span class="line">  tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">  <span class="comment">#隐藏层一，输出shape是128，激励函数是relu</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">  <span class="comment">#Dropout一些神经元，能够有效地处理在训练过程中产生的过拟合问题</span></span><br><span class="line">  tf.keras.layers.Dropout(<span class="number">0</span>.<span class="number">2</span>),</span><br><span class="line">  <span class="comment">#输出层，shape为10分别对应着0-9这几个手写数字，激励函数为softmax，将特征值转换为在各个分类上的概率</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
 
 <p>构建好模型后，通过调用 compile 方法配置该模型的学习流程</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#采用adam优化器，损失函数为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
 
-<p>###训练并验证模型</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>
+<h3 id="训练并验证模型"><a href="#训练并验证模型" class="headerlink" title="训练并验证模型"></a>训练并验证模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>
           
         
       
@@ -567,7 +563,7 @@
                 
               
 
-              <time title="创建时间：2019-08-03 10:17:32 / 修改时间：12:09:56" itemprop="dateCreated datePublished" datetime="2019-08-03T10:17:32+08:00">2019-08-03</time>
+              <time title="创建时间：2019-08-03 10:17:32 / 修改时间：15:40:49" itemprop="dateCreated datePublished" datetime="2019-08-03T10:17:32+08:00">2019-08-03</time>
             </span>
           
 
@@ -628,18 +624,14 @@
       
         
           
-            <p>###一览图<br><img src="..%5Cimages%5Cconda.png" alt="常用命令图"></p>
-<p>###conda环境使用基本命令：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
+            <h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="..%5Cimages%5Cconda.png" alt="常用命令图"></p>
+<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
 
-<p>###更新，卸载安装包：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
+<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
 
-<p>###删除虚拟环境</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
+<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
 
-<p>###清理（conda瘦身）</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
+<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
 
 
           
