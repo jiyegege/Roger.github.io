@@ -103,7 +103,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://pvqnwtxgq.bkt.clouddn.com/some_one.png">
 <meta property="og:image" content="http://pvqnwtxgq.bkt.clouddn.com/15_pre.png">
-<meta property="og:updated_time" content="2019-08-06T08:04:53.483Z">
+<meta property="og:updated_time" content="2019-08-24T04:14:02.739Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tensorflow2.0入门系列（二）">
 <meta name="twitter:description" content="tensorflow2.0入门系列（二）导入相关包12345import tensorflow as tffrom tensorflow import kerasimport numpy as npimport matplotlib.pyplot as plt  Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.60,000张">
@@ -392,13 +392,23 @@
                 
               
 
-              <time title="创建时间：2019-08-06 10:21:35 / 修改时间：16:04:53" itemprop="dateCreated datePublished" datetime="2019-08-06T10:21:35+08:00">2019-08-06</time>
+              <time title="创建时间：2019-08-06 10:21:35" itemprop="dateCreated datePublished" datetime="2019-08-06T10:21:35+08:00">2019-08-06</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-24 12:14:02" itemprop="dateModified" datetime="2019-08-24T12:14:02+08:00">2019-08-24</time>
+              </span>
             
           
 
@@ -460,7 +470,7 @@
       
         <h1 id="tensorflow2-0入门系列（二）"><a href="#tensorflow2-0入门系列（二）" class="headerlink" title="tensorflow2.0入门系列（二）"></a>tensorflow2.0入门系列（二）</h1><h3 id="导入相关包"><a href="#导入相关包" class="headerlink" title="导入相关包"></a>导入相关包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
 
-<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：<br>| Label | Class       |<br>| :—- | ———– |<br>| 0     | T-shirt/top |<br>| 1     | Trouser     |<br>| 2     | Pullover    |<br>| 3     | Dress       |<br>| 4     | Coat        |<br>| 5     | Sandal      |<br>| 6     | Shirt       |<br>| 7     | Sneaker     |<br>| 8     | Bag         |<br>| 9     | Ankle boot  |</p>
+<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：<br> Label | Class<br> :—- | ———–<br> 0     | T-shirt/top<br> 1     | Trouser<br> 2     | Pullover<br> 3     | Dress<br> 4     | Coat<br> 5     | Sandal<br> 6     | Shirt<br> 7     | Sneaker<br> 8     | Bag<br> 9     | Ankle boot  </p>
 <h3 id="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"><a href="#导入时装MNIST数据集，作为MNIST手写时装数据集的扩展" class="headerlink" title="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"></a>导入时装MNIST数据集，作为MNIST手写时装数据集的扩展</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fashion_mnist = keras.datasets.fashion_mnist</span><br><span class="line"></span><br><span class="line">(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()</span><br></pre></td></tr></table></figure>
 
 <p>每个图像都映射到一个标签。 由于类名不包含在数据集中，因此将它们存储在此处以便在后面绘制图像时使用</p>
@@ -562,6 +572,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/passages/2019京东Java校招笔试/" rel="prev" title="2019京东Java校招笔试">
+                2019京东Java校招笔试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -632,7 +646,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -659,7 +673,11 @@
         
           
         
-        <span class="site-state-item-count">5</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -692,7 +710,11 @@
         
           
         
-        <span class="site-state-item-count">8</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>

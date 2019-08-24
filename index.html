@@ -342,6 +342,247 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/2019京东Java校招笔试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Roger">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Roger's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/passages/2019京东Java校招笔试/" class="post-title-link" itemprop="url">2019京东Java校招笔试</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-24 12:15:35 / 修改时间：13:50:45" itemprop="dateCreated datePublished" datetime="2019-08-24T12:15:35+08:00">2019-08-24</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/面试准备/" itemprop="url" rel="index"><span itemprop="name">面试准备</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1 TCP协议的拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载。常用的方法有:<br>正确答案 : BC 您的答案 : BC<br>A 慢启动、窗口滑动<br>B 慢开始、拥塞控制<br>C 快重传、快恢复<br>D 快开始、快恢复</p>
+<p>2 Shell 脚本（shell script），是一种为 shell 编写的脚本程序。现有一个test.sh文件，且有可执行权限，文件中内容为：<br>#!/bin/bash<br>aa=’Hello World !’<br>请问下面选项中哪个能正常显示Hello World !<br>正确答案 : D 您的答案 : D<br>A sh test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>B ./test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>C bash test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>D source test.sh &gt;/dev/null 1 &amp;&amp; echo $aa</p>
+<p>3 bash脚本文件一般第一行开头是<br>正确答案 : C 您的答案 : C<br>A //<br>B ##<br>C #!<br>D #/</p>
+<p>4 在bash编程中,算术比较大于、大于等于的运算符是（ ）<br>正确答案 : CD 您的答案 : CD<br>A &gt;<br>B &gt;=<br>C ge<br>D gt</p>
+<p>5 系统管理员编写扫描临时文件的shell程序tmpsc.sh, 测试该程序时提示拒绝执行，解决的方法有（ ）<br>正确答案 : BCD 您的答案 : BC<br>A chmod 644 tmpsc.sh<br>B chmod 755 tmpsc.sh<br>C chmod a+x tmpsc.sh<br>D chmod u+x tmpsc.sh<br>解析：<br>目录/文件的满权限的形式：<br>drwxrwxrwx<br>-rwxrwxrwx 其中：(r:读取，w:写，x:执行)<br>数字对应：(r:4，w:2，x:1)， 命令行中的三个数字对应的授权角色为owner, group, others</p>
+<ol>
+<li>通过数字修改权限<br>chmod 777 [-R]</li>
+<li>符号类型修改<br>u: owner<br>g: group<br>o: others<br>a : all<br>chmod a+x [-R] 所有人都拥有执行权限</li>
+</ol>
+<p>6 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, TimeUnit.SECONDS,</span><br><span class="line"> <span class="keyword">new</span> ArrayBlockingQueue&lt;Runnable&gt;(<span class="number">5</span>), <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>线程池executor在空闲状态下的线程个数是？<br>正确答案 : B 您的答案 : B<br>A 0<br>B 5<br>C 10<br>D 不确定</p>
+<p>7 Object类不含有以下哪种方法？<br>正确答案 : A 您的答案 : A<br>A equal<br>B wait<br>C notify<br>D clone</p>
+<p>8</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line"> list.add(<span class="string">"a"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JDK1.8中，执行以上程序后，该list进行了几次扩容？<br>正确答案 : C 您的答案 : D<br>A 4<br>B 5<br>C 6<br>D 7<br>解析：初始容量被设置为10,那么容量变化的规则是((旧容量 * 3) / 2) + 1，也就是1.5倍增长</p>
+<p>9 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(fun1());</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun1</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">return</span> fun2();</span><br><span class="line"> &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.print(<span class="string">"C"</span>);</span><br><span class="line"> <span class="keyword">return</span> <span class="string">"D"</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，输出结果正确的是？<br>正确答案 : C 您的答案 : C<br>A ABCD<br>B ACDB<br>C ACBD<br>D 不确定</p>
+<p>10 根据类加载器加载类的初始化原理，推断以下代码的输入结果为？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line"> ClassLoader classLoader=ClassLoader.getSystemClassLoader();</span><br><span class="line"> Class clazz=classLoader.loadClass(<span class="string">"A"</span>);</span><br><span class="line"> System.out.print(<span class="string">"Test"</span>);</span><br><span class="line"> clazz.forName(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A TestA<br>B ATestA<br>C ATest<br>D Test</p>
+<p>11 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A AC<br>B ABC<br>C C<br>D BC</p>
+<p>12 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : C 您的答案 : C<br>A AB<br>B ABC<br>C C<br>D BC</p>
+<p>13 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>14 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>15 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="string">"JD"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>16 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> String s1 = <span class="string">"abc"</span>;</span><br><span class="line"> String s2 = <span class="string">"abc"</span>;</span><br><span class="line"> System.out.println(s1 == s2);</span><br><span class="line"> String s3 = <span class="keyword">new</span> String(<span class="string">"abc"</span>);</span><br><span class="line"> System.out.println(s1 == s3);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，输出结果正确的是？<br>正确答案 : B 您的答案 : B<br>A true true<br>B true false<br>C false fasle<br>D false true</p>
+<p>17 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> Integer y = <span class="number">10</span>;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateX</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateY</span><span class="params">(Integer value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> updateX(x);</span><br><span class="line"> updateY(y);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，x和y的值分别是多少？<br>正确答案 : A 您的答案 : A<br>A 10,10<br>B 10,30<br>C 30,10<br>D 30,30</p>
+<p>18 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#123;</span><br><span class="line"> System.out.println(<span class="string">"C"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.println(<span class="string">"D"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上程序输出的结果，正确的是？<br>正确答案 : C 您的答案 : C<br>A DCABB<br>B DABCBC<br>C DACBCB<br>D DACBB</p>
+<p>19 兼容接口不同的类在一起工作，采用以下哪种设计模式最好？<br>正确答案 : B 您的答案 : C<br>A 建造者模式<br>B 适配器模式<br>C 桥接模式<br>D 代理模式</p>
+<p>20 下图的UML类结构图表示的是哪种设计模式：<br><img src="http://image.acmcoder.com/v1/acmimg/8750747399346469.png?authorization=bce-auth-v1%2F02fe1db0eea94e8480054b43acd6124f%2F2019-02-20T08%3A25%3A05Z%2F-1%2F%2F35eff08031c0d50f671b070ae7e081ac9cce55b98bbf3c39e5f2f5e1590211ef" alt="图"><br>正确答案 : A 您的答案 : A<br>A 抽象工厂模式<br>B 享元模式<br>C 装饰模式<br>D 责任链模式</p>
+<p>21 以下哪条SQL语句可以返回table1中的全部的key：<br>正确答案 : D 您的答案 : D<br>A select tabel1.key from table1 join tabel2 on table1.key=table2.key<br>B select tabel1.key from table1 right outer join tabel2 on table1.key=table2.key<br>C select tabel1.key from table1 left semi join tabel2 on table1.key=table2.key<br>D select tabel1.key from table1 left outer join tabel2 on table1.key=table2.key</p>
+<p>22 下列有关软连接描述正确的是<br>正确答案 : C 您的答案 : C<br>A 与普通文件没什么不同，inode 都指向同一个文件在硬盘中的区块<br>B 不能对目录创建软链接<br>C 保存了其代表的文件的绝对路径，是另外一种文件，在硬盘上有独立的区块，访问时替换自身路径<br>D 不可以对不存在的文件创建软链接</p>
+<p>23 以下哪种设备工作在数据链路层？<br>正确答案 : B 您的答案 : B<br>A 中继器<br>B 集线器<br>C 交换机<br>D 路由器</p>
+<p>24 一颗二叉树的叶子节点有5个，出度为1的结点有3个，该二叉树的结点总个数是？<br>正确答案 : B 您的答案 : B<br>A 11<br>B 12<br>C 13<br>D 14</p>
+<p>25 若串S=”UP！UP！JD”，则其子串的数目<br>正确答案 : B 您的答案 : B<br>A 33<br>B 37<br>C 39<br>D 35<br>解析：(n*(n+1)/2)+1</p>
+<p>26 已知小顶堆：{51,32,73,23,42,62,99,14,24,3943,58,65,80,120}，请问62对应节点的左子节点是<br>正确答案 : B 您的答案 : B<br>A 99<br>B 73<br>C 3943<br>D 120</p>
+<p>27 关于递归法的说法不正确的是（ ）<br>正确答案 : D 您的答案 : D<br>A 程序结构更简洁<br>B 占用CPU的处理时间更多<br>C 要消耗大量的内存空间，程序执行慢，甚至无法执行<br>D 递归法比递推法的执行效率更高</p>
+<p>28 以下为求0到1000以内所有奇数和的算法，从中选出描述正确的算法（ ）<br>正确答案 : A 您的答案 : A<br>A ①s=0；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>B ①s=0；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束<br>C ①s=1；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>D ①s=1；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束</p>
+<p>29 如何在多线程中避免发生死锁？<br>正确答案 : ABCD 您的答案 : ABCD<br>A 允许进程同时访问某些资源。<br>B 允许进程强行从占有者那里夺取某些资源。<br>C 进程在运行前一次性地向系统申请它所需要的全部资源。<br>D 把资源事先分类编号，按号分配，使进程在申请，占用资源时不会形成环路。</p>
+<p>30 下面有关值类型和引用类型描述正确的是（）？<br>正确答案 : ABC 您的答案 : ABC<br>值类型的变量赋值只是进行数据复制，创建一个同值的新对象，而引用类型变量赋值，仅仅是把对象的引用<br>的指针赋值给变量，使它们共用一个内存地址。<br>A<br>值类型数据是在栈上分配内存空间，它的变量直接包含变量的实例，使用效率相对较高。而引用类型数据是<br>分配在堆上，引用类型的变量通常包含一个指向实例的指针，变量通过指针来引用实例。<br>B<br>C 引用类型一般都具有继承性，但是值类型一般都是封装的，因此值类型不能作为其他任何类型的基类。<br>D 值类型变量的作用域主要是在栈上分配内存空间内，而引用类型变量作用域主要在分配的堆上。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/tensorflow2-0入门系列（二）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -387,13 +628,23 @@
                 
               
 
-              <time title="创建时间：2019-08-06 10:21:35 / 修改时间：16:04:53" itemprop="dateCreated datePublished" datetime="2019-08-06T10:21:35+08:00">2019-08-06</time>
+              <time title="创建时间：2019-08-06 10:21:35" itemprop="dateCreated datePublished" datetime="2019-08-06T10:21:35+08:00">2019-08-06</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-24 12:14:02" itemprop="dateModified" datetime="2019-08-24T12:14:02+08:00">2019-08-24</time>
+              </span>
             
           
 
@@ -457,7 +708,7 @@
           
             <h1 id="tensorflow2-0入门系列（二）"><a href="#tensorflow2-0入门系列（二）" class="headerlink" title="tensorflow2.0入门系列（二）"></a>tensorflow2.0入门系列（二）</h1><h3 id="导入相关包"><a href="#导入相关包" class="headerlink" title="导入相关包"></a>导入相关包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
 
-<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：<br>| Label | Class       |<br>| :—- | ———– |<br>| 0     | T-shirt/top |<br>| 1     | Trouser     |<br>| 2     | Pullover    |<br>| 3     | Dress       |<br>| 4     | Coat        |<br>| 5     | Sandal      |<br>| 6     | Shirt       |<br>| 7     | Sneaker     |<br>| 8     | Bag         |<br>| 9     | Ankle boot  |</p>
+<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：<br> Label | Class<br> :—- | ———–<br> 0     | T-shirt/top<br> 1     | Trouser<br> 2     | Pullover<br> 3     | Dress<br> 4     | Coat<br> 5     | Sandal<br> 6     | Shirt<br> 7     | Sneaker<br> 8     | Bag<br> 9     | Ankle boot  </p>
 <h3 id="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"><a href="#导入时装MNIST数据集，作为MNIST手写时装数据集的扩展" class="headerlink" title="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"></a>导入时装MNIST数据集，作为MNIST手写时装数据集的扩展</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fashion_mnist = keras.datasets.fashion_mnist</span><br><span class="line"></span><br><span class="line">(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()</span><br></pre></td></tr></table></figure>
 
 <p>每个图像都映射到一个标签。 由于类名不包含在数据集中，因此将它们存储在此处以便在后面绘制图像时使用</p>
@@ -1118,164 +1369,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Roger">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/uploads/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Roger's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/passages/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-03 10:06:44" itemprop="dateCreated datePublished" datetime="2019-08-03T10:06:44+08:00">2019-08-03</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/apache2 常用操作命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1422,6 +1515,164 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Roger">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Roger's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/passages/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-03 10:06:44" itemprop="dateCreated datePublished" datetime="2019-08-03T10:06:44+08:00">2019-08-03</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1467,7 +1718,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1494,7 +1745,11 @@
         
           
         
-        <span class="site-state-item-count">5</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -1527,7 +1782,11 @@
         
           
         
-        <span class="site-state-item-count">8</span>
+          
+        
+          
+        
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
