@@ -580,13 +580,23 @@
                 
               
 
-              <time title="创建时间：2020-08-18 22:40:21 / 修改时间：22:42:37" itemprop="dateCreated datePublished" datetime="2020-08-18T22:40:21+08:00">2020-08-18</time>
+              <time title="创建时间：2020-08-18 22:40:21" itemprop="dateCreated datePublished" datetime="2020-08-18T22:40:21+08:00">2020-08-18</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-08-28 13:46:13" itemprop="dateModified" datetime="2020-08-28T13:46:13+08:00">2020-08-28</time>
+              </span>
             
           
 
@@ -641,7 +651,243 @@
       
         
           
-            <h1 id="内容准备中"><a href="#内容准备中" class="headerlink" title="内容准备中"></a>内容准备中</h1>
+            <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
+<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
+<ul>
+<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
+<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
+<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
+</ul>
+<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
+<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
+<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
+<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
+<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
+<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
+<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
+<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
+<table>
+<thead>
+<tr>
+<th><strong>RAID 等级</strong></th>
+<th><strong>RAID0</strong></th>
+<th><strong>RAID1</strong></th>
+<th><strong>RAID3</strong></th>
+<th><strong>RAID5</strong></th>
+<th><strong>RAID6</strong></th>
+<th><strong>RAID10</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>别名</strong></td>
+<td>条带</td>
+<td>镜像</td>
+<td>专用奇偶校验条带</td>
+<td>分布奇偶校验条带</td>
+<td>双重奇偶校验条带</td>
+<td>镜像加条带</td>
+</tr>
+<tr>
+<td><strong>容错性</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>冗余类型</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>热备份选择</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>读性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>随机写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>连续写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>需要磁盘数</strong></td>
+<td>n≥1</td>
+<td>2n (n≥1)</td>
+<td>n≥3</td>
+<td>n≥3</td>
+<td>n≥4</td>
+<td>2n(n≥2)≥4</td>
+</tr>
+<tr>
+<td><strong>可用容量</strong></td>
+<td>全部</td>
+<td>50%</td>
+<td>(n-1)/n</td>
+<td>(n-1)/n</td>
+<td>(n-2)/n</td>
+<td>50%</td>
+</tr>
+</tbody></table>
+<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
+<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
+<p>HDFS的架构：主从架构，三大角色</p>
+<ol>
+<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
+<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
+<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
+</ol>
+<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
+<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
+<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
+<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
+<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
+<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
+
+<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
+<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
+<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
+<p>FileSystem 是所有 HDFS 操作的主入口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. 显示当前目录结构</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 显示当前目录结构</span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归显示当前目录结构</span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 显示根目录下内容</span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 创建目录</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 创建目录</span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 递归创建目录</span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 删除操作</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 删除文件</span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归删除目录和文件</span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 从本地加载文件到 HDFS</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>6. 查看文件内容</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
+
+<p><strong>7. 显示文件的最后一千字节</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8. 拷贝文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>9. 移动文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>10. 统计当前目录下各文件大小</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>默认单位字节</li>
+<li>-s : 显示所有文件大小总和，</li>
+<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>11. 合并下载多个文件</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>-nl 在每个文件的末尾添加换行符（LF）</li>
+<li>-skip-empty-file 跳过空文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+
+<p><strong>12. 统计文件系统的可用空间信息</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
+
+<p><strong>13. 更改文件复制因子</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
+<li>-w : 请求命令是否等待复制完成</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
+
+<p><strong>14. 权限控制</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 权限控制和Linux上使用方式一致</span><br><span class="line"><span class="meta">#</span> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件的拥有者  用户必须是超级用户。</span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>15. 文件检测</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
+
+<p>可选选项：</p>
+<ul>
+<li>-d：如果路径是目录，返回 0。</li>
+<li>-e：如果路径存在，则返回 0。</li>
+<li>-f：如果路径是文件，则返回 0。</li>
+<li>-s：如果路径不为空，则返回 0。</li>
+<li>-r：如果路径存在且授予读权限，则返回 0。</li>
+<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
+<li>-z：如果文件长度为零，则返回 0。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 示例</span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>
           
         
       
