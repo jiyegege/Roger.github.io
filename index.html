@@ -784,48 +784,48 @@
 
 <p><strong>1. 显示当前目录结构</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 显示当前目录结构</span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归显示当前目录结构</span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 显示根目录下内容</span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
 
 <p><strong>2. 创建目录</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 创建目录</span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 递归创建目录</span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
 
 <p><strong>3. 删除操作</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 删除文件</span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归删除目录和文件</span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>4. 从本地加载文件到 HDFS</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
 
 <p><strong>5. 从 HDFS 导出文件到本地</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>6. 查看文件内容</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
 
 <p><strong>7. 显示文件的最后一千字节</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>8. 拷贝文件</strong></p>
 <p>shell命令：</p>
@@ -850,7 +850,7 @@
 <li>-nl 在每个文件的末尾添加换行符（LF）</li>
 <li>-skip-empty-file 跳过空文件</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
 
 <p><strong>12. 统计文件系统的可用空间信息</strong></p>
 <p>shell命令：</p>
@@ -868,7 +868,7 @@
 
 <p><strong>14. 权限控制</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 权限控制和Linux上使用方式一致</span><br><span class="line"><span class="meta">#</span> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件的拥有者  用户必须是超级用户。</span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
 
 <p><strong>15. 文件检测</strong></p>
 <p>shell命令：</p>
@@ -884,7 +884,7 @@
 <li>-w：如果路径存在且授予写入权限，则返回 0。</li>
 <li>-z：如果文件长度为零，则返回 0。</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 示例</span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>
@@ -990,13 +990,23 @@
                 
               
 
-              <time title="创建时间：2020-08-18 22:39:25 / 修改时间：22:42:23" itemprop="dateCreated datePublished" datetime="2020-08-18T22:39:25+08:00">2020-08-18</time>
+              <time title="创建时间：2020-08-18 22:39:25" itemprop="dateCreated datePublished" datetime="2020-08-18T22:39:25+08:00">2020-08-18</time>
             </span>
           
 
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-08-30 21:35:54" itemprop="dateModified" datetime="2020-08-30T21:35:54+08:00">2020-08-30</time>
+              </span>
             
           
 
@@ -1051,7 +1061,305 @@
       
         
           
-            <h1 id="内容准备中"><a href="#内容准备中" class="headerlink" title="内容准备中"></a>内容准备中</h1>
+            <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
+<li><p>MacOS10.15</p>
+</li>
+<li><p>Parallels Desktop16创建搭建的centos8 虚拟机</p>
+</li>
+<li><p>集群环境：</p>
+<table>
+<thead>
+<tr>
+<th>IP地址</th>
+<th>主机名</th>
+<th>操作系统</th>
+<th>角色</th>
+<th>服务</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10.211.55.8/24</td>
+<td>master</td>
+<td>Centos8</td>
+<td>master</td>
+<td>HDFS(NameNode)、DFSZKFailoverController(zkfc)、SYNC(同步文件服务器)、ResourceManager(资源分配与调度)</td>
+</tr>
+<tr>
+<td>10.211.55.9/24</td>
+<td>slave1</td>
+<td>Centos8</td>
+<td>slave1</td>
+<td>Zookeeper、HDFS(SecondaryNamenode)、MapReduce(JobHistoryServer)、NodeManager</td>
+</tr>
+<tr>
+<td>10.211.55.10/24</td>
+<td>slave2</td>
+<td>Centos8</td>
+<td>Slave2</td>
+<td>Zookeeper、HDFS(DataNode)、NodeManager</td>
+</tr>
+<tr>
+<td>10.211.55.11/24</td>
+<td>slave3</td>
+<td>Centos8</td>
+<td>Slave3</td>
+<td>Zookeeper、HDFS(DataNode)、NodeManager</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h1 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h1><h2 id="防火墙和SELINUX设置"><a href="#防火墙和SELINUX设置" class="headerlink" title="防火墙和SELINUX设置"></a>防火墙和SELINUX设置</h2><p>因为Hadoop需要开启的端口很多，而且牵涉到很多的权限，所以我们在测试时将防火墙和SELINUX都关掉。<br>在生产环境中，需要针对不同的开放端口做针对性的设置。</p>
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><p>运行以下命令，关闭防火墙</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时关闭防火墙 和 禁止开机启动防火墙</span></span><br><span class="line">systemctl stop firewalld &amp;&amp; systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">systemctl status  firewalld	   <span class="comment">#查看防火墙状态。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭SELINUX"><a href="#关闭SELINUX" class="headerlink" title="关闭SELINUX"></a>关闭SELINUX</h3><p>运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/selinux/config         <span class="comment">#SELINUX配置文件</span></span><br></pre></td></tr></table></figure>
+
+<p>相关参数修改如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#SELINUX=enforcing</span></span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+
+<p>重启服务器，然后查看SELINUX状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">reboot       <span class="comment">#重启</span></span><br><span class="line">getenforce   <span class="comment">#查询SELinux的运行模式,permissive（宽容模式）；enforcing（强制模式）；</span></span><br><span class="line">/usr/sbin/sestatus -v  <span class="comment">#查看SELINUX的状态</span></span><br></pre></td></tr></table></figure>
+
+<p>显示如下内容，则说明SELINUX已经关闭了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELinux status:                 disabled</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><p>以master(10.211.55.8)节点为例，运行下面的命令，修改本机的hostname</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改hostname</span></span><br><span class="line">hostnamectl set-hostname master</span><br></pre></td></tr></table></figure>
+
+<p>运行下面的命令查看设置好的hostname</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/hostname</span><br></pre></td></tr></table></figure>
+
+<p>如果显示如下的内容，则说明修改成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">master</span><br></pre></td></tr></table></figure>
+
+<p>其他节点(10.211.55.9~11)同样进行以上操作，修改主机名。</p>
+<h2 id="hosts设置"><a href="#hosts设置" class="headerlink" title="hosts设置"></a>hosts设置</h2><p>由于一次次的远程连接需要输入IP地址，不利于管理和使用，我们可以在hosts里面把服务器的hostname跟IP地址对应起来。</p>
+<p>在master(10.211.55.8)输入以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p>设置成以下内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">10.211.55.8 master</span><br><span class="line">10.211.55.9 slave1</span><br><span class="line">10.211.55.10 slave2</span><br><span class="line">10.211.55.11 slave3</span><br></pre></td></tr></table></figure>
+
+<p>其他节点(10.211.55.9~11)同样进行以上操作，修改hosts。</p>
+<h2 id="添加Hadoop用户"><a href="#添加Hadoop用户" class="headerlink" title="添加Hadoop用户"></a>添加Hadoop用户</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd hadoop &amp;&amp; passwd hadoop</span><br></pre></td></tr></table></figure>
+
+<p>命令输入完毕后设置用户密码就行</p>
+<p>可为 hadoop 用户增加管理员权限，方便部署，避免一些对新手来说比较棘手的权限问题，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visudo</span><br></pre></td></tr></table></figure>
+
+<p>Shell 命令</p>
+<p>如下图，找到 <code>root ALL=(ALL) ALL</code> 这行（应该在第98行，可以先按一下键盘上的 <code>ESC</code> 键，然后输入 <code>:98</code> (按一下冒号，接着输入98，再按回车键)，可以直接跳到第98行 ），然后在这行下面增加一行内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure>
+
+<p>如下图所示：</p>
+<p><img src="http://img.rogermaster.top/uPic/RhXSSv.png" alt="RhXSSv"></p>
+<p>切换到hadoop用户</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su hadoop</span><br><span class="line">cd ~</span><br></pre></td></tr></table></figure>
+
+<p>每个节点都执行一次</p>
+<h2 id="配置免密登录"><a href="#配置免密登录" class="headerlink" title="配置免密登录"></a>配置免密登录</h2><p>在所有的节点上执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -P <span class="string">''</span> -f ~/.ssh/id_rsa         <span class="comment">#生成验证密钥</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub|ssh hadoop@master <span class="string">"cat - &gt;&gt; ~/.ssh/authorized_keys"</span> <span class="comment">#发送给主服务器</span></span><br></pre></td></tr></table></figure>
+
+<p>如果需要互相免密码登录，则master执行下面命令，把密钥分发给从服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp ~/.ssh/authorized_keys hadoop@slave1:~/.ssh/authorized_keys</span><br><span class="line">scp ~/.ssh/authorized_keys hadoop@slave2:~/.ssh/authorized_keys</span><br><span class="line">scp ~/.ssh/authorized_keys hadoop@slave3:~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>在所有的节点执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 0600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>退出hadoop用户，再重新 su hadoop进入一次即可免密登录了</p>
+<p>验证免密登录</p>
+<p><img src="http://img.rogermaster.top/uPic/oE23jf.png" alt="oE23jf"></p>
+<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><p>创建upload目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir upload</span><br></pre></td></tr></table></figure>
+
+<p>将下载下来的jdk上传到master节点的<code>/home/hadoop/upload</code>下，<a href="https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html" title="jdk下载" target="_blank" rel="noopener">jdk下载地址</a></p>
+<p>执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /usr/java</span><br><span class="line"><span class="built_in">cd</span> /home/hadoop/upload</span><br><span class="line">tar -zxvf jdk-8u261-linux-x64.tar.gz    <span class="comment">#解压JDK</span></span><br><span class="line">sudo sudo mv jdk1.8.0_261/ /usr/java/             <span class="comment">#将JDK移动(剪切)到/usr/java/目录</span></span><br></pre></td></tr></table></figure>
+
+<p>修改全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile       <span class="comment">#文件底部添加以下内容</span></span><br></pre></td></tr></table></figure>
+
+<p>在文件底部添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># jdk</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=<span class="string">"/usr/java/jdk1.8.0_261"</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>加载新的全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>执行以下命令验证jdk是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.rogermaster.top/uPic/LZmlJj.png" alt="LZmlJj"></p>
+<p>将jdk发送到其他节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/java</span><br><span class="line"></span><br><span class="line">ssh root@slave1 'mkdir -p /usr/java/jdk1.8.0_261' &amp;&amp; sudo scp -r /usr/java/jdk1.8.0_261/ root@slave1:$PWD</span><br><span class="line"></span><br><span class="line">ssh root@slave2 'mkdir -p /usr/java/jdk1.8.0_261' &amp;&amp; sudo scp -r /usr/java/jdk1.8.0_261/ root@slave2:$PWD</span><br><span class="line"></span><br><span class="line">ssh root@slave3 'mkdir -p /usr/java/jdk1.8.0_261' &amp;&amp; sudo scp -r /usr/java/jdk1.8.0_261/ root@slave3:$PWD</span><br></pre></td></tr></table></figure>
+
+<p>将环境变量发送到其他节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo scp /etc/profile root@slave1:/etc/profile</span><br><span class="line"></span><br><span class="line">sudo scp /etc/profile root@slave2:/etc/profile</span><br><span class="line"></span><br><span class="line">sudo scp /etc/profile root@slave3:/etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>在slave1、slave2、slave3上分别执行以下命令，让环境变量生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装Zookeeper"><a href="#安装Zookeeper" class="headerlink" title="安装Zookeeper"></a>安装Zookeeper</h2><h2 id="安装并配置Zookeeper"><a href="#安装并配置Zookeeper" class="headerlink" title="安装并配置Zookeeper"></a>安装并配置Zookeeper</h2><p>由于Zookeeper类似于民主选举，每台服务器分别投票共同选举一个作为leader，剩下的都是follower。基于这个原因，官方建议服务器集群设置为奇数台，偶数台的话会有一台的资源浪费。根据咱们的集群规划：slave1~3为我们的Zookeeper服务器。</p>
+<p>在slave1执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/hadoop/upload</span><br><span class="line"></span><br><span class="line">su root</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/hadoop/upload</span><br><span class="line"></span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.6.1/apache-zookeeper-3.6.1-bin.tar.gz</span><br><span class="line"></span><br><span class="line">tar -zxvf apache-zookeeper-3.6.1-bin.tar.gz</span><br><span class="line"></span><br><span class="line">mkdir /home/hadoop/server &amp;&amp; mkdir -p /home/hadoop/data/zkdata &amp;&amp; mkdir -p /home/hadoop/<span class="built_in">log</span>/zklog</span><br><span class="line"></span><br><span class="line">mv apache-zookeeper-3.6.1-bin/ /home/hadoop/server/</span><br><span class="line"></span><br><span class="line">sudo chown -R hadoop:hadoop /home/hadoop/*</span><br></pre></td></tr></table></figure>
+
+<p>修改全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile       <span class="comment">#文件底部添加以下内容</span></span><br></pre></td></tr></table></figure>
+
+<p>在文件底部添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># zookeeper</span></span><br><span class="line"><span class="built_in">export</span> ZOOKEEPER_HOME=<span class="string">"/home/hadoop/zookeeper"</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$ZOOKEEPER_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>加载新的全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile  </span><br><span class="line"><span class="comment"># 切换到hadoop用户</span></span><br><span class="line">su hadoop</span><br></pre></td></tr></table></figure>
+
+<p>将Zookeeper发送到slave2、slave3</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /home/hadoop</span><br><span class="line"></span><br><span class="line">ssh root@slave2 'mkdir -p /home/hadoop/server &amp;&amp; mkdir -p /home/hadoop/data/zkdata &amp;&amp; mkdir -p /home/hadoop/log/zklog' &amp;&amp; sudo scp -r /home/hadoop/server/ root@slave2:$PWD &amp;&amp; sudo scp -r /home/hadoop/data/ root@slave2:$PWD &amp;&amp; sudo scp -r /home/hadoop/log/ root@slave2:$PWD</span><br><span class="line"></span><br><span class="line">ssh root@slave3 'mkdir -p /home/hadoop/server &amp;&amp; mkdir -p /home/hadoop/data/zkdata &amp;&amp; mkdir -p /home/hadoop/log/zklog' &amp;&amp; sudo scp -r /home/hadoop/server/ root@slave3:$PWD &amp;&amp; sudo scp -r /home/hadoop/data/ root@slave3:$PWD &amp;&amp; sudo scp -r /home/hadoop/log/ root@slave3:$PWD</span><br></pre></td></tr></table></figure>
+
+<p>将环境变量发送到slave2、slave3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo scp /etc/profile root@slave2:/etc/profile &amp;&amp; sudo scp /etc/profile root@slave3:/etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>在slave2、slave3上分别执行以下命令，让环境变量生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>使用hadoop执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/hadoop/server/apache-zookeeper-3.6.1-bin/conf</span><br><span class="line">sudo cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+
+<p>修改zoo.cfg的文件内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi zoo.cfg</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dataDir=/home/hadoop/data/zkdata</span><br><span class="line">dataLogDir=/home/hadoop/log/zklog/</span><br><span class="line">server.1=slave1:2888:3888</span><br><span class="line">server.2=slave2:2888:3888</span><br><span class="line">server.3=slave3:2888:3888</span><br></pre></td></tr></table></figure>
+
+<p>将zoo.cfg分发到slave2~3</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo scp /home/hadoop/server/apache-zookeeper-3.6.1-bin/conf/zoo.cfg hadoop@slave2:/home/hadoop/server/apache-zookeeper-3.6.1-bin/conf/zoo.cfg &amp;&amp; sudo scp /home/hadoop/server/apache-zookeeper-3.6.1-bin/conf/zoo.cfg hadoop@slave3:/home/hadoop/server/apache-zookeeper-3.6.1-bin/conf/zoo.cfg</span><br></pre></td></tr></table></figure>
+
+<p>最后不要忘了在每个服务器“/home/hadoop/data/zkdata/”下新建文件“myid”并把当前服务器编号写进去，举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R hadoop:hadoop /home/hadoop/*</span><br><span class="line"><span class="comment"># slave1是1，slave2是2，slave3是3</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt; /home/hadoop/data/zkdata/myid</span><br></pre></td></tr></table></figure>
+
+<p>以下内容只能在slave1~3上执行才能看到正确的结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh stop    <span class="comment">#停止Zookeeper服务</span></span><br><span class="line">zkServer.sh start   <span class="comment">#开启Zookeeper服务</span></span><br><span class="line">zkServer.sh status   <span class="comment">#开启Zookeeper服务</span></span><br></pre></td></tr></table></figure>
+
+<p>执行<code>zkServer.sh start</code>正常情况下会看到下面的内容：</p>
+<p><img src="http://img.rogermaster.top/uPic/PW9TW7.png" alt="PW9TW7"></p>
+<p>如果启动失败，可以到“/home/hadoop/zookeeper/logs/”这个目录里面看看启动日志。</p>
+<p>录入下面的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>可以看到如下的结果：</p>
+<p><img src="http://img.rogermaster.top/uPic/FHDioK.png" alt="FHDioK"></p>
+<p>注意：虽然我们在配置文件中写明了服务器的列表信息，但是，我们还是需要去每一台服务 器去启动，不是一键启动集群模式。<br>每启动一台查看一下状态再启动下一台<br>三台机器上都要有QuorumPeerMain进程，都能显示follower或者leader</p>
+<h2 id="安装Hadoop"><a href="#安装Hadoop" class="headerlink" title="安装Hadoop"></a>安装Hadoop</h2><p>把下载好的Hadoop安装包上传到master节点的/home/hadoop/upload目录下面。</p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz" title="hadoop下载" target="_blank" rel="noopener">hadoop下载地址</a></p>
+<p>先通过root账户执行以下操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su root</span><br><span class="line">mkdir -p <span class="built_in">cd</span> /home/hadoop/server</span><br><span class="line"><span class="built_in">cd</span> /home/hadoop/server</span><br><span class="line">tar -zxvf hadoop-3.3.0.tar.gz</span><br><span class="line">mv /home/hadoop/upload/hadoop-3.3.0/ /home/hadoop/server/</span><br><span class="line">chown -R hadoop:hadoop /home/hadoop/*</span><br></pre></td></tr></table></figure>
+
+<p>修改全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/profile       <span class="comment">#文件底部添加以下内容</span></span><br></pre></td></tr></table></figure>
+
+<p>在文件底部添加以下内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hadoop</span></span><br><span class="line"><span class="built_in">export</span> HADOOP_HOME=<span class="string">"/home/hadoop/server/hadoop-3.3.0"</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$HADOOP_HOME</span>/bin:<span class="variable">$HADOOP_HOME</span>/sbin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>加载新的全局环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>echo $HADOOP_HOME</code>显示如下则表明成功</p>
+<p><img src="http://img.rogermaster.top/uPic/6RkiD2.png" alt="6RkiD2"></p>
+<p>在其他节点同样执行以上添加环境变量的操作</p>
+<p>进入master节点，创建相关目录，执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">su hadoop</span><br><span class="line">rm -rf /home/hadoop/server/hadoop-3.3.0/share/doc      <span class="comment">#删除文档，很大，又没用</span></span><br><span class="line">mkdir -p /home/hadoop/data/dfs/data &amp;&amp; mkdir /home/hadoop/data/dfs/name &amp;&amp; mkdir /home/hadoop/data/dfs/tmp &amp;&amp; mkdir /home/hadoop/data/journaldata</span><br><span class="line"><span class="built_in">cd</span> /home/hadoop/server/hadoop-3.3.0/etc/hadoop</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改hadoop-env"><a href="#修改hadoop-env" class="headerlink" title="修改hadoop-env"></a>修改hadoop-env</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/server/hadoop-3.3.0/etc/hadoop/hadoop-env.sh</span><br></pre></td></tr></table></figure>
+
+<p>添加一行内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=<span class="string">"/usr/java/jdk1.8.0_261"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件core-site-xml"><a href="#修改配置文件core-site-xml" class="headerlink" title="修改配置文件core-site.xml"></a>修改配置文件core-site.xml</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/core-site.xml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;!-- 指定hdfs的nameservice为master --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs:<span class="comment">//master:9000&lt;/value&gt;</span></span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 指定hadoop临时目录 --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;/home/hadoop/data/dfs/tmp&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 指定zookeeper地址 --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;ha.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;slave1:<span class="number">2181</span>,slave2:<span class="number">2181</span>,slave3:<span class="number">2181</span>&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- hadoop链接zookeeper的超时时长设置 --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;ha.zookeeper.session-timeout.ms&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;<span class="number">1000</span>&lt;/value&gt;</span><br><span class="line">        &lt;description&gt;ms&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 修改core-site.xml中的ipc参数,防止出现连接journalnode服务ConnectException --&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">      &lt;name&gt;ipc.client.connect.max.retries&lt;/name&gt;</span><br><span class="line">      &lt;value&gt;<span class="number">100</span>&lt;/value&gt;</span><br><span class="line">      &lt;description&gt;Indicates the number of retries a client will make to establish a server connection.&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">      &lt;name&gt;ipc.client.connect.retry.interval&lt;/name&gt;</span><br><span class="line">      &lt;value&gt;<span class="number">10000</span>&lt;/value&gt;</span><br><span class="line">      &lt;description&gt;Indicates the number of milliseconds a client will wait <span class="keyword">for</span> before retrying to establish a server connection.&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">      &lt;name&gt;topology.script.file.name&lt;/name&gt;</span><br><span class="line">      &lt;value&gt;<span class="number">10000</span>&lt;/value&gt;</span><br><span class="line">      &lt;description&gt;Indicates the number of milliseconds a client will wait <span class="keyword">for</span> before retrying to establish a server connection.&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件hdfs-site-xml"><a href="#修改配置文件hdfs-site-xml" class="headerlink" title="修改配置文件hdfs-site.xml"></a>修改配置文件hdfs-site.xml</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 指定副本数 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 配置namenode和datanode的工作目录-数据存储目录 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/data/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/data/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 启用webhdfs --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.webhdfs.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 配置HDFS的权限控制 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">	    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.permissions.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 配置SecondaryNameNode的节点地址 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>slave1:50090<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件mapred-site-xml"><a href="#修改配置文件mapred-site-xml" class="headerlink" title="修改配置文件mapred-site.xml"></a>修改配置文件mapred-site.xml</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/mapred-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>全部内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 指定mr框架为yarn方式 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">     </span><br><span class="line">    <span class="comment">&lt;!-- 指定mapreduce jobhistory地址 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>slave1:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">     </span><br><span class="line">    <span class="comment">&lt;!-- 任务历史服务器的web地址 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>slave1:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件yarn-site-xml"><a href="#修改配置文件yarn-site-xml" class="headerlink" title="修改配置文件yarn-site.xml"></a>修改配置文件yarn-site.xml</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/yarn-site.xml</span><br></pre></td></tr></table></figure>
+
+<p>内容如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 以逗号分隔的服务列表，其中服务名称应仅包含a-zA-Z0-9_并且不能以数字开头--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- 配置ResourceManager的服务节点 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>master<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8088<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改配置文件workers"><a href="#修改配置文件workers" class="headerlink" title="修改配置文件workers"></a>修改配置文件workers</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/workers</span><br></pre></td></tr></table></figure>
+
+<p>文件中配置的是DataNode的所在节点服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">slave2</span><br><span class="line">slave3</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改yarn-env"><a href="#修改yarn-env" class="headerlink" title="修改yarn-env"></a>修改yarn-env</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/yarn-env.sh</span><br></pre></td></tr></table></figure>
+
+<p>添加一行内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=<span class="string">"/usr/java/jdk1.8.0_261"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改mapred-env"><a href="#修改mapred-env" class="headerlink" title="修改mapred-env"></a>修改mapred-env</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /home/hadoop/hadoop/etc/hadoop/mapred-env.sh</span><br></pre></td></tr></table></figure>
+
+<p>添加一行内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=<span class="string">"/usr/java/jdk1.8.0_261"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="将hadoop安装包分发到其他集群节点"><a href="#将hadoop安装包分发到其他集群节点" class="headerlink" title="将hadoop安装包分发到其他集群节点"></a>将hadoop安装包分发到其他集群节点</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/hadoop/server</span><br><span class="line">scp -r /home/hadoop/server/hadoop-3.3.0/ hadoop@slave1:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/server/hadoop-3.3.0/ hadoop@slave2:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/server/hadoop-3.3.0/ hadoop@slave3:<span class="variable">$PWD</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/hadoop/data</span><br><span class="line">scp -r /home/hadoop/data/dfs/ hadoop@slave1:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/data/journaldata hadoop@slave1:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/data/dfs/ hadoop@slave2:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/data/journaldata hadoop@slave2:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/data/dfs/ hadoop@slave3:<span class="variable">$PWD</span> &amp;&amp; scp -r /home/hadoop/data/journaldata hadoop@slave3:<span class="variable">$PWD</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="格式化HDFS"><a href="#格式化HDFS" class="headerlink" title="格式化HDFS"></a>格式化HDFS</h2><p>在master节点中格式化HDFS(只在master节点，即NameNode执行)，执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format</span><br></pre></td></tr></table></figure>
+
+<h2 id="格式化zkfc"><a href="#格式化zkfc" class="headerlink" title="格式化zkfc"></a>格式化zkfc</h2><p>在master节点中格式化HDFS(只在master节点，即NameNode执行)，执行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs zkfc -formatZK</span><br></pre></td></tr></table></figure>
+
+<h2 id="启动Hadoop集群"><a href="#启动Hadoop集群" class="headerlink" title="启动Hadoop集群"></a>启动Hadoop集群</h2><h3 id="日常启动hadoop"><a href="#日常启动hadoop" class="headerlink" title="日常启动hadoop"></a>日常启动hadoop</h3><p>Hadoop启动顺序：Zookeeper-&gt;Hadoop-&gt;Hbase&gt;Hive…</p>
+<h4 id="停止所有服务"><a href="#停止所有服务" class="headerlink" title="停止所有服务"></a>停止所有服务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stop-all.sh                            <span class="comment">#最好在master（NameNode）上执行</span></span><br><span class="line">mapred --daemon stop historyserver 	   <span class="comment">#master上执行</span></span><br><span class="line">zkServer.sh stop                       <span class="comment">#slave1~3上操作</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="启动ZooKeeper"><a href="#启动ZooKeeper" class="headerlink" title="启动ZooKeeper"></a>启动ZooKeeper</h4><p>在slave1~3上分别执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh stop</span><br><span class="line">zkServer.sh start</span><br><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>显示如下内容，则启动成功</p>
+<p><img src="http://img.rogermaster.top/uPic/0VF4xe.png" alt="0VF4xe"></p>
+<h4 id="启动HDFS"><a href="#启动HDFS" class="headerlink" title="启动HDFS"></a>启动HDFS</h4><p>其中一台机器执行就OK了，比如：master</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stop-dfs.sh    <span class="comment">#先停掉服务</span></span><br><span class="line">start-dfs.sh   <span class="comment">#如果出现错误，则在hadoop-env.sh中，再显示地重新声明一遍JAVA_HOME</span></span><br></pre></td></tr></table></figure>
+
+<p>显示内容如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/fjyyxM.png" alt="fjyyxM"></p>
+<p>执行命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>master上显示如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/2yw9A8.png" alt="2yw9A8"></p>
+<p>Slaver1~3显示如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/FYF63v.png" alt="FYF63v"></p>
+<p><img src="http://img.rogermaster.top/uPic/pRRr0o.png" alt="pRRr0o"></p>
+<h4 id="启动YARN"><a href="#启动YARN" class="headerlink" title="启动YARN"></a>启动YARN</h4><p>在master进行启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stop-yarn.sh</span><br><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure>
+
+<p>显示内容如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/y1tDm5.png" alt="y1tDm5"></p>
+<p>执行命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>显示如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/vwyzNP.png" alt="vwyzNP"></p>
+<p>若备用节点的 resourcemanager 没有启动起来，则手动启动起来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn-daemon.sh start resourcemanager</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动-mapreduce-任务历史服务器"><a href="#启动-mapreduce-任务历史服务器" class="headerlink" title="启动 mapreduce 任务历史服务器"></a>启动 mapreduce 任务历史服务器</h4><p>在slave1上执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mapred --daemon stop historyserver</span><br><span class="line">mapred --daemon start historyserver</span><br></pre></td></tr></table></figure>
+
+<p>执行命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps</span><br></pre></td></tr></table></figure>
+
+<p>显示如下：</p>
+<p><img src="http://img.rogermaster.top/uPic/JfbHLC.png" alt="JfbHLC"></p>
+<h2 id="WEB控制台"><a href="#WEB控制台" class="headerlink" title="WEB控制台"></a>WEB控制台</h2><h3 id="hdfs控制台"><a href="#hdfs控制台" class="headerlink" title="hdfs控制台"></a>hdfs控制台</h3><p><a href="http://10.211.55.8:9870/dfshealth.html#tab-overview" target="_blank" rel="noopener">http://10.211.55.8:9870/dfshealth.html#tab-overview</a></p>
+<p>![image-20200830213217841](/Users/roger/Library/Application Support/typora-user-images/image-20200830213217841.png)</p>
+<h3 id="yarn控制台"><a href="#yarn控制台" class="headerlink" title="yarn控制台"></a>yarn控制台</h3><p><a href="http://10.211.55.8:8088/cluster" target="_blank" rel="noopener">http://10.211.55.8:8088/cluster</a></p>
+<p><img src="http://img.rogermaster.top/uPic/nq8zHG.png" alt="nq8zHG"></p>
+
           
         
       
