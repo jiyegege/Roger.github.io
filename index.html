@@ -371,6 +371,446 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/Java大数据开发入门系列-四-————Spark简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Roger">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Roger's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/passages/Java大数据开发入门系列-四-————Spark简介/" class="post-title-link" itemprop="url">Java大数据开发入门系列(四)————Spark简介</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-02 12:52:34 / 修改时间：21:23:08" itemprop="dateCreated datePublished" datetime="2020-09-02T12:52:34+08:00">2020-09-02</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/大数据/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>Spark 于 2009 年诞生于加州大学伯克利分校 AMPLab，2013 年被捐赠给 Apache 软件基金会，2014 年 2 月成为 Apache 的顶级项目。相对于 MapReduce 的批处理计算，Spark 可以带来上百倍的性能提升，因此它成为继 MapReduce 之后，最为广泛使用的分布式计算框架。</p>
+<h2 id="二、Spark产生背景"><a href="#二、Spark产生背景" class="headerlink" title="二、Spark产生背景"></a>二、Spark产生背景</h2><p>Spark 是在 MapReduce 的基础上产生的，借鉴了大量 MapReduce 实践经验，引入多种新型涉及思想和优化策略。针对MapReduce计算框架存在的局限性进行分析，能更好的了解到 Spark。</p>
+<p>MapReduce 的局限性如下:</p>
+<p>1、处理效率低效</p>
+<ul>
+<li>Map中间结果写磁盘，Reduce写HDFS，多个MR之间通过HDFS交换数据</li>
+<li>任务调度和启动开销大</li>
+<li>无法充分利用内存</li>
+<li>Map 端和 Reduce 端均需要排序</li>
+<li>复杂功能 Io 开销大，对于复杂 sql，需转换 MapReduce 计算，需要通过 HDFS 进行磁盘数据交换，而读写Hfds需消耗大量磁盘和网络 IO</li>
+</ul>
+<p>2、 不适合迭代计算（如机器学习、图计算等），交互式处理（数据挖掘） 和流式处理（点击日志分析）<br>3、 MapReduce 编程不够灵活</p>
+<ul>
+<li>仅支持 Map 和 Reduce 两种操作</li>
+<li>尝试函数式编程风格</li>
+</ul>
+<p>4、计算框架多样化、无形中产生运维和管理成本</p>
+<h2 id="三、特点"><a href="#三、特点" class="headerlink" title="三、特点"></a>三、特点</h2><p>Spark 是基与 MapReduce 基础产生了，克服了其存在的性能低下，变成不够灵活的缺点。</p>
+<p>Spark 作为一种 DAG 计算框架，主要特点如下:</p>
+<p>Apache Spark 具有以下特点：</p>
+<ul>
+<li>使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证；</li>
+<li>多语言支持，目前支持的有 Java，Scala，Python 和 R；</li>
+<li>提供了 80 多个高级 API，可以轻松地构建应用程序；</li>
+<li>支持批处理，流处理和复杂的业务分析；</li>
+<li>丰富的类库支持：包括 SQL，MLlib，GraphX 和 Spark Streaming 等库，并且可以将它们无缝地进行组合；</li>
+<li>丰富的部署模式：支持本地模式和自带的集群模式，也支持在 Hadoop，Mesos，Kubernetes 上运行；</li>
+<li>多数据源支持：支持访问 HDFS，Alluxio，Cassandra，HBase，Hive 以及数百个其他数据源中的数据。</li>
+</ul>
+<p><img src="http://img.rogermaster.top/uPic/r9I3DA.jpg" alt="r9I3DA"></p>
+<h2 id="三、Spark的组成"><a href="#三、Spark的组成" class="headerlink" title="三、Spark的组成"></a>三、Spark的组成</h2><p>Spark组成(BDAS)：全称伯克利数据分析栈，通过大规模集成算法、机器、人之间展现大数据应用的一个平台。也是处理大数据、云计算、通信的技术解决方案。</p>
+<p>它的主要组件有：</p>
+<ul>
+<li>SparkCore：将分布式数据抽象为弹性分布式数据集（RDD），实现了应用任务调度、RPC、序列化和压缩，并为运行在其上的上层组件提供API。</li>
+<li>SparkSQL：Spark Sql 是 Spark 来操作结构化数据的程序包，可以让我使用SQL语句的方式来查询数据，Spark支持 多种数据源，包含Hive表，parquest以及JSON等内容。</li>
+<li>SparkStreaming：是 Spark 提供的实时数据进行流式计算的组件。</li>
+<li>MLlib：提供常用机器学习算法的实现库。</li>
+<li>GraphX：提供一个分布式图计算框架，能高效进行图计算。</li>
+<li>BlinkDB：用于在海量数据上进行交互式SQL的近似查询引擎。</li>
+<li>Tachyon：以内存为中心高容错的的分布式文件系统。</li>
+</ul>
+<h2 id="四、集群架构"><a href="#四、集群架构" class="headerlink" title="四、集群架构"></a>四、集群架构</h2><table>
+<thead>
+<tr>
+<th>Term（术语）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application</td>
+<td>Spark 应用程序，由集群上的一个 Driver 节点和多个 Executor 节点组成。</td>
+</tr>
+<tr>
+<td>Driver program</td>
+<td>主运用程序，该进程运行应用的 main() 方法并且创建 SparkContext</td>
+</tr>
+<tr>
+<td>Cluster manager</td>
+<td>集群资源管理器（例如，Standlone Manager，Mesos，YARN）</td>
+</tr>
+<tr>
+<td>Worker node</td>
+<td>执行计算任务的工作节点</td>
+</tr>
+<tr>
+<td>Executor</td>
+<td>位于工作节点上的应用进程，负责执行计算任务并且将输出数据保存到内存或者磁盘中</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>被发送到 Executor 中的工作单元</td>
+</tr>
+<tr>
+<td>Job</td>
+<td>一个Action算子（比如collect算子）对应一个Job，由并行计算的多个Task组成。</td>
+</tr>
+<tr>
+<td>Stage</td>
+<td>每个Job由多个Stage组成，每个Stage是一个Task集合，由DAG分割而成。</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>承载业务逻辑的运算单元，是Spark平台中可执行的最小工作单元。一个应用根据执行计划以及计算量分为多个Task。</td>
+</tr>
+</tbody></table>
+<p>Spark架构采用了分布式计算中的Master-Slave模型。Master是对应集群中的含有Master进程的节点，Slave是集群中含有Worker进程的节点。Master作为整个集群的控制器，负责整个集群的正常运行；Worker相当于是计算节点，接收主节点命令与进行状态汇报；Executor负责任务的执行；Client作为用户的客户端负责提交应用，Driver负责控制一个应用的执行。</p>
+<p><a href="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" alt="img"></a></p>
+<p><strong>执行过程</strong>：</p>
+<ol>
+<li>用户程序创建 SparkContext 后，它会连接到集群资源管理器，集群资源管理器会为用户程序分配计算资源，并启动 Executor；</li>
+<li>Driver 将计算程序划分为不同的执行阶段和多个 Task，之后将 Task 发送给 Executor；</li>
+<li>Executor 负责执行 Task，并将执行状态汇报给 Driver，同时也会将当前节点资源的使用情况汇报给集群资源管理器。</li>
+</ol>
+<h2 id="四、核心组件"><a href="#四、核心组件" class="headerlink" title="四、核心组件"></a>四、核心组件</h2><p>Spark 基于 Spark Core 扩展了四个核心组件，分别用于满足不同领域的计算需求。</p>
+<p><img src="http://img.rogermaster.top/uPic/0HsQfr.jpg" alt="0HsQfr"></p>
+<h3 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h3><p>Spark SQL 主要用于结构化数据的处理。其具有以下特点：</p>
+<ul>
+<li>能够将 SQL 查询与 Spark 程序无缝混合，允许您使用 SQL 或 DataFrame API 对结构化数据进行查询；</li>
+<li>支持多种数据源，包括 Hive，Avro，Parquet，ORC，JSON 和 JDBC；</li>
+<li>支持 HiveQL 语法以及用户自定义函数 (UDF)，允许你访问现有的 Hive 仓库；</li>
+<li>支持标准的 JDBC 和 ODBC 连接；</li>
+<li>支持优化器，列式存储和代码生成等特性，以提高查询效率。</li>
+</ul>
+<h3 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h3><p>Spark Streaming 主要用于快速构建可扩展，高吞吐量，高容错的流处理程序。支持从 HDFS，Flume，Kafka，Twitter 和 ZeroMQ 读取数据，并进行处理。</p>
+<p><img src="http://img.rogermaster.top/uPic/zcaFjF.jpg" alt="zcaFjF"></p>
+<p>Spark Streaming 的本质是微批处理，它将数据流进行极小粒度的拆分，拆分为多个批处理，从而达到接近于流处理的效果。</p>
+<p><img src="http://img.rogermaster.top/uPic/JUE5Rf.jpg" alt="JUE5Rf"></p>
+<h3 id="MLlib"><a href="#MLlib" class="headerlink" title="MLlib"></a>MLlib</h3><p>MLlib 是 Spark 的机器学习库。其设计目标是使得机器学习变得简单且可扩展。它提供了以下工具：</p>
+<ul>
+<li><strong>常见的机器学习算法</strong>：如分类，回归，聚类和协同过滤；</li>
+<li><strong>特征化</strong>：特征提取，转换，降维和选择；</li>
+<li><strong>管道</strong>：用于构建，评估和调整 ML 管道的工具；</li>
+<li><strong>持久性</strong>：保存和加载算法，模型，管道数据；</li>
+<li><strong>实用工具</strong>：线性代数，统计，数据处理等。</li>
+</ul>
+<h3 id="Graphx"><a href="#Graphx" class="headerlink" title="Graphx"></a>Graphx</h3><p>GraphX 是 Spark 中用于图形计算和图形并行计算的新组件。在高层次上，GraphX 通过引入一个新的图形抽象来扩展 RDD(一种具有附加到每个顶点和边缘的属性的定向多重图形)。为了支持图计算，GraphX 提供了一组基本运算符（如： subgraph，joinVertices 和 aggregateMessages）以及优化后的 Pregel API。此外，GraphX 还包括越来越多的图形算法和构建器，以简化图形分析任务。</p>
+<h2 id="五、RDD简介"><a href="#五、RDD简介" class="headerlink" title="五、RDD简介"></a>五、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
+<ul>
+<li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
+<li>RDD 拥有一个用于计算分区的函数 compute；</li>
+<li>RDD 会保存彼此间的依赖关系，RDD 的每次转换都会生成一个新的依赖关系，这种 RDD 之间的依赖关系就像流水线一样。在部分分区数据丢失后，可以通过这种依赖关系重新计算丢失的分区数据，而不是对 RDD 的所有分区进行重新计算；</li>
+<li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
+<li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
+</ul>
+<h2 id="六、宽依赖和窄依赖"><a href="#六、宽依赖和窄依赖" class="headerlink" title="六、宽依赖和窄依赖"></a>六、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
+<ul>
+<li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
+<li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
+</ul>
+<p>如下图，每一个方框表示一个 RDD，带有颜色的矩形表示分区：</p>
+<p><img src="http://img.rogermaster.top/uPic/EMhehb.jpg" alt="EMhehb"></p>
+<p>区分这两种依赖是非常有用的：</p>
+<ul>
+<li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
+<li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
+</ul>
+<h2 id="七、spark-常用的算子"><a href="#七、spark-常用的算子" class="headerlink" title="七、spark 常用的算子"></a>七、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
+<thead>
+<tr>
+<th>Transformation 算子</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>map</strong>(<em>func</em>)</td>
+<td>对原 RDD 中每个元素运用 <em>func</em> 函数，并生成新的 RDD</td>
+</tr>
+<tr>
+<td><strong>filter</strong>(<em>func</em>)</td>
+<td>对原 RDD 中每个元素使用<em>func</em> 函数进行过滤，并生成新的 RDD</td>
+</tr>
+<tr>
+<td><strong>flatMap</strong>(<em>func</em>)</td>
+<td>与 map 类似，但是每一个输入的 item 被映射成 0 个或多个输出的 items（ <em>func</em> 返回类型需要为 Seq ）。</td>
+</tr>
+<tr>
+<td><strong>mapPartitions</strong>(<em>func</em>)</td>
+<td>与 map 类似，但函数单独在 RDD 的每个分区上运行， <em>func</em>函数的类型为 Iterator<t> =&gt; Iterator<u> ，其中 T 是 RDD 的类型，即 RDD[T]</u></t></td>
+</tr>
+<tr>
+<td><strong>mapPartitionsWithIndex</strong>(<em>func</em>)</td>
+<td>与 mapPartitions 类似，但 <em>func</em> 类型为 (Int, Iterator<t>) =&gt; Iterator<u> ，其中第一个参数为分区索引</u></t></td>
+</tr>
+<tr>
+<td><strong>sample</strong>(<em>withReplacement</em>, <em>fraction</em>, <em>seed</em>)</td>
+<td>数据采样，有三个可选参数：设置是否放回（withReplacement）、采样的百分比（<em>fraction</em>）、随机数生成器的种子（seed）；</td>
+</tr>
+<tr>
+<td><strong>union</strong>(<em>otherDataset</em>)</td>
+<td>合并两个 RDD</td>
+</tr>
+<tr>
+<td><strong>intersection</strong>(<em>otherDataset</em>)</td>
+<td>求两个 RDD 的交集</td>
+</tr>
+<tr>
+<td><strong>distinct</strong>([<em>numTasks</em>]))</td>
+<td>去重</td>
+</tr>
+<tr>
+<td><strong>groupByKey</strong>([<em>numTasks</em>])</td>
+<td>按照 key 值进行分区，即在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, Iterable<v>) <strong>Note:</strong> 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 <code>reduceByKey</code> 或 <code>aggregateByKey</code> 性能会更好 <strong>Note:</strong> 默认情况下，并行度取决于父 RDD 的分区数。可以传入 <code>numTasks</code> 参数进行修改。</v></td>
+</tr>
+<tr>
+<td><strong>reduceByKey</strong>(<em>func</em>, [<em>numTasks</em>])</td>
+<td>按照 key 值进行分组，并对分组后的数据执行归约操作。</td>
+</tr>
+<tr>
+<td><strong>aggregateByKey</strong>(<em>zeroValue</em>,<em>numPartitions</em>)(<em>seqOp</em>, <em>combOp</em>, [<em>numTasks</em>])</td>
+<td>当调用（K，V）对的数据集时，返回（K，U）对的数据集，其中使用给定的组合函数和 zeroValue 聚合每个键的值。与 groupByKey 类似，reduce 任务的数量可通过第二个参数进行配置。</td>
+</tr>
+<tr>
+<td><strong>sortByKey</strong>([<em>ascending</em>], [<em>numTasks</em>])</td>
+<td>按照 key 进行排序，其中的 key 需要实现 Ordered 特质，即可比较</td>
+</tr>
+<tr>
+<td><strong>join</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
+<td>在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，等价于内连接操作。如果想要执行外连接，可以使用 <code>leftOuterJoin</code>, <code>rightOuterJoin</code> 和 <code>fullOuterJoin</code> 等算子。</td>
+</tr>
+<tr>
+<td><strong>cogroup</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
+<td>在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, (Iterable<v>, Iterable<w>)) tuples 的 dataset。</w></v></td>
+</tr>
+<tr>
+<td><strong>cartesian</strong>(<em>otherDataset</em>)</td>
+<td>在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) 类型的 dataset（即笛卡尔积）。</td>
+</tr>
+<tr>
+<td><strong>coalesce</strong>(<em>numPartitions</em>)</td>
+<td>将 RDD 中的分区数减少为 numPartitions。</td>
+</tr>
+<tr>
+<td><strong>repartition</strong>(<em>numPartitions</em>)</td>
+<td>随机重新调整 RDD 中的数据以创建更多或更少的分区，并在它们之间进行平衡。</td>
+</tr>
+<tr>
+<td><strong>repartitionAndSortWithinPartitions</strong>(<em>partitioner</em>)</td>
+<td>根据给定的 partitioner（分区器）对 RDD 进行重新分区，并对分区中的数据按照 key 值进行排序。这比调用 <code>repartition</code> 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作所在的机器。</td>
+</tr>
+</tbody></table>
+<h3 id="Spark-常用的-Action-算子"><a href="#Spark-常用的-Action-算子" class="headerlink" title="Spark 常用的 Action 算子"></a>Spark 常用的 Action 算子</h3><table>
+<thead>
+<tr>
+<th>Action（动作）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>reduce</strong>(<em>func</em>)</td>
+<td>使用函数<em>func</em>执行归约操作</td>
+</tr>
+<tr>
+<td><strong>collect</strong>()</td>
+<td>以一个 array 数组的形式返回 dataset 的所有元素，适用于小结果集。</td>
+</tr>
+<tr>
+<td><strong>count</strong>()</td>
+<td>返回 dataset 中元素的个数。</td>
+</tr>
+<tr>
+<td><strong>first</strong>()</td>
+<td>返回 dataset 中的第一个元素，等价于 take(1)。</td>
+</tr>
+<tr>
+<td><strong>take</strong>(<em>n</em>)</td>
+<td>将数据集中的前 <em>n</em> 个元素作为一个 array 数组返回。</td>
+</tr>
+<tr>
+<td><strong>takeSample</strong>(<em>withReplacement</em>, <em>num</em>, [<em>seed</em>])</td>
+<td>对一个 dataset 进行随机抽样</td>
+</tr>
+<tr>
+<td><strong>takeOrdered</strong>(<em>n</em>, <em>[ordering]</em>)</td>
+<td>按自然顺序（natural order）或自定义比较器（custom comparator）排序后返回前 <em>n</em> 个元素。只适用于小结果集，因为所有数据都会被加载到驱动程序的内存中进行排序。</td>
+</tr>
+<tr>
+<td><strong>saveAsTextFile</strong>(<em>path</em>)</td>
+<td>将 dataset 中的元素以文本文件的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。Spark 将对每个元素调用 toString 方法，将元素转换为文本文件中的一行记录。</td>
+</tr>
+<tr>
+<td><strong>saveAsSequenceFile</strong>(<em>path</em>)</td>
+<td>将 dataset 中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。该操作要求 RDD 中的元素需要实现 Hadoop 的 Writable 接口。对于 Scala 语言而言，它可以将 Spark 中的基本数据类型自动隐式转换为对应 Writable 类型。(目前仅支持 Java and Scala)</td>
+</tr>
+<tr>
+<td><strong>saveAsObjectFile</strong>(<em>path</em>)</td>
+<td>使用 Java 序列化后存储，可以使用 <code>SparkContext.objectFile()</code> 进行加载。(目前仅支持 Java and Scala)</td>
+</tr>
+<tr>
+<td><strong>countByKey</strong>()</td>
+<td>计算每个键出现的次数。</td>
+</tr>
+<tr>
+<td><strong>foreach</strong>(<em>func</em>)</td>
+<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数</td>
+</tr>
+</tbody></table>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/Java大数据开发入门系列-三-————Hive/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1005,7 +1445,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-08-30 21:35:54" itemprop="dateModified" datetime="2020-08-30T21:35:54+08:00">2020-08-30</time>
+                <time title="修改时间：2020-08-31 00:29:53" itemprop="dateModified" datetime="2020-08-31T00:29:53+08:00">2020-08-31</time>
               </span>
             
           
@@ -2808,189 +3248,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/anconda常用命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Roger">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/uploads/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Roger's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/passages/anconda常用命令/" class="post-title-link" itemprop="url">anconda常用命令</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-03 10:17:32" itemprop="dateCreated datePublished" datetime="2019-08-03T10:17:32+08:00">2019-08-03</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-05 17:53:36" itemprop="dateModified" datetime="2019-08-05T17:53:36+08:00">2019-08-05</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/anaconda/" itemprop="url" rel="index"><span itemprop="name">anaconda</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="http://pvqnwtxgq.bkt.clouddn.com/conda.png" alt="常用命令图"></p>
-<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3040,7 +3297,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3122,7 +3379,9 @@
         
           
         
-        <span class="site-state-item-count">15</span>
+          
+        
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
