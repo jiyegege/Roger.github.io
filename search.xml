@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Java大数据开发入门系列(三)————Hive</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%89-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Hive/</url>
-    <content><![CDATA[<h1 id="文章更新中，请耐心期待"><a href="#文章更新中，请耐心期待" class="headerlink" title="文章更新中，请耐心期待"></a>文章更新中，请耐心期待</h1>]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>大数据</tag>
-        <tag>Hive</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>2019京东Java校招笔试</title>
     <url>/passages/2019%E4%BA%AC%E4%B8%9CJava%E6%A0%A1%E6%8B%9B%E7%AC%94%E8%AF%95/</url>
     <content><![CDATA[<p>1 TCP协议的拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载。常用的方法有:<br>正确答案 : BC 您的答案 : BC<br>A 慢启动、窗口滑动<br>B 慢开始、拥塞控制<br>C 快重传、快恢复<br>D 快开始、快恢复</p>
@@ -94,6 +81,674 @@
       <tags>
         <tag>Java</tag>
         <tag>笔试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(四)————Spark之作业调度</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E4%B9%8B%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Spark 有几种计算资源调度的方式。前面讲到，每个Spark应用（SparkContext的实例）都运行一组独立的<code>executor</code>进程。spark运行的集群管理器提供了跨应用之间的资源调度<a href="http://spark.apachecn.org/#/docs/23?id=scheduling-across-applications" target="_blank" rel="noopener">scheduling across applications</a>。其次，在每个Spark应用中，如果多个 <code>jobs</code>（Spark算子）是由不同的线程提交的，那么它们可能会并发运行。如果你的应用是常见的通过网络服务请求，Spark包含一个<a href="#应用内调度">fair scheduler</a>(公平的调度器)来调度每个SparkContext内的资源。在 Spark 应用内部（对应同一个 SparkContext）各个作业之间，Spark 默认 FIFO 调度，同时也可以支持公平调度。</p>
+<h1 id="跨应用调度"><a href="#跨应用调度" class="headerlink" title="跨应用调度"></a>跨应用调度</h1><p>当在集群上运行时，每个Spark应用都会得到一组独立的<code>executor</code>JVM，来运行其任务并存储数据。如果多个用户需要共享你的集群，那么会有很多资源分配相关的选项，如何设计还取觉于具体的集群管理器。</p>
+<p>对 Spark 所支持的各个集群管理器而言，最简单的的资源分配，就是静态划分。这种方式就意味着，每个 Spark 应用都是设定一个最大可用资源总量，并且该应用在整个生命周期内都会占住这个资源。这种方式在 Spark独立部署 standalone 和 YARN调度，以及 Mesos 粗粒度模式(coarse-grained Mesos mode)下都可用。资源分配可以根据集群类型进行如下配置：</p>
+<ul>
+<li><strong>Standalone mode:</strong> 默认情况下，提交到<code>standalone mode</code>集群的应用将以FIFO（先进先出）的顺序运行，并且每个spark应用都会占用集群中所有可用节点。不过你可以通过设置 spark.cores.max 或者 spark.deploy.defaultCores 来限制单个应用所占用的节点个数。最后，除了可以控制对 CPU 的使用数量之外，还可以通过spark.executor.memory来控制各个应用的内存占用量。</li>
+<li><strong>Mesos:</strong> 在Mesos中要使用静态划分的话，需要将 spark.mesos.coarse 设为true，同样，你也需要配置 spark.cores.max来控制各个应用的 CPU 总数，以及 spark.executor.memory 来控制各个应用的内存占用。</li>
+<li><strong>YARN:</strong> 在 YARN 中需要使用 –num-executors 选项来控制 Spark 应用在集群中分配的执行器的个数。对于单个执行器（executor）所占用的资源，可以使用 –executor-memory 和 –executor-cores 来控制。</li>
+</ul>
+<p>Mesos 上还有一种动态共享 CPU 的方式。在这种模式下，每个 Spark 应用的内存占用仍然是固定且独占的(仍由 spark.exexcutor.memory 决定)，但是如果该 Spark 应用没有在某个机器上执行任务的话，那么其它应用可以占用该机器上的 CPU。这种模式对集群中有大量不是很活跃应用的场景非常有效，例如：集群中有很多不同用户的 Spark shell session。但这种模式不适用于低延时的场景，因为当 Spark 应用需要使用 CPU 的时候，可能需要等待一段时间才能取得对 CPU 的使用权。要使用这种模式，只需要在 mesos://URL 上设置 spark.mesos.coarse 属性为 false 即可。</p>
+<p>值得注意的是，目前还没有任何一种资源分配模式支持跨 Spark 应用的内存共享。如果你想通过这种方式共享数据，我们建议你可以单独使用一个服务(例如：alluxio)，这样就能实现多应用访问同一个 RDD 的数据。</p>
+<h2 id="动态资源分配"><a href="#动态资源分配" class="headerlink" title="动态资源分配"></a>动态资源分配</h2><p>Spark 提供了一种基于负载来动态调节 Spark 应用资源占用的机制。这意味着，你的应用会在资源空闲的时间将其释放给集群，需要时再重新申请。这一特性在多个应用 Spark 集群资源的情况下特别有用。</p>
+<p>这个特性默认是禁止的，但是在所有的粗粒度集群管理器上都是可用的，如：独立部署模式<code>standalone mode</code>，<code>YARN mode</code>，和<code>Mesos 粗粒度模式</code>(coarse-grained Mesos mode)。</p>
+<h3 id="配置和部署"><a href="#配置和部署" class="headerlink" title="配置和部署"></a>配置和部署</h3><p>要使用动态资源分配这一特性有两个前提条件。首先，你的应用必须设置 spark.dynamicAllocation.enabled 为 true。其次，你必须在每个worker节点上启动 external shuffle service，同时将 spark.shuffle.service.enabled 设为 true。external shuffle service 的目的是在移除 executor 的时候，能够保留 executor 输出的 shuffle 文件。启用 external shuffle service 的方式在各个集群管理器上各不相同：</p>
+<p>在 Spark 独立部署的集群中，你只需要在 worker 启动前设置 spark.shuffle.service.enabled 为 true 即可。</p>
+<p>在 Mesos 粗粒度模式下，你需要在各个节点上运行 $SPARK_HOME/sbin/start-mesos-shuffle-service.sh 并设置 spark.shuffle.service.enabled为true即可。例如，你可以在Marathon来启用这一功能。</p>
+<p>在YARN模式下，需要按以下步骤在各个 NodeManager 上启动：<a href="#YARN启动shuffle服务">here</a></p>
+<h3 id="资源分配策略"><a href="#资源分配策略" class="headerlink" title="资源分配策略"></a>资源分配策略</h3><p>总体上来说，Spark 应该在executor空闲时将其关闭，而在后续要用时再申请。因为没有一个固定的方法，可以预测一个executor在后续是否马上会被分配去执行任务，或者一个新分配的executor实际上是空闲的，所以我们需要一个试探性的方法，来决定是否申请或是移除一个executor。</p>
+<h4 id="请求策略"><a href="#请求策略" class="headerlink" title="请求策略"></a>请求策略</h4><p>一个启用了动态分配的 Spark 应用在等待任务需要调度的时候，会去申请额外的executor。在这种情况下，必定意味着已有的executor已经不足以同时执行所有未完成的任务。</p>
+<p>Spark会轮流来申请executor。当有待处理的任务达到spark.dynamicAllocation.scheduleerBacklogTimeout秒时，就会触发实际的请求，如果等待队列中仍有挂起的任务，则每过 spark.dynamicAllocation.sustainedSchedulerBacklogTimeout 秒后触发一次资源申请。另外，每一轮申请的executor个数以指数形式增长。例如：一个 Spark 应用可能在首轮申请 1 个执行器，后续的轮次申请个数可能是 2 个、4 个、8 个……。</p>
+<p>采用指数级增长策略的原因有两个：第一，一个应用程序在开始时应该谨慎地请求executor，以防万一发现只增加几个executor就够了，这和 TCP 慢启动有些类似；第二，如果一旦 Spark 应用确实需要申请多个executor的话，那么可以确保其所需的计算资源及时增长。</p>
+<h4 id="移除策略"><a href="#移除策略" class="headerlink" title="移除策略"></a>移除策略</h4><p>移除executor的策略就简单得多了。Spark 应用会在某个执行器空闲超过 spark.dynamicAllocation.executorIdleTimeout 秒后将其删除，在大多数情况下，执行器的移除条件和申请条件都是互斥的，也就是说，执行器在有等待执行任务挂起时，不应该空闲。</p>
+<h3 id="优雅的关闭Executor"><a href="#优雅的关闭Executor" class="headerlink" title="优雅的关闭Executor"></a>优雅的关闭Executor</h3><p>在非动态分配下，executor可能的退出原因有执行失败或是相关 Spark 应用已经退出。不管是哪种原因，executor的所有相关联的状态都已经不再需要，可以丢弃掉。但是在动态分配的情况下，executor有可能在 Spark 应用运行期间被移除。这时候，如果 Spark 应用尝试去访问该executor存储的状态，就必须重算这一部分数据。因此，Spark 需要一种机制，能够优雅的关闭executor，同时还保留其状态数据。</p>
+<p>这种需求对于shuffles操作尤其重要。shuffle过程中，Spark executor首先将 map 输出写到本地磁盘，然后在其他executor试图获取这些map结果数据时，充当这些文件的服务器。一旦有某些任务执行时间过长，动态分配有可能在shuffle结束前移除任务异常的executor，而这些被移除的executor对应的数据将会被重新计算，但这些重算其实是不必要的。</p>
+<p>要解决这一问题，就需要用到 external shuffle service，该服务在 Spark 1.2 引入。该服务在每个节点上都会启动一个不依赖于任何 Spark 应用或executor的独立进程。一旦该服务启用，Spark executor不再从各个executor上获取 shuffle文件，转而从这个 service 获取。这意味着，任何执行器输出的混洗状态数据都可能存留时间比对应的执行器进程还长。</p>
+<p>除了shuffle文件之外，executor也会在磁盘或者内存中缓存数据。一旦executor被移除，其缓存数据将无法访问。这个问题目前还没有解决。或许在未来的版本中，可能会类似采用external shuffle service的方法，将缓存数据保存在堆外存储中以解决这一问题。</p>
+<h1 id="应用内调度"><a href="#应用内调度" class="headerlink" title="应用内调度"></a>应用内调度</h1><p>在指定的 Spark 应用内部（对应同一 SparkContext 实例），多个线程可能并发地提交 Spark 作业（job），他们可以同时运行。在本节中，作业（job）是指，由 Spark action 算子（如：collect）触发的一系列计算任务的集合。Spark 调度器是完全线程安全的，并且能够支持 Spark 应用同时处理多个请求（比如：来自不同用户的查询）。</p>
+<p>默认，Spark 应用内部使用 FIFO 调度策略。每个作业被划分为多个阶段（stage）（例如：map 阶段和 reduce 阶段），第一个作业在其启动后会优先获取所有的可用资源，然后是第二个作业再申请，再第三个……。如果前面的作业没有把集群资源占满，则后续的作业可以立即启动运行，否则，后提交的作业会有明显的延迟等待。</p>
+<p>不过从 Spark 0.8 开始，Spark 也能支持各个作业间的公平（Fair）调度。公平调度时，Spark 以轮询的方式给每个作业分配资源，因此所有的作业获得的资源大体上是平均分配。这意味着，即使有大作业在运行，小的作业再提交也能立即获得计算资源而不是等待前面的作业结束，大大减少了延迟时间。这种模式特别适合于多用户配置。要启用公平调度器，只需设置一下 SparkContext 中 spark.scheduler.mode 属性为 FAIR 即可 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(...).setAppName(...)</span><br><span class="line">conf.set(<span class="string">"spark.scheduler.mode"</span>, <span class="string">"FAIR"</span>)</span><br><span class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br></pre></td></tr></table></figure>
+
+<h2 id="公平调度资源池"><a href="#公平调度资源池" class="headerlink" title="公平调度资源池"></a>公平调度资源池</h2><p>公平调度器还可以支持将作业分组放入资源池（pool），然后给每个资源池配置不同的调度选项（如：权重）(ps:就是设置调度优先级)。这样你就可以给一些比较重要的作业创建一个“高优先级”资源池，或者你也可以把每个用户的作业分到一组，这样一来就是各个用户平均分享集群资源，而不是各个作业平分集群资源。Spark 公平调度的实现方式基本都是模仿 <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/FairScheduler.html" target="_blank" rel="noopener">Hadoop Fair Scheduler</a>来实现的。</p>
+<p>默认情况下，新提交的作业都会进入到默认资源池中，不过作业对应于哪个资源池，可以在提交作业的线程中用 SparkContext.setLocalProperty 设定 spark.scheduler.pool 属性。示例代码如下 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Assuming sc is your SparkContext variable</span></span><br><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="string">"pool1"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>一旦设好了局部属性，所有该线程所提交的作业（即：在该线程中调用 action 算子，如：RDD.save/count/collect 等）都会使用这个资源池。这个设置是以线程为单位保存的，你很容易实现用同一线程来提交同一用户的所有作业到同一个资源池中。同样，如果需要清除资源池设置，只需在对应线程中调用如下代码 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="literal">null</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="资源池默认行为"><a href="#资源池默认行为" class="headerlink" title="资源池默认行为"></a>资源池默认行为</h2><p>默认地，各个资源池之间平分整个集群的资源（包括 default 资源池），但在资源池内部，默认情况下，作业是 FIFO 顺序执行的。举例来说，如果你为每个用户创建了一个资源池，那么久意味着各个用户之间共享整个集群的资源，但每个用户自己提交的作业是按顺序执行的，而不会出现后提交的作业抢占前面作业的资源。</p>
+<h2 id="配置资源池属性"><a href="#配置资源池属性" class="headerlink" title="配置资源池属性"></a>配置资源池属性</h2><p>资源池的属性需要通过配置文件来指定。每个资源池都支持以下3个属性 :</p>
+<ul>
+<li><code>schedulingMode</code>：可以是 FIFO 或 FAIR，控制资源池内部的作业是如何调度的。</li>
+<li><code>weight</code>：控制资源池相对其他资源池，可以分配到资源的比例。默认所有资源池的 weight 都是 1。如果你将某个资源池的 weight 设为 2，那么该资源池中的资源将是其他池子的2倍。如果将 weight 设得很高，如 1000，可以实现资源池之间的调度优先级 – 也就是说，weight=1000 的资源池总能立即启动其对应的作业。</li>
+<li><code>minShare</code>：除了整体 weight 之外，每个资源池还能指定一个最小资源分配值（CPU 个数），管理员可能会需要这个设置。公平调度器总是会尝试优先满足所有活跃（active）资源池的最小资源分配值，然后再根据各个池子的 weight 来分配剩下的资源。因此，minShare 属性能够确保每个资源池都能至少获得一定量的集群资源。minShare 的默认值是 0。</li>
+</ul>
+<p>资源池属性是一个 XML 文件，可以基于 conf/fairscheduler.xml.template 修改，然后在 <a href="http://spark.apachecn.org/#/configuration.html?id=spark-properties" target="_blank" rel="noopener">SparkConf</a>。的 spark.scheduler.allocation.file 属性指定文件路径：</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">conf.set(<span class="string">"spark.scheduler.allocation.file"</span>, <span class="string">"/path/to/file"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>资源池 XML 配置文件格式如下，其中每个池子对应一个 <pool>元素，每个资源池可以有其独立的配置 :</pool></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">allocations</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"production"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FAIR<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>2<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FIFO<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>2<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>3<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">allocations</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="额外补充："><a href="#额外补充：" class="headerlink" title="额外补充："></a>额外补充：</h1><h2 id="Shuffle相关介绍"><a href="#Shuffle相关介绍" class="headerlink" title="Shuffle相关介绍"></a>Shuffle相关介绍</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>有些运算需要将各节点上的同一类数据汇集到某一节点进行计算，把这些分布在不同节点的数据按照一定的规则汇集到一起的过程称为 Shuffle。</p>
+<p><img src="http://img.rogermaster.top/uPic/4C16KL.jpg" alt="4C16KL"></p>
+<p>在MapReduce框架，Shuffle是连接Map和Reduce之间的桥梁，Map阶段通过shuffle读取数据并输出到对应的Reduce，而Reduce阶段负责从Map端拉取数据并进行计算。在整个shuffle过程中，往往伴随着大量的磁盘和网络I/O。所以shuffle性能的高低也直接决定了整个程序的性能高低。而Spark也会有自己的shuffle实现过程。</p>
+<h3 id="Spark中的-shuffle"><a href="#Spark中的-shuffle" class="headerlink" title="Spark中的 shuffle"></a>Spark中的 shuffle</h3><p>在DAG调度的过程中，<strong>Stage</strong> 阶段的划分是根据是否有shuffle过程，也就是存在 <strong>宽依赖</strong> 的时候,需要进行shuffle,这时候会将 <strong>job</strong> 划分成多个Stage，每一个 Stage 内部有很多可以并行运行的 <strong>Task</strong>。</p>
+<p><img src="http://img.rogermaster.top/uPic/XsfPkt.png" alt="XsfPkt"></p>
+<p>标注对应的RDD后：</p>
+<p>![image-20200908223941532](/Users/roger/Library/Application Support/typora-user-images/image-20200908223941532.png)</p>
+<p><img src="http://img.rogermaster.top/uPic/LEZncX.png" alt="LEZncX"></p>
+<p>stage与stage之间的过程就是 shuffle 阶段，前一个 Stage 的 ShuffleMapTask 进行 Shuffle Write， 把数据存储在 BlockManager 上面， 并且把数据位置元信息上报到 Driver 的 MapOutTrack 组件中， 下一个 Stage 根据数据位置元信息， 进行 Shuffle Read， 拉取上个 Stage 的输出数据。在 Spark 中，负责 shuffle 过程的执行、计算和处理的组件主要就是 <strong>ShuffleManager</strong> 。ShuffleManager 随着Spark的发展有两种实现的方式，分别为 <strong>HashShuffleManager</strong> 和 <strong>SortShuffleManager</strong> ，因此spark的Shuffle有 <strong>Hash Shuffle</strong>  和 <strong>Sort Shuffle</strong> 两种。</p>
+<p>在 <strong>Spark 1.2</strong> 以前，默认的shuffle计算引擎是 <strong>HashShuffleManager</strong> 。</p>
+<p><strong>HashShuffleManager</strong> 有着一个非常严重的弊端，就是会产生大量的中间磁盘文件，进而由大量的磁盘IO操作影响了性能。因此在Spark 1.2以后的版本中，默认的 <strong>ShuffleManager</strong> 改成了 <strong>SortShuffleManager</strong> 。</p>
+<p><strong>SortShuffleManager</strong> 相较于 HashShuffleManager 来说，有了一定的改进。主要就在于每个Task在进行shuffle操作时，虽然也会产生较多的临时磁盘文件，但是最后会将所有的临时文件合并(merge)成一个磁盘文件，因此每个 Task 就只有一个磁盘文件。在下一个 Stage 的shuffle read task拉取自己的数据时，只要根据索引读取每个磁盘文件中的部分数据即可。</p>
+<p>Hash shuffle是不具有排序的Shuffle。</p>
+<h2 id="YARN启动shuffle服务"><a href="#YARN启动shuffle服务" class="headerlink" title="YARN启动shuffle服务"></a>YARN启动shuffle服务</h2><p>要在YARN群集中的每个NodeManager上启动Spark Shuffle服务，请遵循以下说明：</p>
+<ol>
+<li>用YARN配置文件构建Spark。如果你使用的是预打包的发行版，请跳过这一步。</li>
+<li>找到<code>spark-&lt;version&gt;-yarn-shuffle.jar</code>. 如果你是自己构建的spark会在 <code>$SPARK_HOME/common/network-yarn/target/scala-&lt;version&gt;</code> 下,如果你用的我是发行版则在 <code>yarn</code> 下.</li>
+<li>将这个jar包添加到集群中所有NodeManagers的classpath中。</li>
+<li>在每个节点的yarn-site.xml中，将spark_shuffle添加到yarn.nodemanager.aux-services中，然后将yarn.nodemanager.aux-services.spark_shuffle.class设置org.apache.spark.network.yarn.YarnShuffleService。</li>
+<li>在 etc/hadoop/yarn-env.sh 中设置 YARN_HEAPSIZE（默认为 1000），增加 NodeManager 的堆大小，以避免在shuffle中的垃圾回收问题。</li>
+<li>重新启动集群中的所有NodeManagers。</li>
+</ol>
+<p>在YARN上运行shuffle service时，可以使用以下附加配置选项：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Property Name</th>
+<th align="left">Default</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>spark.yarn.shuffle.stopOnFailure</code></td>
+<td align="left"><code>false</code></td>
+<td align="left">当Spark shuffle service的初始化出现故障时，是否要停止NodeManager。这可以防止在Spark shuffle service没有运行的NodeManagers上运行容器导致的应用失败。</td>
+</tr>
+</tbody></table>
+<p>参考文献：</p>
+<ul>
+<li><a href="https://juejin.im/post/6844904065218920456#heading-21" target="_blank" rel="noopener">Spark的Shuffle总结分析</a>-说出你的愿望吧</li>
+<li><a href="https://zhuanlan.zhihu.com/p/67061627" target="_blank" rel="noopener">Spark Shuffle 详解</a>-小鹏</li>
+<li><a href="https://spark.apache.org/docs/latest/job-scheduling.html#job-scheduling" target="_blank" rel="noopener">Job-scheduling</a>-apache</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Hadoop</tag>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(四)————Spark简介</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>Spark 于 2009 年诞生于加州大学伯克利分校 AMPLab，2013 年被捐赠给 Apache 软件基金会，2014 年 2 月成为 Apache 的顶级项目。相对于 MapReduce 的批处理计算，Spark 可以带来上百倍的性能提升，因此它成为继 MapReduce 之后，最为广泛使用的分布式计算框架。</p>
+<h2 id="二、Spark产生背景"><a href="#二、Spark产生背景" class="headerlink" title="二、Spark产生背景"></a>二、Spark产生背景</h2><p>Spark 是在 MapReduce 的基础上产生的，借鉴了大量 MapReduce 实践经验，引入多种新型涉及思想和优化策略。针对MapReduce计算框架存在的局限性进行分析，能更好的了解到 Spark。</p>
+<p>MapReduce 的局限性如下:</p>
+<p>1、处理效率低效</p>
+<ul>
+<li>Map中间结果写磁盘，Reduce写HDFS，多个MR之间通过HDFS交换数据</li>
+<li>任务调度和启动开销大</li>
+<li>无法充分利用内存</li>
+<li>Map 端和 Reduce 端均需要排序</li>
+<li>复杂功能 Io 开销大，对于复杂 sql，需转换 MapReduce 计算，需要通过 HDFS 进行磁盘数据交换，而读写Hfds需消耗大量磁盘和网络 IO</li>
+</ul>
+<p>2、 不适合迭代计算（如机器学习、图计算等），交互式处理（数据挖掘） 和流式处理（点击日志分析）<br>3、 MapReduce 编程不够灵活</p>
+<ul>
+<li>仅支持 Map 和 Reduce 两种操作</li>
+<li>尝试函数式编程风格</li>
+</ul>
+<p>4、计算框架多样化、无形中产生运维和管理成本</p>
+<h2 id="三、特点"><a href="#三、特点" class="headerlink" title="三、特点"></a>三、特点</h2><p>Spark 是基与 MapReduce 基础产生了，克服了其存在的性能低下，变成不够灵活的缺点。</p>
+<p>Spark 作为一种 DAG 计算框架，主要特点如下:</p>
+<p>Apache Spark 具有以下特点：</p>
+<ul>
+<li>使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证；</li>
+<li>多语言支持，目前支持的有 Java，Scala，Python 和 R；</li>
+<li>提供了 80 多个高级 API，可以轻松地构建应用程序；</li>
+<li>支持批处理，流处理和复杂的业务分析；</li>
+<li>丰富的类库支持：包括 SQL，MLlib，GraphX 和 Spark Streaming 等库，并且可以将它们无缝地进行组合；</li>
+<li>丰富的部署模式：支持本地模式和自带的集群模式，也支持在 Hadoop，Mesos，Kubernetes 上运行；</li>
+<li>多数据源支持：支持访问 HDFS，Alluxio，Cassandra，HBase，Hive 以及数百个其他数据源中的数据。</li>
+</ul>
+<p><img src="http://img.rogermaster.top/uPic/r9I3DA.jpg" alt="r9I3DA"></p>
+<h2 id="三、Spark的组成"><a href="#三、Spark的组成" class="headerlink" title="三、Spark的组成"></a>三、Spark的组成</h2><p>Spark组成(BDAS)：全称伯克利数据分析栈，通过大规模集成算法、机器、人之间展现大数据应用的一个平台。也是处理大数据、云计算、通信的技术解决方案。</p>
+<p>它的主要组件有：</p>
+<ul>
+<li>SparkCore：将分布式数据抽象为弹性分布式数据集（RDD），实现了应用任务调度、RPC、序列化和压缩，并为运行在其上的上层组件提供API。</li>
+<li>SparkSQL：Spark Sql 是 Spark 来操作结构化数据的程序包，可以让我使用SQL语句的方式来查询数据，Spark支持 多种数据源，包含Hive表，parquest以及JSON等内容。</li>
+<li>SparkStreaming：是 Spark 提供的实时数据进行流式计算的组件。</li>
+<li>MLlib：提供常用机器学习算法的实现库。</li>
+<li>GraphX：提供一个分布式图计算框架，能高效进行图计算。</li>
+<li>BlinkDB：用于在海量数据上进行交互式SQL的近似查询引擎。</li>
+<li>Tachyon：以内存为中心高容错的的分布式文件系统。</li>
+</ul>
+<h2 id="四、集群架构"><a href="#四、集群架构" class="headerlink" title="四、集群架构"></a>四、集群架构</h2><table>
+<thead>
+<tr>
+<th>Term（术语）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application</td>
+<td>Spark 应用程序，由集群上的一个 Driver 节点和多个 Executor 节点组成。</td>
+</tr>
+<tr>
+<td>Driver program</td>
+<td>主运用程序，该进程运行 main() 方法并且创建 SparkContext</td>
+</tr>
+<tr>
+<td>Cluster manager</td>
+<td>集群资源管理器（例如，Standlone Manager，Mesos，YARN）</td>
+</tr>
+<tr>
+<td>Worker node</td>
+<td>执行计算任务的工作节点</td>
+</tr>
+<tr>
+<td>Executor</td>
+<td>位于工作节点上的应用进程，负责执行计算任务并且将输出数据保存到内存或者磁盘中</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>被发送到 Executor 中的工作单元</td>
+</tr>
+<tr>
+<td>Job</td>
+<td>一个Action算子（比如collect算子）对应一个Job，由并行计算的多个Task组成。</td>
+</tr>
+<tr>
+<td>Stage</td>
+<td>每个Job由多个Stage组成，每个Stage是一个Task集合，由DAG分割而成。</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>承载业务逻辑的运算单元，是Spark平台中可执行的最小工作单元。一个应用根据执行计划以及计算量分为多个Task。</td>
+</tr>
+</tbody></table>
+<p>Spark架构采用了分布式计算中的Master-Slave模型。Master是对应集群中的含有Master进程的节点，Slave是集群中含有Worker进程的节点。Master作为整个集群的控制器，负责整个集群的正常运行；Worker相当于是计算节点，接收主节点命令与进行状态汇报；Executor负责任务的执行；Client作为用户的客户端负责提交应用，Driver负责控制一个应用的执行。</p>
+<p><a href="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" alt="img"></a></p>
+<p><strong>执行过程</strong>：</p>
+<ol>
+<li>用户程序创建 SparkContext 后，它会连接到集群资源管理器，集群资源管理器会为用户程序分配计算资源，并启动 Executor；</li>
+<li>Driver 将计算程序划分为不同的执行阶段和多个 <code>task</code>，之后将 <code>task</code> 发送给 Executor；</li>
+<li>Executor 负责执行 Task，并将执行状态汇报给 Driver，同时也会将当前节点资源的使用情况汇报给集群资源管理器。</li>
+<li>因为Driver调度了集群上的 <code>task</code>（任务），更好的方式应该是在相同的局域网中靠近 <code>worker</code> 的节点上运行。如果你不喜欢发送请求到远程的集群，倒不如打开一个 <code>RPC</code> 至 <code>driver</code> 并让它就近提交操作而不是从很远的 <code>worker</code> 节点上运行一个 <code>driver</code>。</li>
+</ol>
+<p><strong>driver做什么</strong></p>
+<ul>
+<li>运行应用程序的main函数</li>
+<li>创建spark的上下文</li>
+<li>划分RDD并生成有向无环图（DAGScheduler）</li>
+<li>与spark中的其他组进行协调，协调资源等等（SchedulerBackend）</li>
+<li>生成并发送task到executor（taskScheduler）</li>
+</ul>
+<p><strong>driver运行在哪里（yarn模式）</strong><br>yarn-cluster模式下:client将用户程序提交到到spark集群中就与spark集群断开联系了(client可以在启动应用程序后消失)，此时client将不会发挥其他任何作用，仅仅负责提交。在此模式下,driver运行在AM(ApplicationMaster)里，可以理解为AM包括了driver的功能就像Driver运行在AM里一样，此时的AM既能够向AM申请资源并进行分配，又能完成driver划分RDD提交task等工作。</p>
+<p>yarn-client模式下:Driver运行在客户端上，先有driver再用AM，此时driver负责RDD生成、task生成和分发，向AM申请资源等 ,AM负责向RM申请资源，其他的都由driver来完成。</p>
+<h2 id="四、核心组件"><a href="#四、核心组件" class="headerlink" title="四、核心组件"></a>四、核心组件</h2><p>Spark 基于 Spark Core 扩展了四个核心组件，分别用于满足不同领域的计算需求。</p>
+<p><img src="http://img.rogermaster.top/uPic/0HsQfr.jpg" alt="0HsQfr"></p>
+<h3 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h3><p>Spark SQL 主要用于结构化数据的处理。其具有以下特点：</p>
+<ul>
+<li>能够将 SQL 查询与 Spark 程序无缝混合，允许您使用 SQL 或 DataFrame API 对结构化数据进行查询；</li>
+<li>支持多种数据源，包括 Hive，Avro，Parquet，ORC，JSON 和 JDBC；</li>
+<li>支持 HiveQL 语法以及用户自定义函数 (UDF)，允许你访问现有的 Hive 仓库；</li>
+<li>支持标准的 JDBC 和 ODBC 连接；</li>
+<li>支持优化器，列式存储和代码生成等特性，以提高查询效率。</li>
+</ul>
+<h3 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h3><p>Spark Streaming 主要用于快速构建可扩展，高吞吐量，高容错的流处理程序。支持从 HDFS，Flume，Kafka，Twitter 和 ZeroMQ 读取数据，并进行处理。</p>
+<p><img src="http://img.rogermaster.top/uPic/zcaFjF.jpg" alt="zcaFjF"></p>
+<p>Spark Streaming 的本质是微批处理，它将数据流进行极小粒度的拆分，拆分为多个批处理，从而达到接近于流处理的效果。</p>
+<p><img src="http://img.rogermaster.top/uPic/JUE5Rf.jpg" alt="JUE5Rf"></p>
+<h3 id="MLlib"><a href="#MLlib" class="headerlink" title="MLlib"></a>MLlib</h3><p>MLlib 是 Spark 的机器学习库。其设计目标是使得机器学习变得简单且可扩展。它提供了以下工具：</p>
+<ul>
+<li><strong>常见的机器学习算法</strong>：如分类，回归，聚类和协同过滤；</li>
+<li><strong>特征化</strong>：特征提取，转换，降维和选择；</li>
+<li><strong>管道</strong>：用于构建，评估和调整 ML 管道的工具；</li>
+<li><strong>持久性</strong>：保存和加载算法，模型，管道数据；</li>
+<li><strong>实用工具</strong>：线性代数，统计，数据处理等。</li>
+</ul>
+<h3 id="Graphx"><a href="#Graphx" class="headerlink" title="Graphx"></a>Graphx</h3><p>GraphX 是 Spark 中用于图形计算和图形并行计算的新组件。在高层次上，GraphX 通过引入一个新的图形抽象来扩展 RDD(一种具有附加到每个顶点和边缘的属性的定向多重图形)。为了支持图计算，GraphX 提供了一组基本运算符（如： subgraph，joinVertices 和 aggregateMessages）以及优化后的 Pregel API。此外，GraphX 还包括越来越多的图形算法和构建器，以简化图形分析任务。</p>
+<h2 id="五、RDD简介"><a href="#五、RDD简介" class="headerlink" title="五、RDD简介"></a>五、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
+<ul>
+<li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
+<li>RDD 拥有一个用于计算分区的函数 compute；</li>
+<li>RDD 会保存彼此间的依赖关系，RDD 的每次转换都会生成一个新的依赖关系，这种 RDD 之间的依赖关系就像流水线一样。在部分分区数据丢失后，可以通过这种依赖关系重新计算丢失的分区数据，而不是对 RDD 的所有分区进行重新计算；</li>
+<li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
+<li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
+</ul>
+<h2 id="六、宽依赖和窄依赖"><a href="#六、宽依赖和窄依赖" class="headerlink" title="六、宽依赖和窄依赖"></a>六、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
+<ul>
+<li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
+<li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
+</ul>
+<p>如下图，每一个方框表示一个 RDD，带有颜色的矩形表示分区：</p>
+<p><img src="http://img.rogermaster.top/uPic/EMhehb.jpg" alt="EMhehb"></p>
+<p>区分这两种依赖是非常有用的：</p>
+<ul>
+<li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
+<li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
+</ul>
+<h2 id="七、spark-常用的算子"><a href="#七、spark-常用的算子" class="headerlink" title="七、spark 常用的算子"></a>七、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
+<thead>
+<tr>
+<th>Transformation 算子</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>map</strong>(<em>func</em>)</td>
+<td>对原 RDD 中每个元素运用 <em>func</em> 函数，并生成新的 RDD</td>
+</tr>
+<tr>
+<td><strong>filter</strong>(<em>func</em>)</td>
+<td>对原 RDD 中每个元素使用<em>func</em> 函数进行过滤，并生成新的 RDD</td>
+</tr>
+<tr>
+<td><strong>flatMap</strong>(<em>func</em>)</td>
+<td>与 map 类似，但是每一个输入的 item 被映射成 0 个或多个输出的 items（ <em>func</em> 返回类型需要为 Seq ）。</td>
+</tr>
+<tr>
+<td><strong>mapPartitions</strong>(<em>func</em>)</td>
+<td>与 map 类似，但函数单独在 RDD 的每个分区上运行， <em>func</em>函数的类型为 Iterator<t> =&gt; Iterator<u> ，其中 T 是 RDD 的类型，即 RDD[T]</u></t></td>
+</tr>
+<tr>
+<td><strong>mapPartitionsWithIndex</strong>(<em>func</em>)</td>
+<td>与 mapPartitions 类似，但 <em>func</em> 类型为 (Int, Iterator<t>) =&gt; Iterator<u> ，其中第一个参数为分区索引</u></t></td>
+</tr>
+<tr>
+<td><strong>sample</strong>(<em>withReplacement</em>, <em>fraction</em>, <em>seed</em>)</td>
+<td>数据采样，有三个可选参数：设置是否放回（withReplacement）、采样的百分比（<em>fraction</em>）、随机数生成器的种子（seed）；</td>
+</tr>
+<tr>
+<td><strong>union</strong>(<em>otherDataset</em>)</td>
+<td>合并两个 RDD</td>
+</tr>
+<tr>
+<td><strong>intersection</strong>(<em>otherDataset</em>)</td>
+<td>求两个 RDD 的交集</td>
+</tr>
+<tr>
+<td><strong>distinct</strong>([<em>numTasks</em>]))</td>
+<td>去重</td>
+</tr>
+<tr>
+<td><strong>groupByKey</strong>([<em>numTasks</em>])</td>
+<td>按照 key 值进行分区，即在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, Iterable<v>) <strong>Note:</strong> 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 <code>reduceByKey</code> 或 <code>aggregateByKey</code> 性能会更好 <strong>Note:</strong> 默认情况下，并行度取决于父 RDD 的分区数。可以传入 <code>numTasks</code> 参数进行修改。</v></td>
+</tr>
+<tr>
+<td><strong>reduceByKey</strong>(<em>func</em>, [<em>numTasks</em>])</td>
+<td>按照 key 值进行分组，并对分组后的数据执行归约操作。</td>
+</tr>
+<tr>
+<td><strong>aggregateByKey</strong>(<em>zeroValue</em>,<em>numPartitions</em>)(<em>seqOp</em>, <em>combOp</em>, [<em>numTasks</em>])</td>
+<td>当调用（K，V）对的数据集时，返回（K，U）对的数据集，其中使用给定的组合函数和 zeroValue 聚合每个键的值。与 groupByKey 类似，reduce 任务的数量可通过第二个参数进行配置。</td>
+</tr>
+<tr>
+<td><strong>sortByKey</strong>([<em>ascending</em>], [<em>numTasks</em>])</td>
+<td>按照 key 进行排序，其中的 key 需要实现 Ordered 特质，即可比较</td>
+</tr>
+<tr>
+<td><strong>join</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
+<td>在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，等价于内连接操作。如果想要执行外连接，可以使用 <code>leftOuterJoin</code>, <code>rightOuterJoin</code> 和 <code>fullOuterJoin</code> 等算子。</td>
+</tr>
+<tr>
+<td><strong>cogroup</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
+<td>在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, (Iterable<v>, Iterable<w>)) tuples 的 dataset。</w></v></td>
+</tr>
+<tr>
+<td><strong>cartesian</strong>(<em>otherDataset</em>)</td>
+<td>在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) 类型的 dataset（即笛卡尔积）。</td>
+</tr>
+<tr>
+<td><strong>coalesce</strong>(<em>numPartitions</em>)</td>
+<td>将 RDD 中的分区数减少为 numPartitions。</td>
+</tr>
+<tr>
+<td><strong>repartition</strong>(<em>numPartitions</em>)</td>
+<td>随机重新调整 RDD 中的数据以创建更多或更少的分区，并在它们之间进行平衡。</td>
+</tr>
+<tr>
+<td><strong>repartitionAndSortWithinPartitions</strong>(<em>partitioner</em>)</td>
+<td>根据给定的 partitioner（分区器）对 RDD 进行重新分区，并对分区中的数据按照 key 值进行排序。这比调用 <code>repartition</code> 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作所在的机器。</td>
+</tr>
+</tbody></table>
+<h3 id="Spark-常用的-Action-算子"><a href="#Spark-常用的-Action-算子" class="headerlink" title="Spark 常用的 Action 算子"></a>Spark 常用的 Action 算子</h3><table>
+<thead>
+<tr>
+<th>Action（动作）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>reduce</strong>(<em>func</em>)</td>
+<td>使用函数<em>func</em>执行归约操作</td>
+</tr>
+<tr>
+<td><strong>collect</strong>()</td>
+<td>以一个 array 数组的形式返回 dataset 的所有元素，适用于小结果集。</td>
+</tr>
+<tr>
+<td><strong>count</strong>()</td>
+<td>返回 dataset 中元素的个数。</td>
+</tr>
+<tr>
+<td><strong>first</strong>()</td>
+<td>返回 dataset 中的第一个元素，等价于 take(1)。</td>
+</tr>
+<tr>
+<td><strong>take</strong>(<em>n</em>)</td>
+<td>将数据集中的前 <em>n</em> 个元素作为一个 array 数组返回。</td>
+</tr>
+<tr>
+<td><strong>takeSample</strong>(<em>withReplacement</em>, <em>num</em>, [<em>seed</em>])</td>
+<td>对一个 dataset 进行随机抽样</td>
+</tr>
+<tr>
+<td><strong>takeOrdered</strong>(<em>n</em>, <em>[ordering]</em>)</td>
+<td>按自然顺序（natural order）或自定义比较器（custom comparator）排序后返回前 <em>n</em> 个元素。只适用于小结果集，因为所有数据都会被加载到驱动程序的内存中进行排序。</td>
+</tr>
+<tr>
+<td><strong>saveAsTextFile</strong>(<em>path</em>)</td>
+<td>将 dataset 中的元素以文本文件的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。Spark 将对每个元素调用 toString 方法，将元素转换为文本文件中的一行记录。</td>
+</tr>
+<tr>
+<td><strong>saveAsSequenceFile</strong>(<em>path</em>)</td>
+<td>将 dataset 中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。该操作要求 RDD 中的元素需要实现 Hadoop 的 Writable 接口。对于 Scala 语言而言，它可以将 Spark 中的基本数据类型自动隐式转换为对应 Writable 类型。(目前仅支持 Java and Scala)</td>
+</tr>
+<tr>
+<td><strong>saveAsObjectFile</strong>(<em>path</em>)</td>
+<td>使用 Java 序列化后存储，可以使用 <code>SparkContext.objectFile()</code> 进行加载。(目前仅支持 Java and Scala)</td>
+</tr>
+<tr>
+<td><strong>countByKey</strong>()</td>
+<td>计算每个键出现的次数。</td>
+</tr>
+<tr>
+<td><strong>foreach</strong>(<em>func</em>)</td>
+<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Hadoop</tag>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(三)————Hive</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%89-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Hive/</url>
+    <content><![CDATA[<h1 id="文章更新中，请耐心期待"><a href="#文章更新中，请耐心期待" class="headerlink" title="文章更新中，请耐心期待"></a>文章更新中，请耐心期待</h1>]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>spring boot</tag>
+        <tag>Hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(二)————HDFS</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
+    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
+<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
+<ul>
+<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
+<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
+<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
+</ul>
+<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
+<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
+<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
+<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
+<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
+<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
+<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
+<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
+<table>
+<thead>
+<tr>
+<th><strong>RAID 等级</strong></th>
+<th><strong>RAID0</strong></th>
+<th><strong>RAID1</strong></th>
+<th><strong>RAID3</strong></th>
+<th><strong>RAID5</strong></th>
+<th><strong>RAID6</strong></th>
+<th><strong>RAID10</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>别名</strong></td>
+<td>条带</td>
+<td>镜像</td>
+<td>专用奇偶校验条带</td>
+<td>分布奇偶校验条带</td>
+<td>双重奇偶校验条带</td>
+<td>镜像加条带</td>
+</tr>
+<tr>
+<td><strong>容错性</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>冗余类型</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>热备份选择</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>读性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>随机写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>连续写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>需要磁盘数</strong></td>
+<td>n≥1</td>
+<td>2n (n≥1)</td>
+<td>n≥3</td>
+<td>n≥3</td>
+<td>n≥4</td>
+<td>2n(n≥2)≥4</td>
+</tr>
+<tr>
+<td><strong>可用容量</strong></td>
+<td>全部</td>
+<td>50%</td>
+<td>(n-1)/n</td>
+<td>(n-1)/n</td>
+<td>(n-2)/n</td>
+<td>50%</td>
+</tr>
+</tbody></table>
+<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
+<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
+<p>HDFS的架构：主从架构，三大角色</p>
+<ol>
+<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
+<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
+<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
+</ol>
+<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
+<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
+<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
+<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
+<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
+<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
+
+<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
+<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
+<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
+<p>FileSystem 是所有 HDFS 操作的主入口。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. 显示当前目录结构</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 显示当前目录结构</span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归显示当前目录结构</span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 显示根目录下内容</span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 创建目录</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 创建目录</span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 递归创建目录</span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 删除操作</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 删除文件</span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归删除目录和文件</span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 从本地加载文件到 HDFS</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>6. 查看文件内容</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
+
+<p><strong>7. 显示文件的最后一千字节</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8. 拷贝文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>9. 移动文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>10. 统计当前目录下各文件大小</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>默认单位字节</li>
+<li>-s : 显示所有文件大小总和，</li>
+<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>11. 合并下载多个文件</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>-nl 在每个文件的末尾添加换行符（LF）</li>
+<li>-skip-empty-file 跳过空文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+
+<p><strong>12. 统计文件系统的可用空间信息</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
+
+<p><strong>13. 更改文件复制因子</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
+<li>-w : 请求命令是否等待复制完成</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
+
+<p><strong>14. 权限控制</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 权限控制和Linux上使用方式一致</span><br><span class="line"><span class="meta">#</span> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件的拥有者  用户必须是超级用户。</span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>15. 文件检测</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
+
+<p>可选选项：</p>
+<ul>
+<li>-d：如果路径是目录，返回 0。</li>
+<li>-e：如果路径存在，则返回 0。</li>
+<li>-f：如果路径是文件，则返回 0。</li>
+<li>-s：如果路径不为空，则返回 0。</li>
+<li>-r：如果路径存在且授予读权限，则返回 0。</li>
+<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
+<li>-z：如果文件长度为零，则返回 0。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 示例</span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Hadoop</tag>
+        <tag>spring boot</tag>
       </tags>
   </entry>
   <entry>
@@ -402,625 +1057,9 @@
         <category>大数据</category>
       </categories>
       <tags>
-        <tag>spring boot</tag>
         <tag>大数据</tag>
         <tag>Hadoop</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java大数据开发入门系列(四)————Spark简介</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>Spark 于 2009 年诞生于加州大学伯克利分校 AMPLab，2013 年被捐赠给 Apache 软件基金会，2014 年 2 月成为 Apache 的顶级项目。相对于 MapReduce 的批处理计算，Spark 可以带来上百倍的性能提升，因此它成为继 MapReduce 之后，最为广泛使用的分布式计算框架。</p>
-<h2 id="二、Spark产生背景"><a href="#二、Spark产生背景" class="headerlink" title="二、Spark产生背景"></a>二、Spark产生背景</h2><p>Spark 是在 MapReduce 的基础上产生的，借鉴了大量 MapReduce 实践经验，引入多种新型涉及思想和优化策略。针对MapReduce计算框架存在的局限性进行分析，能更好的了解到 Spark。</p>
-<p>MapReduce 的局限性如下:</p>
-<p>1、处理效率低效</p>
-<ul>
-<li>Map中间结果写磁盘，Reduce写HDFS，多个MR之间通过HDFS交换数据</li>
-<li>任务调度和启动开销大</li>
-<li>无法充分利用内存</li>
-<li>Map 端和 Reduce 端均需要排序</li>
-<li>复杂功能 Io 开销大，对于复杂 sql，需转换 MapReduce 计算，需要通过 HDFS 进行磁盘数据交换，而读写Hfds需消耗大量磁盘和网络 IO</li>
-</ul>
-<p>2、 不适合迭代计算（如机器学习、图计算等），交互式处理（数据挖掘） 和流式处理（点击日志分析）<br>3、 MapReduce 编程不够灵活</p>
-<ul>
-<li>仅支持 Map 和 Reduce 两种操作</li>
-<li>尝试函数式编程风格</li>
-</ul>
-<p>4、计算框架多样化、无形中产生运维和管理成本</p>
-<h2 id="三、特点"><a href="#三、特点" class="headerlink" title="三、特点"></a>三、特点</h2><p>Spark 是基与 MapReduce 基础产生了，克服了其存在的性能低下，变成不够灵活的缺点。</p>
-<p>Spark 作为一种 DAG 计算框架，主要特点如下:</p>
-<p>Apache Spark 具有以下特点：</p>
-<ul>
-<li>使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证；</li>
-<li>多语言支持，目前支持的有 Java，Scala，Python 和 R；</li>
-<li>提供了 80 多个高级 API，可以轻松地构建应用程序；</li>
-<li>支持批处理，流处理和复杂的业务分析；</li>
-<li>丰富的类库支持：包括 SQL，MLlib，GraphX 和 Spark Streaming 等库，并且可以将它们无缝地进行组合；</li>
-<li>丰富的部署模式：支持本地模式和自带的集群模式，也支持在 Hadoop，Mesos，Kubernetes 上运行；</li>
-<li>多数据源支持：支持访问 HDFS，Alluxio，Cassandra，HBase，Hive 以及数百个其他数据源中的数据。</li>
-</ul>
-<p><img src="http://img.rogermaster.top/uPic/r9I3DA.jpg" alt="r9I3DA"></p>
-<h2 id="三、Spark的组成"><a href="#三、Spark的组成" class="headerlink" title="三、Spark的组成"></a>三、Spark的组成</h2><p>Spark组成(BDAS)：全称伯克利数据分析栈，通过大规模集成算法、机器、人之间展现大数据应用的一个平台。也是处理大数据、云计算、通信的技术解决方案。</p>
-<p>它的主要组件有：</p>
-<ul>
-<li>SparkCore：将分布式数据抽象为弹性分布式数据集（RDD），实现了应用任务调度、RPC、序列化和压缩，并为运行在其上的上层组件提供API。</li>
-<li>SparkSQL：Spark Sql 是 Spark 来操作结构化数据的程序包，可以让我使用SQL语句的方式来查询数据，Spark支持 多种数据源，包含Hive表，parquest以及JSON等内容。</li>
-<li>SparkStreaming：是 Spark 提供的实时数据进行流式计算的组件。</li>
-<li>MLlib：提供常用机器学习算法的实现库。</li>
-<li>GraphX：提供一个分布式图计算框架，能高效进行图计算。</li>
-<li>BlinkDB：用于在海量数据上进行交互式SQL的近似查询引擎。</li>
-<li>Tachyon：以内存为中心高容错的的分布式文件系统。</li>
-</ul>
-<h2 id="四、集群架构"><a href="#四、集群架构" class="headerlink" title="四、集群架构"></a>四、集群架构</h2><table>
-<thead>
-<tr>
-<th>Term（术语）</th>
-<th>Meaning（含义）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Application</td>
-<td>Spark 应用程序，由集群上的一个 Driver 节点和多个 Executor 节点组成。</td>
-</tr>
-<tr>
-<td>Driver program</td>
-<td>主运用程序，该进程运行应用的 main() 方法并且创建 SparkContext</td>
-</tr>
-<tr>
-<td>Cluster manager</td>
-<td>集群资源管理器（例如，Standlone Manager，Mesos，YARN）</td>
-</tr>
-<tr>
-<td>Worker node</td>
-<td>执行计算任务的工作节点</td>
-</tr>
-<tr>
-<td>Executor</td>
-<td>位于工作节点上的应用进程，负责执行计算任务并且将输出数据保存到内存或者磁盘中</td>
-</tr>
-<tr>
-<td>Task</td>
-<td>被发送到 Executor 中的工作单元</td>
-</tr>
-<tr>
-<td>Job</td>
-<td>一个Action算子（比如collect算子）对应一个Job，由并行计算的多个Task组成。</td>
-</tr>
-<tr>
-<td>Stage</td>
-<td>每个Job由多个Stage组成，每个Stage是一个Task集合，由DAG分割而成。</td>
-</tr>
-<tr>
-<td>Task</td>
-<td>承载业务逻辑的运算单元，是Spark平台中可执行的最小工作单元。一个应用根据执行计划以及计算量分为多个Task。</td>
-</tr>
-</tbody></table>
-<p>Spark架构采用了分布式计算中的Master-Slave模型。Master是对应集群中的含有Master进程的节点，Slave是集群中含有Worker进程的节点。Master作为整个集群的控制器，负责整个集群的正常运行；Worker相当于是计算节点，接收主节点命令与进行状态汇报；Executor负责任务的执行；Client作为用户的客户端负责提交应用，Driver负责控制一个应用的执行。</p>
-<p><a href="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" alt="img"></a></p>
-<p><strong>执行过程</strong>：</p>
-<ol>
-<li>用户程序创建 SparkContext 后，它会连接到集群资源管理器，集群资源管理器会为用户程序分配计算资源，并启动 Executor；</li>
-<li>Driver 将计算程序划分为不同的执行阶段和多个 Task，之后将 Task 发送给 Executor；</li>
-<li>Executor 负责执行 Task，并将执行状态汇报给 Driver，同时也会将当前节点资源的使用情况汇报给集群资源管理器。</li>
-</ol>
-<h2 id="四、核心组件"><a href="#四、核心组件" class="headerlink" title="四、核心组件"></a>四、核心组件</h2><p>Spark 基于 Spark Core 扩展了四个核心组件，分别用于满足不同领域的计算需求。</p>
-<p><img src="http://img.rogermaster.top/uPic/0HsQfr.jpg" alt="0HsQfr"></p>
-<h3 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h3><p>Spark SQL 主要用于结构化数据的处理。其具有以下特点：</p>
-<ul>
-<li>能够将 SQL 查询与 Spark 程序无缝混合，允许您使用 SQL 或 DataFrame API 对结构化数据进行查询；</li>
-<li>支持多种数据源，包括 Hive，Avro，Parquet，ORC，JSON 和 JDBC；</li>
-<li>支持 HiveQL 语法以及用户自定义函数 (UDF)，允许你访问现有的 Hive 仓库；</li>
-<li>支持标准的 JDBC 和 ODBC 连接；</li>
-<li>支持优化器，列式存储和代码生成等特性，以提高查询效率。</li>
-</ul>
-<h3 id="Spark-Streaming"><a href="#Spark-Streaming" class="headerlink" title="Spark Streaming"></a>Spark Streaming</h3><p>Spark Streaming 主要用于快速构建可扩展，高吞吐量，高容错的流处理程序。支持从 HDFS，Flume，Kafka，Twitter 和 ZeroMQ 读取数据，并进行处理。</p>
-<p><img src="http://img.rogermaster.top/uPic/zcaFjF.jpg" alt="zcaFjF"></p>
-<p>Spark Streaming 的本质是微批处理，它将数据流进行极小粒度的拆分，拆分为多个批处理，从而达到接近于流处理的效果。</p>
-<p><img src="http://img.rogermaster.top/uPic/JUE5Rf.jpg" alt="JUE5Rf"></p>
-<h3 id="MLlib"><a href="#MLlib" class="headerlink" title="MLlib"></a>MLlib</h3><p>MLlib 是 Spark 的机器学习库。其设计目标是使得机器学习变得简单且可扩展。它提供了以下工具：</p>
-<ul>
-<li><strong>常见的机器学习算法</strong>：如分类，回归，聚类和协同过滤；</li>
-<li><strong>特征化</strong>：特征提取，转换，降维和选择；</li>
-<li><strong>管道</strong>：用于构建，评估和调整 ML 管道的工具；</li>
-<li><strong>持久性</strong>：保存和加载算法，模型，管道数据；</li>
-<li><strong>实用工具</strong>：线性代数，统计，数据处理等。</li>
-</ul>
-<h3 id="Graphx"><a href="#Graphx" class="headerlink" title="Graphx"></a>Graphx</h3><p>GraphX 是 Spark 中用于图形计算和图形并行计算的新组件。在高层次上，GraphX 通过引入一个新的图形抽象来扩展 RDD(一种具有附加到每个顶点和边缘的属性的定向多重图形)。为了支持图计算，GraphX 提供了一组基本运算符（如： subgraph，joinVertices 和 aggregateMessages）以及优化后的 Pregel API。此外，GraphX 还包括越来越多的图形算法和构建器，以简化图形分析任务。</p>
-<h2 id="五、RDD简介"><a href="#五、RDD简介" class="headerlink" title="五、RDD简介"></a>五、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
-<ul>
-<li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
-<li>RDD 拥有一个用于计算分区的函数 compute；</li>
-<li>RDD 会保存彼此间的依赖关系，RDD 的每次转换都会生成一个新的依赖关系，这种 RDD 之间的依赖关系就像流水线一样。在部分分区数据丢失后，可以通过这种依赖关系重新计算丢失的分区数据，而不是对 RDD 的所有分区进行重新计算；</li>
-<li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
-<li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
-</ul>
-<h2 id="六、宽依赖和窄依赖"><a href="#六、宽依赖和窄依赖" class="headerlink" title="六、宽依赖和窄依赖"></a>六、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
-<ul>
-<li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
-<li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
-</ul>
-<p>如下图，每一个方框表示一个 RDD，带有颜色的矩形表示分区：</p>
-<p><img src="http://img.rogermaster.top/uPic/EMhehb.jpg" alt="EMhehb"></p>
-<p>区分这两种依赖是非常有用的：</p>
-<ul>
-<li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
-<li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
-</ul>
-<h2 id="七、spark-常用的算子"><a href="#七、spark-常用的算子" class="headerlink" title="七、spark 常用的算子"></a>七、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
-<thead>
-<tr>
-<th>Transformation 算子</th>
-<th>Meaning（含义）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>map</strong>(<em>func</em>)</td>
-<td>对原 RDD 中每个元素运用 <em>func</em> 函数，并生成新的 RDD</td>
-</tr>
-<tr>
-<td><strong>filter</strong>(<em>func</em>)</td>
-<td>对原 RDD 中每个元素使用<em>func</em> 函数进行过滤，并生成新的 RDD</td>
-</tr>
-<tr>
-<td><strong>flatMap</strong>(<em>func</em>)</td>
-<td>与 map 类似，但是每一个输入的 item 被映射成 0 个或多个输出的 items（ <em>func</em> 返回类型需要为 Seq ）。</td>
-</tr>
-<tr>
-<td><strong>mapPartitions</strong>(<em>func</em>)</td>
-<td>与 map 类似，但函数单独在 RDD 的每个分区上运行， <em>func</em>函数的类型为 Iterator<t> =&gt; Iterator<u> ，其中 T 是 RDD 的类型，即 RDD[T]</u></t></td>
-</tr>
-<tr>
-<td><strong>mapPartitionsWithIndex</strong>(<em>func</em>)</td>
-<td>与 mapPartitions 类似，但 <em>func</em> 类型为 (Int, Iterator<t>) =&gt; Iterator<u> ，其中第一个参数为分区索引</u></t></td>
-</tr>
-<tr>
-<td><strong>sample</strong>(<em>withReplacement</em>, <em>fraction</em>, <em>seed</em>)</td>
-<td>数据采样，有三个可选参数：设置是否放回（withReplacement）、采样的百分比（<em>fraction</em>）、随机数生成器的种子（seed）；</td>
-</tr>
-<tr>
-<td><strong>union</strong>(<em>otherDataset</em>)</td>
-<td>合并两个 RDD</td>
-</tr>
-<tr>
-<td><strong>intersection</strong>(<em>otherDataset</em>)</td>
-<td>求两个 RDD 的交集</td>
-</tr>
-<tr>
-<td><strong>distinct</strong>([<em>numTasks</em>]))</td>
-<td>去重</td>
-</tr>
-<tr>
-<td><strong>groupByKey</strong>([<em>numTasks</em>])</td>
-<td>按照 key 值进行分区，即在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, Iterable<v>) <strong>Note:</strong> 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 <code>reduceByKey</code> 或 <code>aggregateByKey</code> 性能会更好 <strong>Note:</strong> 默认情况下，并行度取决于父 RDD 的分区数。可以传入 <code>numTasks</code> 参数进行修改。</v></td>
-</tr>
-<tr>
-<td><strong>reduceByKey</strong>(<em>func</em>, [<em>numTasks</em>])</td>
-<td>按照 key 值进行分组，并对分组后的数据执行归约操作。</td>
-</tr>
-<tr>
-<td><strong>aggregateByKey</strong>(<em>zeroValue</em>,<em>numPartitions</em>)(<em>seqOp</em>, <em>combOp</em>, [<em>numTasks</em>])</td>
-<td>当调用（K，V）对的数据集时，返回（K，U）对的数据集，其中使用给定的组合函数和 zeroValue 聚合每个键的值。与 groupByKey 类似，reduce 任务的数量可通过第二个参数进行配置。</td>
-</tr>
-<tr>
-<td><strong>sortByKey</strong>([<em>ascending</em>], [<em>numTasks</em>])</td>
-<td>按照 key 进行排序，其中的 key 需要实现 Ordered 特质，即可比较</td>
-</tr>
-<tr>
-<td><strong>join</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
-<td>在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，等价于内连接操作。如果想要执行外连接，可以使用 <code>leftOuterJoin</code>, <code>rightOuterJoin</code> 和 <code>fullOuterJoin</code> 等算子。</td>
-</tr>
-<tr>
-<td><strong>cogroup</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
-<td>在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, (Iterable<v>, Iterable<w>)) tuples 的 dataset。</w></v></td>
-</tr>
-<tr>
-<td><strong>cartesian</strong>(<em>otherDataset</em>)</td>
-<td>在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) 类型的 dataset（即笛卡尔积）。</td>
-</tr>
-<tr>
-<td><strong>coalesce</strong>(<em>numPartitions</em>)</td>
-<td>将 RDD 中的分区数减少为 numPartitions。</td>
-</tr>
-<tr>
-<td><strong>repartition</strong>(<em>numPartitions</em>)</td>
-<td>随机重新调整 RDD 中的数据以创建更多或更少的分区，并在它们之间进行平衡。</td>
-</tr>
-<tr>
-<td><strong>repartitionAndSortWithinPartitions</strong>(<em>partitioner</em>)</td>
-<td>根据给定的 partitioner（分区器）对 RDD 进行重新分区，并对分区中的数据按照 key 值进行排序。这比调用 <code>repartition</code> 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作所在的机器。</td>
-</tr>
-</tbody></table>
-<h3 id="Spark-常用的-Action-算子"><a href="#Spark-常用的-Action-算子" class="headerlink" title="Spark 常用的 Action 算子"></a>Spark 常用的 Action 算子</h3><table>
-<thead>
-<tr>
-<th>Action（动作）</th>
-<th>Meaning（含义）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>reduce</strong>(<em>func</em>)</td>
-<td>使用函数<em>func</em>执行归约操作</td>
-</tr>
-<tr>
-<td><strong>collect</strong>()</td>
-<td>以一个 array 数组的形式返回 dataset 的所有元素，适用于小结果集。</td>
-</tr>
-<tr>
-<td><strong>count</strong>()</td>
-<td>返回 dataset 中元素的个数。</td>
-</tr>
-<tr>
-<td><strong>first</strong>()</td>
-<td>返回 dataset 中的第一个元素，等价于 take(1)。</td>
-</tr>
-<tr>
-<td><strong>take</strong>(<em>n</em>)</td>
-<td>将数据集中的前 <em>n</em> 个元素作为一个 array 数组返回。</td>
-</tr>
-<tr>
-<td><strong>takeSample</strong>(<em>withReplacement</em>, <em>num</em>, [<em>seed</em>])</td>
-<td>对一个 dataset 进行随机抽样</td>
-</tr>
-<tr>
-<td><strong>takeOrdered</strong>(<em>n</em>, <em>[ordering]</em>)</td>
-<td>按自然顺序（natural order）或自定义比较器（custom comparator）排序后返回前 <em>n</em> 个元素。只适用于小结果集，因为所有数据都会被加载到驱动程序的内存中进行排序。</td>
-</tr>
-<tr>
-<td><strong>saveAsTextFile</strong>(<em>path</em>)</td>
-<td>将 dataset 中的元素以文本文件的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。Spark 将对每个元素调用 toString 方法，将元素转换为文本文件中的一行记录。</td>
-</tr>
-<tr>
-<td><strong>saveAsSequenceFile</strong>(<em>path</em>)</td>
-<td>将 dataset 中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。该操作要求 RDD 中的元素需要实现 Hadoop 的 Writable 接口。对于 Scala 语言而言，它可以将 Spark 中的基本数据类型自动隐式转换为对应 Writable 类型。(目前仅支持 Java and Scala)</td>
-</tr>
-<tr>
-<td><strong>saveAsObjectFile</strong>(<em>path</em>)</td>
-<td>使用 Java 序列化后存储，可以使用 <code>SparkContext.objectFile()</code> 进行加载。(目前仅支持 Java and Scala)</td>
-</tr>
-<tr>
-<td><strong>countByKey</strong>()</td>
-<td>计算每个键出现的次数。</td>
-</tr>
-<tr>
-<td><strong>foreach</strong>(<em>func</em>)</td>
-<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
         <tag>spring boot</tag>
-        <tag>大数据</tag>
-        <tag>Hadoop</tag>
-        <tag>spark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java大数据开发入门系列(二)————HDFS</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
-    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
-<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
-<ul>
-<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
-<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
-<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
-</ul>
-<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
-<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
-<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
-<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
-<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
-<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
-<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
-<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
-<table>
-<thead>
-<tr>
-<th><strong>RAID 等级</strong></th>
-<th><strong>RAID0</strong></th>
-<th><strong>RAID1</strong></th>
-<th><strong>RAID3</strong></th>
-<th><strong>RAID5</strong></th>
-<th><strong>RAID6</strong></th>
-<th><strong>RAID10</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>别名</strong></td>
-<td>条带</td>
-<td>镜像</td>
-<td>专用奇偶校验条带</td>
-<td>分布奇偶校验条带</td>
-<td>双重奇偶校验条带</td>
-<td>镜像加条带</td>
-</tr>
-<tr>
-<td><strong>容错性</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>冗余类型</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>热备份选择</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>读性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-</tr>
-<tr>
-<td><strong>随机写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>连续写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>需要磁盘数</strong></td>
-<td>n≥1</td>
-<td>2n (n≥1)</td>
-<td>n≥3</td>
-<td>n≥3</td>
-<td>n≥4</td>
-<td>2n(n≥2)≥4</td>
-</tr>
-<tr>
-<td><strong>可用容量</strong></td>
-<td>全部</td>
-<td>50%</td>
-<td>(n-1)/n</td>
-<td>(n-1)/n</td>
-<td>(n-2)/n</td>
-<td>50%</td>
-</tr>
-</tbody></table>
-<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
-<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
-<p>HDFS的架构：主从架构，三大角色</p>
-<ol>
-<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
-<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
-<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
-</ol>
-<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
-<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
-<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
-<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
-<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
-<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
-
-<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
-<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
-<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
-<p>FileSystem 是所有 HDFS 操作的主入口。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. 显示当前目录结构</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. 创建目录</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>3. 删除操作</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>4. 从本地加载文件到 HDFS</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
-
-<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>6. 查看文件内容</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
-
-<p><strong>7. 显示文件的最后一千字节</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>8. 拷贝文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>9. 移动文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>10. 统计当前目录下各文件大小</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>默认单位字节</li>
-<li>-s : 显示所有文件大小总和，</li>
-<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>11. 合并下载多个文件</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>-nl 在每个文件的末尾添加换行符（LF）</li>
-<li>-skip-empty-file 跳过空文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
-
-<p><strong>12. 统计文件系统的可用空间信息</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
-
-<p><strong>13. 更改文件复制因子</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
-<li>-w : 请求命令是否等待复制完成</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
-
-<p><strong>14. 权限控制</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
-
-<p><strong>15. 文件检测</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
-
-<p>可选选项：</p>
-<ul>
-<li>-d：如果路径是目录，返回 0。</li>
-<li>-e：如果路径存在，则返回 0。</li>
-<li>-f：如果路径是文件，则返回 0。</li>
-<li>-s：如果路径不为空，则返回 0。</li>
-<li>-r：如果路径存在且授予读权限，则返回 0。</li>
-<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
-<li>-z：如果文件长度为零，则返回 0。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>大数据</tag>
-        <tag>Hadoop</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>anconda常用命令</title>
-    <url>/passages/anconda%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="http://pvqnwtxgq.bkt.clouddn.com/conda.png" alt="常用命令图"></p>
-<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>anaconda</category>
-      </categories>
-      <tags>
-        <tag>anaconda</tag>
-        <tag>命令行</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>apache2 常用操作命令</title>
-    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
-]]></content>
-      <categories>
-        <category>服务器部署</category>
-      </categories>
-      <tags>
-        <tag>服务器部署</tag>
-        <tag>liunx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/passages/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>tensorflow2.0入门系列(一)</title>
-    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="tensorflow2入门教程（-）"><a href="#tensorflow2入门教程（-）" class="headerlink" title="tensorflow2入门教程（-）"></a>tensorflow2入门教程（-）</h1><h3 id="导入TensorFlow2-0"><a href="#导入TensorFlow2-0" class="headerlink" title="导入TensorFlow2.0"></a>导入TensorFlow2.0</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
-
-<p>MNIST数据集是一个手写数据集，其中有60,000张训练图片, 和10,000张训练图片，是深度学习常被用来入门的数据集</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#加载mnist数据</span></span><br><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取训练数据和测试数据，将样本从整数转换为浮点数</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="构建深度学习模型"><a href="#构建深度学习模型" class="headerlink" title="构建深度学习模型"></a>构建深度学习模型</h3><p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
-<p>softmax用于多分类过程中，它将多个神经元的输出，映射到（0,1）区间内，可以看成概率来理解，从而来进行多分类！</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#tf.keras.models.Sequential为Keras提供的层叠模型</span></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">  <span class="comment">#输入层，输入的shape是28X28（图片大小是28X28）  ,tf.keras.layers.Flatten()将输入展平，将多维数据展层一维，降维打击</span></span><br><span class="line">  tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">  <span class="comment">#隐藏层一，输出shape是128，激励函数是relu,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">  <span class="comment">#Dropout一些神经元，能够有效地处理在训练过程中产生的过拟合问题</span></span><br><span class="line">  tf.keras.layers.Dropout(<span class="number">0</span>.<span class="number">2</span>),</span><br><span class="line">  <span class="comment">#输出层，shape为10分别对应着0-9这几个手写数字，激励函数为softmax，将特征值转换为在各个分类上的概率，,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-
-<p>构建好模型后，通过调用 compile 方法配置该模型的学习流程</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用adam优化器，损失函数为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
-
-<h3 id="训练并验证模型"><a href="#训练并验证模型" class="headerlink" title="训练并验证模型"></a>训练并验证模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>tensorflow2.0</category>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>tensorflow2.0</tag>
-        <tag>深度学习</tag>
       </tags>
   </entry>
   <entry>
@@ -1221,6 +1260,83 @@
       <tags>
         <tag>spring boot</tag>
         <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>anconda常用命令</title>
+    <url>/passages/anconda%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="http://pvqnwtxgq.bkt.clouddn.com/conda.png" alt="常用命令图"></p>
+<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>anaconda</category>
+      </categories>
+      <tags>
+        <tag>anaconda</tag>
+        <tag>命令行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>apache2 常用操作命令</title>
+    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
+]]></content>
+      <categories>
+        <category>服务器部署</category>
+      </categories>
+      <tags>
+        <tag>服务器部署</tag>
+        <tag>liunx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/passages/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>tensorflow2.0入门系列(一)</title>
+    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="tensorflow2入门教程（-）"><a href="#tensorflow2入门教程（-）" class="headerlink" title="tensorflow2入门教程（-）"></a>tensorflow2入门教程（-）</h1><h3 id="导入TensorFlow2-0"><a href="#导入TensorFlow2-0" class="headerlink" title="导入TensorFlow2.0"></a>导入TensorFlow2.0</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
+
+<p>MNIST数据集是一个手写数据集，其中有60,000张训练图片, 和10,000张训练图片，是深度学习常被用来入门的数据集</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#加载mnist数据</span></span><br><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取训练数据和测试数据，将样本从整数转换为浮点数</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="构建深度学习模型"><a href="#构建深度学习模型" class="headerlink" title="构建深度学习模型"></a>构建深度学习模型</h3><p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
+<p>softmax用于多分类过程中，它将多个神经元的输出，映射到（0,1）区间内，可以看成概率来理解，从而来进行多分类！</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#tf.keras.models.Sequential为Keras提供的层叠模型</span></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">  <span class="comment">#输入层，输入的shape是28X28（图片大小是28X28）  ,tf.keras.layers.Flatten()将输入展平，将多维数据展层一维，降维打击</span></span><br><span class="line">  tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">  <span class="comment">#隐藏层一，输出shape是128，激励函数是relu,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">  <span class="comment">#Dropout一些神经元，能够有效地处理在训练过程中产生的过拟合问题</span></span><br><span class="line">  tf.keras.layers.Dropout(<span class="number">0</span>.<span class="number">2</span>),</span><br><span class="line">  <span class="comment">#输出层，shape为10分别对应着0-9这几个手写数字，激励函数为softmax，将特征值转换为在各个分类上的概率，,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+
+<p>构建好模型后，通过调用 compile 方法配置该模型的学习流程</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用adam优化器，损失函数为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="训练并验证模型"><a href="#训练并验证模型" class="headerlink" title="训练并验证模型"></a>训练并验证模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>tensorflow2.0</category>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>tensorflow2.0</tag>
+        <tag>深度学习</tag>
       </tags>
   </entry>
   <entry>
