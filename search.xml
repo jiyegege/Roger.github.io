@@ -84,6 +84,394 @@
       </tags>
   </entry>
   <entry>
+    <title>Java大数据开发入门系列(三)————Hive</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%89-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Hive/</url>
+    <content><![CDATA[<h1 id="文章更新中，请耐心期待"><a href="#文章更新中，请耐心期待" class="headerlink" title="文章更新中，请耐心期待"></a>文章更新中，请耐心期待</h1>]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>大数据</tag>
+        <tag>Hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(二)————HDFS</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
+    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
+<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
+<ul>
+<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
+<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
+<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
+</ul>
+<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
+<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
+<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
+<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
+<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
+<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
+<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
+<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
+<table>
+<thead>
+<tr>
+<th><strong>RAID 等级</strong></th>
+<th><strong>RAID0</strong></th>
+<th><strong>RAID1</strong></th>
+<th><strong>RAID3</strong></th>
+<th><strong>RAID5</strong></th>
+<th><strong>RAID6</strong></th>
+<th><strong>RAID10</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>别名</strong></td>
+<td>条带</td>
+<td>镜像</td>
+<td>专用奇偶校验条带</td>
+<td>分布奇偶校验条带</td>
+<td>双重奇偶校验条带</td>
+<td>镜像加条带</td>
+</tr>
+<tr>
+<td><strong>容错性</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>冗余类型</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>热备份选择</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>读性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>随机写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>连续写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>需要磁盘数</strong></td>
+<td>n≥1</td>
+<td>2n (n≥1)</td>
+<td>n≥3</td>
+<td>n≥3</td>
+<td>n≥4</td>
+<td>2n(n≥2)≥4</td>
+</tr>
+<tr>
+<td><strong>可用容量</strong></td>
+<td>全部</td>
+<td>50%</td>
+<td>(n-1)/n</td>
+<td>(n-1)/n</td>
+<td>(n-2)/n</td>
+<td>50%</td>
+</tr>
+</tbody></table>
+<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
+<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
+<p>HDFS的架构：主从架构，三大角色</p>
+<ol>
+<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
+<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
+<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
+</ol>
+<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
+<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
+<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
+<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
+<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
+<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
+
+<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
+<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
+<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
+<p>FileSystem 是所有 HDFS 操作的主入口。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. 显示当前目录结构</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 显示当前目录结构</span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归显示当前目录结构</span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 显示根目录下内容</span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 创建目录</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 创建目录</span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 递归创建目录</span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 删除操作</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 删除文件</span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归删除目录和文件</span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 从本地加载文件到 HDFS</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>6. 查看文件内容</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
+
+<p><strong>7. 显示文件的最后一千字节</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8. 拷贝文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>9. 移动文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>10. 统计当前目录下各文件大小</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>默认单位字节</li>
+<li>-s : 显示所有文件大小总和，</li>
+<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>11. 合并下载多个文件</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>-nl 在每个文件的末尾添加换行符（LF）</li>
+<li>-skip-empty-file 跳过空文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+
+<p><strong>12. 统计文件系统的可用空间信息</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
+
+<p><strong>13. 更改文件复制因子</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
+<li>-w : 请求命令是否等待复制完成</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
+
+<p><strong>14. 权限控制</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 权限控制和Linux上使用方式一致</span><br><span class="line"><span class="meta">#</span> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件的拥有者  用户必须是超级用户。</span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>15. 文件检测</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
+
+<p>可选选项：</p>
+<ul>
+<li>-d：如果路径是目录，返回 0。</li>
+<li>-e：如果路径存在，则返回 0。</li>
+<li>-f：如果路径是文件，则返回 0。</li>
+<li>-s：如果路径不为空，则返回 0。</li>
+<li>-r：如果路径存在且授予读权限，则返回 0。</li>
+<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
+<li>-z：如果文件长度为零，则返回 0。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 示例</span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>大数据</tag>
+        <tag>Hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(四)————Spark之作业调度</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E4%B9%8B%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Spark 有几种计算资源调度的方式。前面讲到，每个Spark应用（SparkContext的实例）都运行一组独立的<code>executor</code>进程。spark运行的集群管理器提供了跨应用之间的资源调度<a href="http://spark.apachecn.org/#/docs/23?id=scheduling-across-applications" target="_blank" rel="noopener">scheduling across applications</a>。其次，在每个Spark应用中，如果多个 <code>jobs</code>（Spark算子）是由不同的线程提交的，那么它们可能会并发运行。如果你的应用是常见的通过网络服务请求，Spark包含一个<a href="#应用内调度">fair scheduler</a>(公平的调度器)来调度每个SparkContext内的资源。在 Spark 应用内部（对应同一个 SparkContext）各个作业之间，Spark 默认 FIFO 调度，同时也可以支持公平调度。</p>
+<h1 id="跨应用调度"><a href="#跨应用调度" class="headerlink" title="跨应用调度"></a>跨应用调度</h1><p>当在集群上运行时，每个Spark应用都会得到一组独立的<code>executor</code>JVM，来运行其任务并存储数据。如果多个用户需要共享你的集群，那么会有很多资源分配相关的选项，如何设计还取觉于具体的集群管理器。</p>
+<p>对 Spark 所支持的各个集群管理器而言，最简单的的资源分配，就是静态划分。这种方式就意味着，每个 Spark 应用都是设定一个最大可用资源总量，并且该应用在整个生命周期内都会占住这个资源。这种方式在 Spark独立部署 standalone 和 YARN调度，以及 Mesos 粗粒度模式(coarse-grained Mesos mode)下都可用。资源分配可以根据集群类型进行如下配置：</p>
+<ul>
+<li><strong>Standalone mode:</strong> 默认情况下，提交到<code>standalone mode</code>集群的应用将以FIFO（先进先出）的顺序运行，并且每个spark应用都会占用集群中所有可用节点。不过你可以通过设置 spark.cores.max 或者 spark.deploy.defaultCores 来限制单个应用所占用的节点个数。最后，除了可以控制对 CPU 的使用数量之外，还可以通过spark.executor.memory来控制各个应用的内存占用量。</li>
+<li><strong>Mesos:</strong> 在Mesos中要使用静态划分的话，需要将 spark.mesos.coarse 设为true，同样，你也需要配置 spark.cores.max来控制各个应用的 CPU 总数，以及 spark.executor.memory 来控制各个应用的内存占用。</li>
+<li><strong>YARN:</strong> 在 YARN 中需要使用 –num-executors 选项来控制 Spark 应用在集群中分配的执行器的个数。对于单个执行器（executor）所占用的资源，可以使用 –executor-memory 和 –executor-cores 来控制。</li>
+</ul>
+<p>Mesos 上还有一种动态共享 CPU 的方式。在这种模式下，每个 Spark 应用的内存占用仍然是固定且独占的(仍由 spark.exexcutor.memory 决定)，但是如果该 Spark 应用没有在某个机器上执行任务的话，那么其它应用可以占用该机器上的 CPU。这种模式对集群中有大量不是很活跃应用的场景非常有效，例如：集群中有很多不同用户的 Spark shell session。但这种模式不适用于低延时的场景，因为当 Spark 应用需要使用 CPU 的时候，可能需要等待一段时间才能取得对 CPU 的使用权。要使用这种模式，只需要在 mesos://URL 上设置 spark.mesos.coarse 属性为 false 即可。</p>
+<p>值得注意的是，目前还没有任何一种资源分配模式支持跨 Spark 应用的内存共享。如果你想通过这种方式共享数据，我们建议你可以单独使用一个服务(例如：alluxio)，这样就能实现多应用访问同一个 RDD 的数据。</p>
+<h2 id="动态资源分配"><a href="#动态资源分配" class="headerlink" title="动态资源分配"></a>动态资源分配</h2><p>Spark 提供了一种基于负载来动态调节 Spark 应用资源占用的机制。这意味着，你的应用会在资源空闲的时间将其释放给集群，需要时再重新申请。这一特性在多个应用 Spark 集群资源的情况下特别有用。</p>
+<p>这个特性默认是禁止的，但是在所有的粗粒度集群管理器上都是可用的，如：独立部署模式<code>standalone mode</code>，<code>YARN mode</code>，和<code>Mesos 粗粒度模式</code>(coarse-grained Mesos mode)。</p>
+<h3 id="配置和部署"><a href="#配置和部署" class="headerlink" title="配置和部署"></a>配置和部署</h3><p>要使用动态资源分配这一特性有两个前提条件。首先，你的应用必须设置 spark.dynamicAllocation.enabled 为 true。其次，你必须在每个worker节点上启动 external shuffle service，同时将 spark.shuffle.service.enabled 设为 true。external shuffle service 的目的是在移除 executor 的时候，能够保留 executor 输出的 shuffle 文件。启用 external shuffle service 的方式在各个集群管理器上各不相同：</p>
+<p>在 Spark 独立部署的集群中，你只需要在 worker 启动前设置 spark.shuffle.service.enabled 为 true 即可。</p>
+<p>在 Mesos 粗粒度模式下，你需要在各个节点上运行 $SPARK_HOME/sbin/start-mesos-shuffle-service.sh 并设置 spark.shuffle.service.enabled为true即可。例如，你可以在Marathon来启用这一功能。</p>
+<p>在YARN模式下，需要按以下步骤在各个 NodeManager 上启动：<a href="#YARN启动shuffle服务">here</a></p>
+<h3 id="资源分配策略"><a href="#资源分配策略" class="headerlink" title="资源分配策略"></a>资源分配策略</h3><p>总体上来说，Spark 应该在executor空闲时将其关闭，而在后续要用时再申请。因为没有一个固定的方法，可以预测一个executor在后续是否马上会被分配去执行任务，或者一个新分配的executor实际上是空闲的，所以我们需要一个试探性的方法，来决定是否申请或是移除一个executor。</p>
+<h4 id="请求策略"><a href="#请求策略" class="headerlink" title="请求策略"></a>请求策略</h4><p>一个启用了动态分配的 Spark 应用在等待任务需要调度的时候，会去申请额外的executor。在这种情况下，必定意味着已有的executor已经不足以同时执行所有未完成的任务。</p>
+<p>Spark会轮流来申请executor。当有待处理的任务达到spark.dynamicAllocation.scheduleerBacklogTimeout秒时，就会触发实际的请求，如果等待队列中仍有挂起的任务，则每过 spark.dynamicAllocation.sustainedSchedulerBacklogTimeout 秒后触发一次资源申请。另外，每一轮申请的executor个数以指数形式增长。例如：一个 Spark 应用可能在首轮申请 1 个执行器，后续的轮次申请个数可能是 2 个、4 个、8 个……。</p>
+<p>采用指数级增长策略的原因有两个：第一，一个应用程序在开始时应该谨慎地请求executor，以防万一发现只增加几个executor就够了，这和 TCP 慢启动有些类似；第二，如果一旦 Spark 应用确实需要申请多个executor的话，那么可以确保其所需的计算资源及时增长。</p>
+<h4 id="移除策略"><a href="#移除策略" class="headerlink" title="移除策略"></a>移除策略</h4><p>移除executor的策略就简单得多了。Spark 应用会在某个执行器空闲超过 spark.dynamicAllocation.executorIdleTimeout 秒后将其删除，在大多数情况下，执行器的移除条件和申请条件都是互斥的，也就是说，执行器在有等待执行任务挂起时，不应该空闲。</p>
+<h3 id="优雅的关闭Executor"><a href="#优雅的关闭Executor" class="headerlink" title="优雅的关闭Executor"></a>优雅的关闭Executor</h3><p>在非动态分配下，executor可能的退出原因有执行失败或是相关 Spark 应用已经退出。不管是哪种原因，executor的所有相关联的状态都已经不再需要，可以丢弃掉。但是在动态分配的情况下，executor有可能在 Spark 应用运行期间被移除。这时候，如果 Spark 应用尝试去访问该executor存储的状态，就必须重算这一部分数据。因此，Spark 需要一种机制，能够优雅的关闭executor，同时还保留其状态数据。</p>
+<p>这种需求对于shuffles操作尤其重要。shuffle过程中，Spark executor首先将 map 输出写到本地磁盘，然后在其他executor试图获取这些map结果数据时，充当这些文件的服务器。一旦有某些任务执行时间过长，动态分配有可能在shuffle结束前移除任务异常的executor，而这些被移除的executor对应的数据将会被重新计算，但这些重算其实是不必要的。</p>
+<p>要解决这一问题，就需要用到 external shuffle service，该服务在 Spark 1.2 引入。该服务在每个节点上都会启动一个不依赖于任何 Spark 应用或executor的独立进程。一旦该服务启用，Spark executor不再从各个executor上获取 shuffle文件，转而从这个 service 获取。这意味着，任何执行器输出的混洗状态数据都可能存留时间比对应的执行器进程还长。</p>
+<p>除了shuffle文件之外，executor也会在磁盘或者内存中缓存数据。一旦executor被移除，其缓存数据将无法访问。这个问题目前还没有解决。或许在未来的版本中，可能会类似采用external shuffle service的方法，将缓存数据保存在堆外存储中以解决这一问题。</p>
+<h1 id="应用内调度"><a href="#应用内调度" class="headerlink" title="应用内调度"></a>应用内调度</h1><p>在指定的 Spark 应用内部（对应同一 SparkContext 实例），多个线程可能并发地提交 Spark 作业（job），他们可以同时运行。在本节中，作业（job）是指，由 Spark action 算子（如：collect）触发的一系列计算任务的集合。Spark 调度器是完全线程安全的，并且能够支持 Spark 应用同时处理多个请求（比如：来自不同用户的查询）。</p>
+<p>默认，Spark 应用内部使用 FIFO 调度策略。每个作业被划分为多个阶段（stage）（例如：map 阶段和 reduce 阶段），第一个作业在其启动后会优先获取所有的可用资源，然后是第二个作业再申请，再第三个……。如果前面的作业没有把集群资源占满，则后续的作业可以立即启动运行，否则，后提交的作业会有明显的延迟等待。</p>
+<p>不过从 Spark 0.8 开始，Spark 也能支持各个作业间的公平（Fair）调度。公平调度时，Spark 以轮询的方式给每个作业分配资源，因此所有的作业获得的资源大体上是平均分配。这意味着，即使有大作业在运行，小的作业再提交也能立即获得计算资源而不是等待前面的作业结束，大大减少了延迟时间。这种模式特别适合于多用户配置。要启用公平调度器，只需设置一下 SparkContext 中 spark.scheduler.mode 属性为 FAIR 即可 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(...).setAppName(...)</span><br><span class="line">conf.set(<span class="string">"spark.scheduler.mode"</span>, <span class="string">"FAIR"</span>)</span><br><span class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br></pre></td></tr></table></figure>
+
+<h2 id="公平调度资源池"><a href="#公平调度资源池" class="headerlink" title="公平调度资源池"></a>公平调度资源池</h2><p>公平调度器还可以支持将作业分组放入资源池（pool），然后给每个资源池配置不同的调度选项（如：权重）(ps:就是设置调度优先级)。这样你就可以给一些比较重要的作业创建一个“高优先级”资源池，或者你也可以把每个用户的作业分到一组，这样一来就是各个用户平均分享集群资源，而不是各个作业平分集群资源。Spark 公平调度的实现方式基本都是模仿 <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/FairScheduler.html" target="_blank" rel="noopener">Hadoop Fair Scheduler</a>来实现的。</p>
+<p>默认情况下，新提交的作业都会进入到默认资源池中，不过作业对应于哪个资源池，可以在提交作业的线程中用 SparkContext.setLocalProperty 设定 spark.scheduler.pool 属性。示例代码如下 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Assuming sc is your SparkContext variable</span></span><br><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="string">"pool1"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>一旦设好了局部属性，所有该线程所提交的作业（即：在该线程中调用 action 算子，如：RDD.save/count/collect 等）都会使用这个资源池。这个设置是以线程为单位保存的，你很容易实现用同一线程来提交同一用户的所有作业到同一个资源池中。同样，如果需要清除资源池设置，只需在对应线程中调用如下代码 :</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="literal">null</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="资源池默认行为"><a href="#资源池默认行为" class="headerlink" title="资源池默认行为"></a>资源池默认行为</h2><p>默认地，各个资源池之间平分整个集群的资源（包括 default 资源池），但在资源池内部，默认情况下，作业是 FIFO 顺序执行的。举例来说，如果你为每个用户创建了一个资源池，那么久意味着各个用户之间共享整个集群的资源，但每个用户自己提交的作业是按顺序执行的，而不会出现后提交的作业抢占前面作业的资源。</p>
+<h2 id="配置资源池属性"><a href="#配置资源池属性" class="headerlink" title="配置资源池属性"></a>配置资源池属性</h2><p>资源池的属性需要通过配置文件来指定。每个资源池都支持以下3个属性 :</p>
+<ul>
+<li><code>schedulingMode</code>：可以是 FIFO 或 FAIR，控制资源池内部的作业是如何调度的。</li>
+<li><code>weight</code>：控制资源池相对其他资源池，可以分配到资源的比例。默认所有资源池的 weight 都是 1。如果你将某个资源池的 weight 设为 2，那么该资源池中的资源将是其他池子的2倍。如果将 weight 设得很高，如 1000，可以实现资源池之间的调度优先级 – 也就是说，weight=1000 的资源池总能立即启动其对应的作业。</li>
+<li><code>minShare</code>：除了整体 weight 之外，每个资源池还能指定一个最小资源分配值（CPU 个数），管理员可能会需要这个设置。公平调度器总是会尝试优先满足所有活跃（active）资源池的最小资源分配值，然后再根据各个池子的 weight 来分配剩下的资源。因此，minShare 属性能够确保每个资源池都能至少获得一定量的集群资源。minShare 的默认值是 0。</li>
+</ul>
+<p>资源池属性是一个 XML 文件，可以基于 conf/fairscheduler.xml.template 修改，然后在 <a href="http://spark.apachecn.org/#/configuration.html?id=spark-properties" target="_blank" rel="noopener">SparkConf</a>。的 spark.scheduler.allocation.file 属性指定文件路径：</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">conf.set(<span class="string">"spark.scheduler.allocation.file"</span>, <span class="string">"/path/to/file"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>资源池 XML 配置文件格式如下，其中每个池子对应一个 <pool>元素，每个资源池可以有其独立的配置 :</pool></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">allocations</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"production"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FAIR<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>2<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FIFO<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>2<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>3<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">allocations</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="额外补充："><a href="#额外补充：" class="headerlink" title="额外补充："></a>额外补充：</h1><h2 id="Shuffle相关介绍"><a href="#Shuffle相关介绍" class="headerlink" title="Shuffle相关介绍"></a>Shuffle相关介绍</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>有些运算需要将各节点上的同一类数据汇集到某一节点进行计算，把这些分布在不同节点的数据按照一定的规则汇集到一起的过程称为 Shuffle。</p>
+<p><img src="http://img.rogermaster.top/uPic/4C16KL.jpg" alt="4C16KL"></p>
+<p>在MapReduce框架，Shuffle是连接Map和Reduce之间的桥梁，Map阶段通过shuffle读取数据并输出到对应的Reduce，而Reduce阶段负责从Map端拉取数据并进行计算。在整个shuffle过程中，往往伴随着大量的磁盘和网络I/O。所以shuffle性能的高低也直接决定了整个程序的性能高低。而Spark也会有自己的shuffle实现过程。</p>
+<h3 id="Spark中的-shuffle"><a href="#Spark中的-shuffle" class="headerlink" title="Spark中的 shuffle"></a>Spark中的 shuffle</h3><p>在DAG调度的过程中，<strong>Stage</strong> 阶段的划分是根据是否有shuffle过程，也就是存在 <strong>宽依赖</strong> 的时候,需要进行shuffle,这时候会将 <strong>job</strong> 划分成多个Stage，每一个 Stage 内部有很多可以并行运行的 <strong>Task</strong>。</p>
+<p><img src="http://img.rogermaster.top/uPic/XsfPkt.png" alt="XsfPkt"></p>
+<p>标注对应的RDD后：</p>
+<p>![image-20200908223941532](/Users/roger/Library/Application Support/typora-user-images/image-20200908223941532.png)</p>
+<p><img src="http://img.rogermaster.top/uPic/LEZncX.png" alt="LEZncX"></p>
+<p>stage与stage之间的过程就是 shuffle 阶段，前一个 Stage 的 ShuffleMapTask 进行 Shuffle Write， 把数据存储在 BlockManager 上面， 并且把数据位置元信息上报到 Driver 的 MapOutTrack 组件中， 下一个 Stage 根据数据位置元信息， 进行 Shuffle Read， 拉取上个 Stage 的输出数据。在 Spark 中，负责 shuffle 过程的执行、计算和处理的组件主要就是 <strong>ShuffleManager</strong> 。ShuffleManager 随着Spark的发展有两种实现的方式，分别为 <strong>HashShuffleManager</strong> 和 <strong>SortShuffleManager</strong> ，因此spark的Shuffle有 <strong>Hash Shuffle</strong>  和 <strong>Sort Shuffle</strong> 两种。</p>
+<p>在 <strong>Spark 1.2</strong> 以前，默认的shuffle计算引擎是 <strong>HashShuffleManager</strong> 。</p>
+<p><strong>HashShuffleManager</strong> 有着一个非常严重的弊端，就是会产生大量的中间磁盘文件，进而由大量的磁盘IO操作影响了性能。因此在Spark 1.2以后的版本中，默认的 <strong>ShuffleManager</strong> 改成了 <strong>SortShuffleManager</strong> 。</p>
+<p><strong>SortShuffleManager</strong> 相较于 HashShuffleManager 来说，有了一定的改进。主要就在于每个Task在进行shuffle操作时，虽然也会产生较多的临时磁盘文件，但是最后会将所有的临时文件合并(merge)成一个磁盘文件，因此每个 Task 就只有一个磁盘文件。在下一个 Stage 的shuffle read task拉取自己的数据时，只要根据索引读取每个磁盘文件中的部分数据即可。</p>
+<p>Hash shuffle是不具有排序的Shuffle。</p>
+<h2 id="YARN启动shuffle服务"><a href="#YARN启动shuffle服务" class="headerlink" title="YARN启动shuffle服务"></a>YARN启动shuffle服务</h2><p>要在YARN群集中的每个NodeManager上启动Spark Shuffle服务，请遵循以下说明：</p>
+<ol>
+<li>用YARN配置文件构建Spark。如果你使用的是预打包的发行版，请跳过这一步。</li>
+<li>找到<code>spark-&lt;version&gt;-yarn-shuffle.jar</code>. 如果你是自己构建的spark会在 <code>$SPARK_HOME/common/network-yarn/target/scala-&lt;version&gt;</code> 下,如果你用的我是发行版则在 <code>yarn</code> 下.</li>
+<li>将这个jar包添加到集群中所有NodeManagers的classpath中。</li>
+<li>在每个节点的yarn-site.xml中，将spark_shuffle添加到yarn.nodemanager.aux-services中，然后将yarn.nodemanager.aux-services.spark_shuffle.class设置org.apache.spark.network.yarn.YarnShuffleService。</li>
+<li>在 etc/hadoop/yarn-env.sh 中设置 YARN_HEAPSIZE（默认为 1000），增加 NodeManager 的堆大小，以避免在shuffle中的垃圾回收问题。</li>
+<li>重新启动集群中的所有NodeManagers。</li>
+</ol>
+<p>在YARN上运行shuffle service时，可以使用以下附加配置选项：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Property Name</th>
+<th align="left">Default</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>spark.yarn.shuffle.stopOnFailure</code></td>
+<td align="left"><code>false</code></td>
+<td align="left">当Spark shuffle service的初始化出现故障时，是否要停止NodeManager。这可以防止在Spark shuffle service没有运行的NodeManagers上运行容器导致的应用失败。</td>
+</tr>
+</tbody></table>
+<h2 id="Spark调度算法-FIFO、FAIR"><a href="#Spark调度算法-FIFO、FAIR" class="headerlink" title="Spark调度算法(FIFO、FAIR)"></a>Spark调度算法(FIFO、FAIR)</h2><p>FIFO模式的算法类是FIFOSchedulingAlgorithm，FAIR模式的算法实现类是FairSchedulingAlgorithm。下面看两种模式下的比较函数的实现，FIFO：</p>
+<p>先比较priority，在FIFO中该优先级实际上是Job ID，越早提交的job的jobId越小，priority越小，优先级越高。</p>
+<p>若priority相同，则说明是同一个job里的TaskSetMagager，则比较StageId，StageId越小优先级越高。</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">comparator</span></span>(s1: <span class="type">Schedulable</span>, s2: <span class="type">Schedulable</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> priority1 = s1.priority</span><br><span class="line">    <span class="keyword">val</span> priority2 = s2.priority</span><br><span class="line">    <span class="keyword">var</span> res = math.signum(priority1 - priority2)</span><br><span class="line">    <span class="comment">//优先级比较，越小，就最先执行</span></span><br><span class="line">    <span class="keyword">if</span> (res == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">val</span> stageId1 = s1.stageId</span><br><span class="line">      <span class="keyword">val</span> stageId2 = s2.stageId</span><br><span class="line">      res = math.signum(stageId1 - stageId2)</span><br><span class="line">      <span class="comment">//优先级相同，就比较stageId，StageId越小优先级越高</span></span><br><span class="line">    &#125;</span><br><span class="line">    res &lt; <span class="number">0</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.rogermaster.top/uPic/2kctUu.jpg" alt="2kctUu"></p>
+<p>FAIR 模式中有一个 rootPool 和多个子 Pool， 各个子 Pool 中存储着所有待分配的 <code>TaskSetMagager</code> 。</p>
+<p>在  FAIR  模 式 中 ， 需 要 先 对 子  Pool 进 行 排 序 ， 再 对 子  Pool 里 面 的</p>
+<p><code>TaskSetMagager</code>进行排序，因为<code>Pool</code>和<code>TaskSetMagager</code>都继承了Schedulable特质， 因此使用相同的排序算法。</p>
+<p>排序过程的比较是基于 <code>Fair-share</code> 来比较的，每个要排序的对象包含三个属性:</p>
+<p>runningTasks 值（ 正在运行的 Task 数）、minShare 值、weight 值，比较时会综合考量 runningTasks 值， minShare 值以及 weight 值。</p>
+<p>注意，minShare、weight 的值均在公平调度配置文件 fairscheduler.xml 中被指定，调度池在构建阶段会读取此文件的相关配置。</p>
+<p>1)    如果 A 对象的 runningTasks 大于它的 minShare， B 对象的 runningTasks 小于它的 minShare，那么 B 排在 A 前面； （ 如果一个<code>Pool</code>的<code>miniShare</code>够用，另一个不够用，先分配给够用的。）</p>
+<p>2)    如果 A 、B 对象的 runningTasks 都小于它们的 minShare ，那么就比较runningTasks 与 minShare 的比值（ <code>minShare</code> 使用率），谁小谁排前面；（ 两个<code>poll</code>都够用，谁占<code>miniShare</code>的少先分配给谁。例如两个Pool同样数量的<code>runningTask</code>，先分配给<code>miniShare</code>大的。）</p>
+<p>3)    如果 A 、B 对象的 <code>runningTasks</code> 都大于它们的 <code>minShare</code> ，那么就比较<code>runningTasks</code> 与 <code>weight</code> 的比值（ 权重使用率），谁小谁排前面。（同样数量的<code>runningTask</code>，先分配给<code>weight</code>大的）</p>
+<p>4)    如果上述比较均相等，则比较名字。</p>
+<p>整体上来说就是通过 <code>minShare</code> 和 <code>weight</code> 这两个参数控制比较过程， 可以做到让 <code>minShare</code> 使用率和权重使用率少（ 实际运行 task 比例较少） 的先运行。</p>
+<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">FairSchedulingAlgorithm</span> <span class="keyword">extends</span> <span class="title">SchedulingAlgorithm</span> </span>&#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">comparator</span></span>(s1: <span class="type">Schedulable</span>, s2: <span class="type">Schedulable</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> minShare1 = s1.minShare</span><br><span class="line">    <span class="keyword">val</span> minShare2 = s2.minShare</span><br><span class="line">    <span class="comment">//默认为0,除非通过fair的配置文件进行了配置指定</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> runningTasks1 = s1.runningTasks</span><br><span class="line">    <span class="keyword">val</span> runningTasks2 = s2.runningTasks</span><br><span class="line">    <span class="comment">/* 如果是TaskSetManager时,就是taskSet中运行的task的个数,</span></span><br><span class="line"><span class="comment">     * 如果是Pool实例是表示是所有使用这个poolName的所有的TaskSetManager正在运行的task的个数.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> s1Needy = runningTasks1 &lt; minShare1</span><br><span class="line">    <span class="keyword">val</span> s2Needy = runningTasks2 &lt; minShare2</span><br><span class="line">    <span class="comment">//只有在minShare在fair的配置文件中显示配置,同时大于正在运行的task的个数时,才会为true</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> minShareRatio1 = runningTasks1.toDouble / math.max(minShare1, <span class="number">1.0</span>).toDouble</span><br><span class="line">    <span class="keyword">val</span> minShareRatio2 = runningTasks2.toDouble / math.max(minShare2, <span class="number">1.0</span>).toDouble</span><br><span class="line">    <span class="comment">//运行的task的个数针对于minShare的比重</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">val</span> taskToWeightRatio1 = runningTasks1.toDouble / s1.weight.toDouble</span><br><span class="line">    <span class="keyword">val</span> taskToWeightRatio2 = runningTasks2.toDouble / s2.weight.toDouble</span><br><span class="line">    <span class="comment">//得到正在运行的task个数针对于pool的weight的比重</span></span><br><span class="line">    <span class="keyword">var</span> compare: <span class="type">Int</span> = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*这里首先根据正在运行的task的个数是否已经达到调度队列中最小的分片的个数来进行排序,</span></span><br><span class="line"><span class="comment">    * 如果s1中运行运行的个数小于s1的pool的配置的minShare,返回true,表示s1排序在前面.</span></span><br><span class="line"><span class="comment">    * 如果s2中运行的task的个数小于s2的pool中配置的minShare(最小分片数)的值,表示s1小于s2,这时s2排序应该靠		 * 前.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (s1Needy &amp;&amp; !s2Needy) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!s1Needy &amp;&amp; s2Needy) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s1Needy &amp;&amp; s2Needy) &#123;</span><br><span class="line">    <span class="comment">/*这种情况表示s1与s2两个队列中,正在运行的task的个数都已经大于(不小于)了两个子调度器中配置的minShare的   		* 个数时,根据两个子调度器队列中正在运行的task的个数对应此调度器中最小分片的值所占的比重最小的一个排序更靠前</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">      compare = minShareRatio1.compareTo(minShareRatio2)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">/*这种情况表示s1与s2两个子调度器的队列中,正在运行的task的个数都还没有达到配置的最小分片的个数的情况,比</span></span><br><span class="line"><span class="comment">    *	较两个队列中正在运行的task的个数对应调度器队列的weigth的占比,最小的一个排序更靠前</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">      compare = taskToWeightRatio1.compareTo(taskToWeightRatio2)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (compare &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (compare &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//如果两个根据上面的计算,排序值都相同,就看看这两个调度器的名称,按名称的字节序来排序了.</span></span><br><span class="line">      s1.name &lt; s2.name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考文献：</p>
+<ul>
+<li><a href="https://juejin.im/post/6844904065218920456#heading-21" target="_blank" rel="noopener">Spark的Shuffle总结分析</a>-说出你的愿望吧</li>
+<li><a href="https://zhuanlan.zhihu.com/p/67061627" target="_blank" rel="noopener">Spark Shuffle 详解</a>-小鹏</li>
+<li><a href="https://spark.apache.org/docs/latest/job-scheduling.html#job-scheduling" target="_blank" rel="noopener">Job-scheduling</a>-apache</li>
+<li><a href="https://www.cnblogs.com/hanhaotian/p/11791966.html" target="_blank" rel="noopener">SPARK的TASK调度器(FAIR公平调度算法)</a>-herman很慢</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>Hadoop</tag>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java大数据开发入门系列(一)————环境搭建</title>
     <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%80-%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><ul>
@@ -395,265 +783,16 @@
       </tags>
   </entry>
   <entry>
-    <title>Java大数据开发入门系列(三)————Hive</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%89-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Hive/</url>
-    <content><![CDATA[<h1 id="文章更新中，请耐心期待"><a href="#文章更新中，请耐心期待" class="headerlink" title="文章更新中，请耐心期待"></a>文章更新中，请耐心期待</h1>]]></content>
+    <title>apache2 常用操作命令</title>
+    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
+]]></content>
       <categories>
-        <category>大数据</category>
+        <category>服务器部署</category>
       </categories>
       <tags>
-        <tag>spring boot</tag>
-        <tag>大数据</tag>
-        <tag>Hive</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java大数据开发入门系列(二)————HDFS</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
-    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
-<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
-<ul>
-<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
-<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
-<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
-</ul>
-<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
-<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
-<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
-<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
-<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
-<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
-<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
-<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
-<table>
-<thead>
-<tr>
-<th><strong>RAID 等级</strong></th>
-<th><strong>RAID0</strong></th>
-<th><strong>RAID1</strong></th>
-<th><strong>RAID3</strong></th>
-<th><strong>RAID5</strong></th>
-<th><strong>RAID6</strong></th>
-<th><strong>RAID10</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>别名</strong></td>
-<td>条带</td>
-<td>镜像</td>
-<td>专用奇偶校验条带</td>
-<td>分布奇偶校验条带</td>
-<td>双重奇偶校验条带</td>
-<td>镜像加条带</td>
-</tr>
-<tr>
-<td><strong>容错性</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>冗余类型</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>热备份选择</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>读性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-</tr>
-<tr>
-<td><strong>随机写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>连续写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>需要磁盘数</strong></td>
-<td>n≥1</td>
-<td>2n (n≥1)</td>
-<td>n≥3</td>
-<td>n≥3</td>
-<td>n≥4</td>
-<td>2n(n≥2)≥4</td>
-</tr>
-<tr>
-<td><strong>可用容量</strong></td>
-<td>全部</td>
-<td>50%</td>
-<td>(n-1)/n</td>
-<td>(n-1)/n</td>
-<td>(n-2)/n</td>
-<td>50%</td>
-</tr>
-</tbody></table>
-<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
-<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
-<p>HDFS的架构：主从架构，三大角色</p>
-<ol>
-<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
-<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
-<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
-</ol>
-<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
-<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
-<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
-<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
-<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
-<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
-
-<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
-<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
-<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
-<p>FileSystem 是所有 HDFS 操作的主入口。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. 显示当前目录结构</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. 创建目录</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>3. 删除操作</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>4. 从本地加载文件到 HDFS</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
-
-<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>6. 查看文件内容</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
-
-<p><strong>7. 显示文件的最后一千字节</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>8. 拷贝文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>9. 移动文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>10. 统计当前目录下各文件大小</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>默认单位字节</li>
-<li>-s : 显示所有文件大小总和，</li>
-<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>11. 合并下载多个文件</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>-nl 在每个文件的末尾添加换行符（LF）</li>
-<li>-skip-empty-file 跳过空文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
-
-<p><strong>12. 统计文件系统的可用空间信息</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
-
-<p><strong>13. 更改文件复制因子</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
-<li>-w : 请求命令是否等待复制完成</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
-
-<p><strong>14. 权限控制</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
-
-<p><strong>15. 文件检测</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
-
-<p>可选选项：</p>
-<ul>
-<li>-d：如果路径是目录，返回 0。</li>
-<li>-e：如果路径存在，则返回 0。</li>
-<li>-f：如果路径是文件，则返回 0。</li>
-<li>-s：如果路径不为空，则返回 0。</li>
-<li>-r：如果路径存在且授予读权限，则返回 0。</li>
-<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
-<li>-z：如果文件长度为零，则返回 0。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>大数据</tag>
-        <tag>Hadoop</tag>
+        <tag>服务器部署</tag>
+        <tag>liunx</tag>
       </tags>
   </entry>
   <entry>
@@ -675,493 +814,6 @@
       <tags>
         <tag>anaconda</tag>
         <tag>命令行</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>apache2 常用操作命令</title>
-    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
-]]></content>
-      <categories>
-        <category>服务器部署</category>
-      </categories>
-      <tags>
-        <tag>服务器部署</tag>
-        <tag>liunx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java大数据开发入门系列(四)————Spark之作业调度</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E4%B9%8B%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
-    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Spark 有几种计算资源调度的方式。前面讲到，每个Spark应用（SparkContext的实例）都运行一组独立的<code>executor</code>进程。spark运行的集群管理器提供了跨应用之间的资源调度<a href="http://spark.apachecn.org/#/docs/23?id=scheduling-across-applications" target="_blank" rel="noopener">scheduling across applications</a>。其次，在每个Spark应用中，如果多个 <code>jobs</code>（Spark算子）是由不同的线程提交的，那么它们可能会并发运行。如果你的应用是常见的通过网络服务请求，Spark包含一个<a href="#应用内调度">fair scheduler</a>(公平的调度器)来调度每个SparkContext内的资源。在 Spark 应用内部（对应同一个 SparkContext）各个作业之间，Spark 默认 FIFO 调度，同时也可以支持公平调度。</p>
-<h1 id="跨应用调度"><a href="#跨应用调度" class="headerlink" title="跨应用调度"></a>跨应用调度</h1><p>当在集群上运行时，每个Spark应用都会得到一组独立的<code>executor</code>JVM，来运行其任务并存储数据。如果多个用户需要共享你的集群，那么会有很多资源分配相关的选项，如何设计还取觉于具体的集群管理器。</p>
-<p>对 Spark 所支持的各个集群管理器而言，最简单的的资源分配，就是静态划分。这种方式就意味着，每个 Spark 应用都是设定一个最大可用资源总量，并且该应用在整个生命周期内都会占住这个资源。这种方式在 Spark独立部署 standalone 和 YARN调度，以及 Mesos 粗粒度模式(coarse-grained Mesos mode)下都可用。资源分配可以根据集群类型进行如下配置：</p>
-<ul>
-<li><strong>Standalone mode:</strong> 默认情况下，提交到<code>standalone mode</code>集群的应用将以FIFO（先进先出）的顺序运行，并且每个spark应用都会占用集群中所有可用节点。不过你可以通过设置 spark.cores.max 或者 spark.deploy.defaultCores 来限制单个应用所占用的节点个数。最后，除了可以控制对 CPU 的使用数量之外，还可以通过spark.executor.memory来控制各个应用的内存占用量。</li>
-<li><strong>Mesos:</strong> 在Mesos中要使用静态划分的话，需要将 spark.mesos.coarse 设为true，同样，你也需要配置 spark.cores.max来控制各个应用的 CPU 总数，以及 spark.executor.memory 来控制各个应用的内存占用。</li>
-<li><strong>YARN:</strong> 在 YARN 中需要使用 –num-executors 选项来控制 Spark 应用在集群中分配的执行器的个数。对于单个执行器（executor）所占用的资源，可以使用 –executor-memory 和 –executor-cores 来控制。</li>
-</ul>
-<p>Mesos 上还有一种动态共享 CPU 的方式。在这种模式下，每个 Spark 应用的内存占用仍然是固定且独占的(仍由 spark.exexcutor.memory 决定)，但是如果该 Spark 应用没有在某个机器上执行任务的话，那么其它应用可以占用该机器上的 CPU。这种模式对集群中有大量不是很活跃应用的场景非常有效，例如：集群中有很多不同用户的 Spark shell session。但这种模式不适用于低延时的场景，因为当 Spark 应用需要使用 CPU 的时候，可能需要等待一段时间才能取得对 CPU 的使用权。要使用这种模式，只需要在 mesos://URL 上设置 spark.mesos.coarse 属性为 false 即可。</p>
-<p>值得注意的是，目前还没有任何一种资源分配模式支持跨 Spark 应用的内存共享。如果你想通过这种方式共享数据，我们建议你可以单独使用一个服务(例如：alluxio)，这样就能实现多应用访问同一个 RDD 的数据。</p>
-<h2 id="动态资源分配"><a href="#动态资源分配" class="headerlink" title="动态资源分配"></a>动态资源分配</h2><p>Spark 提供了一种基于负载来动态调节 Spark 应用资源占用的机制。这意味着，你的应用会在资源空闲的时间将其释放给集群，需要时再重新申请。这一特性在多个应用 Spark 集群资源的情况下特别有用。</p>
-<p>这个特性默认是禁止的，但是在所有的粗粒度集群管理器上都是可用的，如：独立部署模式<code>standalone mode</code>，<code>YARN mode</code>，和<code>Mesos 粗粒度模式</code>(coarse-grained Mesos mode)。</p>
-<h3 id="配置和部署"><a href="#配置和部署" class="headerlink" title="配置和部署"></a>配置和部署</h3><p>要使用动态资源分配这一特性有两个前提条件。首先，你的应用必须设置 spark.dynamicAllocation.enabled 为 true。其次，你必须在每个worker节点上启动 external shuffle service，同时将 spark.shuffle.service.enabled 设为 true。external shuffle service 的目的是在移除 executor 的时候，能够保留 executor 输出的 shuffle 文件。启用 external shuffle service 的方式在各个集群管理器上各不相同：</p>
-<p>在 Spark 独立部署的集群中，你只需要在 worker 启动前设置 spark.shuffle.service.enabled 为 true 即可。</p>
-<p>在 Mesos 粗粒度模式下，你需要在各个节点上运行 $SPARK_HOME/sbin/start-mesos-shuffle-service.sh 并设置 spark.shuffle.service.enabled为true即可。例如，你可以在Marathon来启用这一功能。</p>
-<p>在YARN模式下，需要按以下步骤在各个 NodeManager 上启动：<a href="#YARN启动shuffle服务">here</a></p>
-<h3 id="资源分配策略"><a href="#资源分配策略" class="headerlink" title="资源分配策略"></a>资源分配策略</h3><p>总体上来说，Spark 应该在executor空闲时将其关闭，而在后续要用时再申请。因为没有一个固定的方法，可以预测一个executor在后续是否马上会被分配去执行任务，或者一个新分配的executor实际上是空闲的，所以我们需要一个试探性的方法，来决定是否申请或是移除一个executor。</p>
-<h4 id="请求策略"><a href="#请求策略" class="headerlink" title="请求策略"></a>请求策略</h4><p>一个启用了动态分配的 Spark 应用在等待任务需要调度的时候，会去申请额外的executor。在这种情况下，必定意味着已有的executor已经不足以同时执行所有未完成的任务。</p>
-<p>Spark会轮流来申请executor。当有待处理的任务达到spark.dynamicAllocation.scheduleerBacklogTimeout秒时，就会触发实际的请求，如果等待队列中仍有挂起的任务，则每过 spark.dynamicAllocation.sustainedSchedulerBacklogTimeout 秒后触发一次资源申请。另外，每一轮申请的executor个数以指数形式增长。例如：一个 Spark 应用可能在首轮申请 1 个执行器，后续的轮次申请个数可能是 2 个、4 个、8 个……。</p>
-<p>采用指数级增长策略的原因有两个：第一，一个应用程序在开始时应该谨慎地请求executor，以防万一发现只增加几个executor就够了，这和 TCP 慢启动有些类似；第二，如果一旦 Spark 应用确实需要申请多个executor的话，那么可以确保其所需的计算资源及时增长。</p>
-<h4 id="移除策略"><a href="#移除策略" class="headerlink" title="移除策略"></a>移除策略</h4><p>移除executor的策略就简单得多了。Spark 应用会在某个执行器空闲超过 spark.dynamicAllocation.executorIdleTimeout 秒后将其删除，在大多数情况下，执行器的移除条件和申请条件都是互斥的，也就是说，执行器在有等待执行任务挂起时，不应该空闲。</p>
-<h3 id="优雅的关闭Executor"><a href="#优雅的关闭Executor" class="headerlink" title="优雅的关闭Executor"></a>优雅的关闭Executor</h3><p>在非动态分配下，executor可能的退出原因有执行失败或是相关 Spark 应用已经退出。不管是哪种原因，executor的所有相关联的状态都已经不再需要，可以丢弃掉。但是在动态分配的情况下，executor有可能在 Spark 应用运行期间被移除。这时候，如果 Spark 应用尝试去访问该executor存储的状态，就必须重算这一部分数据。因此，Spark 需要一种机制，能够优雅的关闭executor，同时还保留其状态数据。</p>
-<p>这种需求对于shuffles操作尤其重要。shuffle过程中，Spark executor首先将 map 输出写到本地磁盘，然后在其他executor试图获取这些map结果数据时，充当这些文件的服务器。一旦有某些任务执行时间过长，动态分配有可能在shuffle结束前移除任务异常的executor，而这些被移除的executor对应的数据将会被重新计算，但这些重算其实是不必要的。</p>
-<p>要解决这一问题，就需要用到 external shuffle service，该服务在 Spark 1.2 引入。该服务在每个节点上都会启动一个不依赖于任何 Spark 应用或executor的独立进程。一旦该服务启用，Spark executor不再从各个executor上获取 shuffle文件，转而从这个 service 获取。这意味着，任何执行器输出的混洗状态数据都可能存留时间比对应的执行器进程还长。</p>
-<p>除了shuffle文件之外，executor也会在磁盘或者内存中缓存数据。一旦executor被移除，其缓存数据将无法访问。这个问题目前还没有解决。或许在未来的版本中，可能会类似采用external shuffle service的方法，将缓存数据保存在堆外存储中以解决这一问题。</p>
-<h1 id="应用内调度"><a href="#应用内调度" class="headerlink" title="应用内调度"></a>应用内调度</h1><p>在指定的 Spark 应用内部（对应同一 SparkContext 实例），多个线程可能并发地提交 Spark 作业（job），他们可以同时运行。在本节中，作业（job）是指，由 Spark action 算子（如：collect）触发的一系列计算任务的集合。Spark 调度器是完全线程安全的，并且能够支持 Spark 应用同时处理多个请求（比如：来自不同用户的查询）。</p>
-<p>默认，Spark 应用内部使用 FIFO 调度策略。每个作业被划分为多个阶段（stage）（例如：map 阶段和 reduce 阶段），第一个作业在其启动后会优先获取所有的可用资源，然后是第二个作业再申请，再第三个……。如果前面的作业没有把集群资源占满，则后续的作业可以立即启动运行，否则，后提交的作业会有明显的延迟等待。</p>
-<p>不过从 Spark 0.8 开始，Spark 也能支持各个作业间的公平（Fair）调度。公平调度时，Spark 以轮询的方式给每个作业分配资源，因此所有的作业获得的资源大体上是平均分配。这意味着，即使有大作业在运行，小的作业再提交也能立即获得计算资源而不是等待前面的作业结束，大大减少了延迟时间。这种模式特别适合于多用户配置。要启用公平调度器，只需设置一下 SparkContext 中 spark.scheduler.mode 属性为 FAIR 即可 :</p>
-<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setMaster(...).setAppName(...)</span><br><span class="line">conf.set(<span class="string">"spark.scheduler.mode"</span>, <span class="string">"FAIR"</span>)</span><br><span class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br></pre></td></tr></table></figure>
-
-<h2 id="公平调度资源池"><a href="#公平调度资源池" class="headerlink" title="公平调度资源池"></a>公平调度资源池</h2><p>公平调度器还可以支持将作业分组放入资源池（pool），然后给每个资源池配置不同的调度选项（如：权重）(ps:就是设置调度优先级)。这样你就可以给一些比较重要的作业创建一个“高优先级”资源池，或者你也可以把每个用户的作业分到一组，这样一来就是各个用户平均分享集群资源，而不是各个作业平分集群资源。Spark 公平调度的实现方式基本都是模仿 <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/FairScheduler.html" target="_blank" rel="noopener">Hadoop Fair Scheduler</a>来实现的。</p>
-<p>默认情况下，新提交的作业都会进入到默认资源池中，不过作业对应于哪个资源池，可以在提交作业的线程中用 SparkContext.setLocalProperty 设定 spark.scheduler.pool 属性。示例代码如下 :</p>
-<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Assuming sc is your SparkContext variable</span></span><br><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="string">"pool1"</span>)</span><br></pre></td></tr></table></figure>
-
-<p>一旦设好了局部属性，所有该线程所提交的作业（即：在该线程中调用 action 算子，如：RDD.save/count/collect 等）都会使用这个资源池。这个设置是以线程为单位保存的，你很容易实现用同一线程来提交同一用户的所有作业到同一个资源池中。同样，如果需要清除资源池设置，只需在对应线程中调用如下代码 :</p>
-<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">sc.setLocalProperty(<span class="string">"spark.scheduler.pool"</span>, <span class="literal">null</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="资源池默认行为"><a href="#资源池默认行为" class="headerlink" title="资源池默认行为"></a>资源池默认行为</h2><p>默认地，各个资源池之间平分整个集群的资源（包括 default 资源池），但在资源池内部，默认情况下，作业是 FIFO 顺序执行的。举例来说，如果你为每个用户创建了一个资源池，那么久意味着各个用户之间共享整个集群的资源，但每个用户自己提交的作业是按顺序执行的，而不会出现后提交的作业抢占前面作业的资源。</p>
-<h2 id="配置资源池属性"><a href="#配置资源池属性" class="headerlink" title="配置资源池属性"></a>配置资源池属性</h2><p>资源池的属性需要通过配置文件来指定。每个资源池都支持以下3个属性 :</p>
-<ul>
-<li><code>schedulingMode</code>：可以是 FIFO 或 FAIR，控制资源池内部的作业是如何调度的。</li>
-<li><code>weight</code>：控制资源池相对其他资源池，可以分配到资源的比例。默认所有资源池的 weight 都是 1。如果你将某个资源池的 weight 设为 2，那么该资源池中的资源将是其他池子的2倍。如果将 weight 设得很高，如 1000，可以实现资源池之间的调度优先级 – 也就是说，weight=1000 的资源池总能立即启动其对应的作业。</li>
-<li><code>minShare</code>：除了整体 weight 之外，每个资源池还能指定一个最小资源分配值（CPU 个数），管理员可能会需要这个设置。公平调度器总是会尝试优先满足所有活跃（active）资源池的最小资源分配值，然后再根据各个池子的 weight 来分配剩下的资源。因此，minShare 属性能够确保每个资源池都能至少获得一定量的集群资源。minShare 的默认值是 0。</li>
-</ul>
-<p>资源池属性是一个 XML 文件，可以基于 conf/fairscheduler.xml.template 修改，然后在 <a href="http://spark.apachecn.org/#/configuration.html?id=spark-properties" target="_blank" rel="noopener">SparkConf</a>。的 spark.scheduler.allocation.file 属性指定文件路径：</p>
-<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line">conf.set(<span class="string">"spark.scheduler.allocation.file"</span>, <span class="string">"/path/to/file"</span>)</span><br></pre></td></tr></table></figure>
-
-<p>资源池 XML 配置文件格式如下，其中每个池子对应一个 <pool>元素，每个资源池可以有其独立的配置 :</pool></p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">allocations</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"production"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FAIR<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>1<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>2<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pool</span> <span class="attr">name</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">schedulingMode</span>&gt;</span>FIFO<span class="tag">&lt;/<span class="name">schedulingMode</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">weight</span>&gt;</span>2<span class="tag">&lt;/<span class="name">weight</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">minShare</span>&gt;</span>3<span class="tag">&lt;/<span class="name">minShare</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pool</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">allocations</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="额外补充："><a href="#额外补充：" class="headerlink" title="额外补充："></a>额外补充：</h1><h2 id="Shuffle相关介绍"><a href="#Shuffle相关介绍" class="headerlink" title="Shuffle相关介绍"></a>Shuffle相关介绍</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>有些运算需要将各节点上的同一类数据汇集到某一节点进行计算，把这些分布在不同节点的数据按照一定的规则汇集到一起的过程称为 Shuffle。</p>
-<p><img src="http://img.rogermaster.top/uPic/4C16KL.jpg" alt="4C16KL"></p>
-<p>在MapReduce框架，Shuffle是连接Map和Reduce之间的桥梁，Map阶段通过shuffle读取数据并输出到对应的Reduce，而Reduce阶段负责从Map端拉取数据并进行计算。在整个shuffle过程中，往往伴随着大量的磁盘和网络I/O。所以shuffle性能的高低也直接决定了整个程序的性能高低。而Spark也会有自己的shuffle实现过程。</p>
-<h3 id="Spark中的-shuffle"><a href="#Spark中的-shuffle" class="headerlink" title="Spark中的 shuffle"></a>Spark中的 shuffle</h3><p>在DAG调度的过程中，<strong>Stage</strong> 阶段的划分是根据是否有shuffle过程，也就是存在 <strong>宽依赖</strong> 的时候,需要进行shuffle,这时候会将 <strong>job</strong> 划分成多个Stage，每一个 Stage 内部有很多可以并行运行的 <strong>Task</strong>。</p>
-<p><img src="http://img.rogermaster.top/uPic/XsfPkt.png" alt="XsfPkt"></p>
-<p>标注对应的RDD后：</p>
-<p>![image-20200908223941532](/Users/roger/Library/Application Support/typora-user-images/image-20200908223941532.png)</p>
-<p><img src="http://img.rogermaster.top/uPic/LEZncX.png" alt="LEZncX"></p>
-<p>stage与stage之间的过程就是 shuffle 阶段，前一个 Stage 的 ShuffleMapTask 进行 Shuffle Write， 把数据存储在 BlockManager 上面， 并且把数据位置元信息上报到 Driver 的 MapOutTrack 组件中， 下一个 Stage 根据数据位置元信息， 进行 Shuffle Read， 拉取上个 Stage 的输出数据。在 Spark 中，负责 shuffle 过程的执行、计算和处理的组件主要就是 <strong>ShuffleManager</strong> 。ShuffleManager 随着Spark的发展有两种实现的方式，分别为 <strong>HashShuffleManager</strong> 和 <strong>SortShuffleManager</strong> ，因此spark的Shuffle有 <strong>Hash Shuffle</strong>  和 <strong>Sort Shuffle</strong> 两种。</p>
-<p>在 <strong>Spark 1.2</strong> 以前，默认的shuffle计算引擎是 <strong>HashShuffleManager</strong> 。</p>
-<p><strong>HashShuffleManager</strong> 有着一个非常严重的弊端，就是会产生大量的中间磁盘文件，进而由大量的磁盘IO操作影响了性能。因此在Spark 1.2以后的版本中，默认的 <strong>ShuffleManager</strong> 改成了 <strong>SortShuffleManager</strong> 。</p>
-<p><strong>SortShuffleManager</strong> 相较于 HashShuffleManager 来说，有了一定的改进。主要就在于每个Task在进行shuffle操作时，虽然也会产生较多的临时磁盘文件，但是最后会将所有的临时文件合并(merge)成一个磁盘文件，因此每个 Task 就只有一个磁盘文件。在下一个 Stage 的shuffle read task拉取自己的数据时，只要根据索引读取每个磁盘文件中的部分数据即可。</p>
-<p>Hash shuffle是不具有排序的Shuffle。</p>
-<h2 id="YARN启动shuffle服务"><a href="#YARN启动shuffle服务" class="headerlink" title="YARN启动shuffle服务"></a>YARN启动shuffle服务</h2><p>要在YARN群集中的每个NodeManager上启动Spark Shuffle服务，请遵循以下说明：</p>
-<ol>
-<li>用YARN配置文件构建Spark。如果你使用的是预打包的发行版，请跳过这一步。</li>
-<li>找到<code>spark-&lt;version&gt;-yarn-shuffle.jar</code>. 如果你是自己构建的spark会在 <code>$SPARK_HOME/common/network-yarn/target/scala-&lt;version&gt;</code> 下,如果你用的我是发行版则在 <code>yarn</code> 下.</li>
-<li>将这个jar包添加到集群中所有NodeManagers的classpath中。</li>
-<li>在每个节点的yarn-site.xml中，将spark_shuffle添加到yarn.nodemanager.aux-services中，然后将yarn.nodemanager.aux-services.spark_shuffle.class设置org.apache.spark.network.yarn.YarnShuffleService。</li>
-<li>在 etc/hadoop/yarn-env.sh 中设置 YARN_HEAPSIZE（默认为 1000），增加 NodeManager 的堆大小，以避免在shuffle中的垃圾回收问题。</li>
-<li>重新启动集群中的所有NodeManagers。</li>
-</ol>
-<p>在YARN上运行shuffle service时，可以使用以下附加配置选项：</p>
-<table>
-<thead>
-<tr>
-<th align="left">Property Name</th>
-<th align="left">Default</th>
-<th align="left">Meaning</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>spark.yarn.shuffle.stopOnFailure</code></td>
-<td align="left"><code>false</code></td>
-<td align="left">当Spark shuffle service的初始化出现故障时，是否要停止NodeManager。这可以防止在Spark shuffle service没有运行的NodeManagers上运行容器导致的应用失败。</td>
-</tr>
-</tbody></table>
-<h2 id="Spark公平调度算法-FAIR"><a href="#Spark公平调度算法-FAIR" class="headerlink" title="Spark公平调度算法(FAIR)"></a>Spark公平调度算法(FAIR)</h2><p><img src="http://img.rogermaster.top/uPic/2kctUu.jpg" alt="2kctUu"></p>
-<p>FAIR 模式中有一个 rootPool 和多个子 Pool， 各个子 Pool 中存储着所有待分配的 <code>TaskSetMagager</code> 。</p>
-<p>在  FAIR  模 式 中 ， 需 要 先 对 子  Pool 进 行 排 序 ， 再 对 子  Pool 里 面 的</p>
-<p><code>TaskSetMagager</code>进行排序，因为<code>Pool</code>和<code>TaskSetMagager</code>都继承了Schedulable特质， 因此使用相同的排序算法。</p>
-<p>排序过程的比较是基于 <code>Fair-share</code> 来比较的，每个要排序的对象包含三个属性:</p>
-<p>runningTasks 值（ 正在运行的 Task 数）、minShare 值、weight 值，比较时会综合考量 runningTasks 值， minShare 值以及 weight 值。</p>
-<p>注意，minShare、weight 的值均在公平调度配置文件 fairscheduler.xml 中被指定，调度池在构建阶段会读取此文件的相关配置。</p>
-<p>1)    如果 A 对象的 runningTasks 大于它的 minShare， B 对象的 runningTasks 小于它的 minShare，那么 B 排在 A 前面； （ <code>runningTasks</code>比<code>minShare</code>小的先执行）</p>
-<p>2)    如果 A 、B 对象的 runningTasks 都小于它们的 minShare ，那么就比较runningTasks 与 minShare 的比值（ <code>minShare</code> 使用率），谁小谁排前面；（ <code>minShare</code>使用率低的先执行）</p>
-<p>3)    如果 A 、B 对象的 <code>runningTasks</code> 都大于它们的 <code>minShare</code> ，那么就比较<code>runningTasks</code> 与 <code>weight</code> 的比值（ 权重使用率），谁小谁排前面。（权重使用率低的先执行）</p>
-<p>4)    如果上述比较均相等，则比较名字。</p>
-<p>整体上来说就是通过 <code>minShare</code> 和 <code>weight</code> 这两个参数控制比较过程， 可以做到让 <code>minShare</code> 使用率和权重使用率少（ 实际运行 task 比例较少） 的先运行。</p>
-<figure class="highlight scala"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span>[spark] <span class="class"><span class="keyword">class</span> <span class="title">FairSchedulingAlgorithm</span> <span class="keyword">extends</span> <span class="title">SchedulingAlgorithm</span> </span>&#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">comparator</span></span>(s1: <span class="type">Schedulable</span>, s2: <span class="type">Schedulable</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> minShare1 = s1.minShare</span><br><span class="line">    <span class="keyword">val</span> minShare2 = s2.minShare</span><br><span class="line">    默认为<span class="number">0</span>,除非通过fair的配置文件进行了配置指定</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> runningTasks1 = s1.runningTasks</span><br><span class="line">    <span class="keyword">val</span> runningTasks2 = s2.runningTasks</span><br><span class="line">    如果是<span class="type">TaskSetManager</span>时,就是taskSet中运行的task的个数,</span><br><span class="line">    如果是<span class="type">Pool</span>实例是表示是所有使用这个poolName的所有的<span class="type">TaskSetManager</span>正在运行的task的个数.</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> s1Needy = runningTasks1 &lt; minShare1</span><br><span class="line">    <span class="keyword">val</span> s2Needy = runningTasks2 &lt; minShare2</span><br><span class="line">    只有在minShare在fair的配置文件中显示配置,同时大于正在运行的task的个数时,才会为<span class="literal">true</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">val</span> minShareRatio1 = runningTasks1.toDouble / math.max(minShare1, <span class="number">1.0</span>).toDouble</span><br><span class="line">    <span class="keyword">val</span> minShareRatio2 = runningTasks2.toDouble / math.max(minShare2, <span class="number">1.0</span>).toDouble</span><br><span class="line">    运行的task的个数针对于minShare的比重</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">val</span> taskToWeightRatio1 = runningTasks1.toDouble / s1.weight.toDouble</span><br><span class="line">    <span class="keyword">val</span> taskToWeightRatio2 = runningTasks2.toDouble / s2.weight.toDouble</span><br><span class="line">    得到正在运行的task个数针对于pool的weight的比重</span><br><span class="line">    <span class="keyword">var</span> compare: <span class="type">Int</span> = <span class="number">0</span></span><br><span class="line"> </span><br><span class="line">    这里首先根据正在运行的task的个数是否已经达到调度队列中最小的分片的个数来进行排序,</span><br><span class="line">    如果s1中运行运行的个数小于s1的pool的配置的minShare,返回<span class="literal">true</span>,表示s1排序在前面.</span><br><span class="line">    如果s2中运行的task的个数小于s2的pool中配置的minShare(最小分片数)的值,表示s1小于s2,这时s2排序应该靠前.</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (s1Needy &amp;&amp; !s2Needy) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!s1Needy &amp;&amp; s2Needy) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s1Needy &amp;&amp; s2Needy) &#123;</span><br><span class="line">    这种情况表示s1与s2两个队列中,正在运行的task的个数都已经大于(不小于)了两个子调度器中配置的minShare的个数时,根据两个子调度器队列中正在运行的task的个数对应此调度器中最小分片的值所占的比重最小的一个排序更靠前</span><br><span class="line">      compare = minShareRatio1.compareTo(minShareRatio2)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    这种情况表示s1与s2两个子调度器的队列中,正在运行的task的个数都还没有达到配置的最小分片的个数的情况,比较两个队列中正在运行的task的个数对应调度器队列的weigth的占比,最小的一个排序更靠前</span><br><span class="line">      compare = taskToWeightRatio1.compareTo(taskToWeightRatio2)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> (compare &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (compare &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    如果两个根据上面的计算,排序值都相同,就看看这两个调度器的名称,按名称的字节序来排序了.</span><br><span class="line">      s1.name &lt; s2.name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>参考文献：</p>
-<ul>
-<li><a href="https://juejin.im/post/6844904065218920456#heading-21" target="_blank" rel="noopener">Spark的Shuffle总结分析</a>-说出你的愿望吧</li>
-<li><a href="https://zhuanlan.zhihu.com/p/67061627" target="_blank" rel="noopener">Spark Shuffle 详解</a>-小鹏</li>
-<li><a href="https://spark.apache.org/docs/latest/job-scheduling.html#job-scheduling" target="_blank" rel="noopener">Job-scheduling</a>-apache</li>
-<li><a href="https://www.cnblogs.com/hanhaotian/p/11791966.html" target="_blank" rel="noopener">SPARK的TASK调度器(FAIR公平调度算法)</a>-herman很慢</li>
-</ul>
-]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-        <tag>Hadoop</tag>
-        <tag>spark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/passages/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>SpringBoot中使用flyway做好数据库版本控制</title>
-    <url>/passages/SpringBoot%E4%B8%AD%E4%BD%BF%E7%94%A8flyway%E5%81%9A%E5%A5%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</url>
-    <content><![CDATA[<h2 id="为什么需要数据库版本控制"><a href="#为什么需要数据库版本控制" class="headerlink" title="为什么需要数据库版本控制"></a>为什么需要数据库版本控制</h2><p>​    在真实的项目开发中，我们一般有三套环境：开发、测试、生产。在开发阶段我们一般都是在开发环境中进行操作，项目开发肯定不止一个人，在开发的过程中，我们肯定会对数据库的库表进行一些修改操作。并且这些操作需要同步到这三套环境中。但是多人协同，人为操作难免会出现疏忽，有时候修改了开发环境忘记了去修改其他环境。很多情况下都需要对数据库的变化做跟踪，以便于我们回退到某个版本。因此我们需要有这样一个工具来帮助我们管理数据库版本，做好各个环境同步更新。</p>
-<h2 id="为什么选择Flyway"><a href="#为什么选择Flyway" class="headerlink" title="为什么选择Flyway"></a>为什么选择Flyway</h2><p>​    现在比较常用的数据库版本管理工具有Flyway和Liquibase。Spring Boot提供了这两者的内建支持，可以很快应用到产品中。</p>
-<p>​    使用Flyway的好处在于使用简单，直接书写我们比较熟悉的sql脚本即可，不需要进行额外的学习。Liquibase的优点在于它能跨平台、跨库，但是需要我们花时间去学习他的脚本编写规则。如果你的项目中没有跨数据库的需要，那么flyway完全够用了。</p>
-<h2 id="Flyway的工作模式"><a href="#Flyway的工作模式" class="headerlink" title="Flyway的工作模式"></a>Flyway的工作模式</h2><p>​    flyway在项目运行的时候会判断你的数据库中是否存在<em>flyway_schema_history</em>表，如果没有就会创建。这个表主要用于记录数据库的状态，Flyway的版本控住主要也是依赖这张表的。</p>
-<p>​    当<em>flyway_schema_history</em>这张表存在，。当检测到你有新的版本需要迁移的时候，Flyway会逐一对比<em>flyway_schema_history</em>表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按版本号次序迁移到数据库中。</p>
-<p><img src="http://img.rogermaster.top/uPic/TkDIKR.png" alt="TkDIKR"></p>
-<p>应用每个迁移时，<em>flyway_schema_history</em>表将相应更新：</p>
-<p><img src="http://img.rogermaster.top/uPic/GC3nO8.png" alt="GC3nO8"></p>
-<p>​    flyway在升级数据库的时候，会检查已经执行过的版本对应的脚本是否发生变化，包括脚本文件名，以及脚本内容。如果flyway检测到发生了变化，则抛出错误，并终止升级。</p>
-<p>​    如果已经执行过的脚本没有发生变化，flyway会跳过这些脚本，依次执行后续版本的脚本，并在记录表中插入对应的升级记录。</p>
-<p>​    所以，flyway总是幂等的，而且可以支持跨版本的升级。</p>
-<p>​    Migrations就是我们用SQL编写的脚本。为了让我们编写的SQL脚本生效，还需要按照Flyway指定的方式进行命名。</p>
-<p><img src="http://img.rogermaster.top/uPic/nuNib6.png" alt="nuNib6"></p>
-<ul>
-<li><strong>Prefix</strong>: <code>V</code>代表版本化，<code>U</code>代表撤销，<code>R</code>代表可重复迁移。</li>
-<li><strong>Version</strong>: 带点或下划线的版本，可以随意分隔多个部分（不适合重复迁移）。</li>
-<li><strong>Separator</strong>: <code>__</code> (两个下划线)</li>
-<li><strong>Description</strong>: 下划线或空格分隔单词</li>
-<li><strong>Suffix</strong>: <code>.sql</code></li>
-</ul>
-<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="1、添加依赖"><a href="#1、添加依赖" class="headerlink" title="1、添加依赖"></a>1、添加依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flyway-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、配置application-yml文件"><a href="#2、配置application-yml文件" class="headerlink" title="2、配置application.yml文件"></a>2、配置application.yml文件</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  datasource:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">jdbc:mysql://localhost:3306/test?useSSL=false&amp;allowMultiQueries=true</span></span><br><span class="line"><span class="attr">    username:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    password:</span> <span class="number">123456</span></span><br><span class="line"><span class="attr">    driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据库版本控制</span></span><br><span class="line"><span class="attr">  flyway:</span></span><br><span class="line">    <span class="comment"># 启用或禁用 flyway</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 字符编码</span></span><br><span class="line"><span class="attr">    encoding:</span> <span class="string">utf-8</span></span><br><span class="line">    <span class="comment"># 对执行迁移时基准版本的描述</span></span><br><span class="line"><span class="attr">    baseline-description:</span> <span class="string">test</span></span><br><span class="line">    <span class="comment"># 若连接的数据库非空库，是否初始化</span></span><br><span class="line">    <span class="comment"># 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.</span></span><br><span class="line"><span class="attr">    baseline-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 指定 baseline 的版本号,缺省值为 1, 低于该版本号的 SQL 文件, migrate 的时候被忽略</span></span><br><span class="line">    <span class="comment"># 开始执行基准迁移时对现有的schema的版本打标签，默认值为1.</span></span><br><span class="line"><span class="attr">    baseline-version:</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 是否开启校验</span></span><br><span class="line">    <span class="comment"># 迁移时是否校验，默认为 true</span></span><br><span class="line"><span class="attr">    validate-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 默认脚本加载路径：/db/migration</span></span><br><span class="line">    <span class="comment"># locations: ["classpath:/db/migration"]</span></span><br><span class="line">    <span class="comment"># flyway 的 clean 命令会删除指定 schema 下的所有 table，默认 false</span></span><br><span class="line"><span class="attr">    clean-disabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 发环境最好开启 outOfOrder, 生产环境关闭 outOfOrder</span></span><br><span class="line">    <span class="comment"># 是否允许无序的迁移，默认 false</span></span><br><span class="line"><span class="attr">    out-of-order:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 检查迁移脚本的位置是否存在，默认false</span></span><br><span class="line"><span class="attr">    check-location:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当读取元数据表时是否忽略错误的迁移，默认false</span></span><br><span class="line"><span class="attr">    ignore-future-migrations:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当初始化好连接时要执行的SQL</span></span><br><span class="line"><span class="attr">    init-sqls:</span> <span class="string">show</span> <span class="string">tables;</span></span><br><span class="line">    <span class="comment"># 迁移时使用的JDBC URL，如果没有指定的话，将使用配置的主数据源</span></span><br><span class="line">    <span class="comment"># url:</span></span><br><span class="line">    <span class="comment"># 迁移数据库的用户名</span></span><br><span class="line">    <span class="comment"># user:</span></span><br><span class="line">    <span class="comment"># 目标数据库的密码</span></span><br><span class="line">    <span class="comment"># password:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的前缀，默认$&#123;</span></span><br><span class="line">    <span class="comment">#placeholder-prefix:</span></span><br><span class="line">    <span class="comment"># 是否要被替换，默认true</span></span><br><span class="line">    <span class="comment">#placeholder-replacement:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的后缀，默认&#125;</span></span><br><span class="line">    <span class="comment">#placeholder-suffix:</span></span><br><span class="line">    <span class="comment"># 设置placeholder的value</span></span><br><span class="line">    <span class="comment">#placeholders.[placeholder name]</span></span><br><span class="line">    <span class="comment"># 设定需要flywary迁移的schema，大小写敏感，默认为连接默认的schema</span></span><br><span class="line">    <span class="comment">#schemas: flyway</span></span><br><span class="line">    <span class="comment"># 迁移文件的前缀，默认为V</span></span><br><span class="line">    <span class="comment">#sql-migration-prefix:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的文件名分隔符，默认__</span></span><br><span class="line">    <span class="comment">#sql-migration-separator:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的后缀，默认为.sql</span></span><br><span class="line">    <span class="comment">#sql-migration-suffix:</span></span><br><span class="line">    <span class="comment"># 使用的元数据表名，默认为schema_version</span></span><br><span class="line">    <span class="comment">#table: flyway_schema_history</span></span><br><span class="line">    <span class="comment"># 迁移时使用的目标版本，默认为latest version</span></span><br><span class="line">    <span class="comment">#target:</span></span><br></pre></td></tr></table></figure>
-
-<p>flyway下没有配置url、user、password的话将会使用springboot的数据源。</p>
-<h3 id="3、在db-migration包下新建V1-initialization-table-sql文件。"><a href="#3、在db-migration包下新建V1-initialization-table-sql文件。" class="headerlink" title="3、在db.migration包下新建V1__initialization_table.sql文件。"></a>3、在db.migration包下新建V1__initialization_table.sql文件。</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> zerofill <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'自增ID'</span>,</span><br><span class="line">  <span class="string">`user_name`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'姓名'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_general_ci ROW_FORMAT=DYNAMIC <span class="keyword">COMMENT</span>=<span class="string">'用户表'</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>flyway脚本默认放在classpath:/db/migration目录下面，如果想换位置，可以自定义一个位置spring.flyway.locations即为脚本存放的位置。</p>
-</blockquote>
-<h3 id="4、开始验证"><a href="#4、开始验证" class="headerlink" title="4、开始验证"></a>4、开始验证</h3><p>目前只有test库中没有任何表：</p>
-<p><img src="http://img.rogermaster.top/uPic/JEo9XF.png" alt="JEo9XF"></p>
-<p>我们开始启动项目看看：</p>
-<p><img src="http://img.rogermaster.top/uPic/NQVITI.png" alt="NQVITI"></p>
-<p>通过日志信息，我们可以看到已经迁移成功了，我们去数据库看看。</p>
-<p><img src="http://img.rogermaster.top/uPic/PI8774.png" alt="PI8774"></p>
-<p>表结构：</p>
-<p><img src="http://img.rogermaster.top/uPic/UTMMNl.png" alt="UTMMNl"></p>
-<p>现在我们来给user表新增一个字段试试。</p>
-<p>V1.1__addField_col.sql</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="keyword">user</span> <span class="keyword">add</span> mail <span class="built_in">varchar</span>(<span class="number">128</span>) <span class="keyword">comment</span> <span class="string">'用户邮箱'</span>;</span><br></pre></td></tr></table></figure>
-
-<p>运行项目看看</p>
-<p><img src="http://img.rogermaster.top/uPic/hIlzSt.png" alt="hIlzSt"></p>
-<p>表结构：</p>
-<p><img src="http://img.rogermaster.top/uPic/IDeE9S.png" alt="IDeE9S"></p>
-]]></content>
-      <categories>
-        <category>spring boot</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tensorflow2.0入门系列(一)</title>
-    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="tensorflow2入门教程（-）"><a href="#tensorflow2入门教程（-）" class="headerlink" title="tensorflow2入门教程（-）"></a>tensorflow2入门教程（-）</h1><h3 id="导入TensorFlow2-0"><a href="#导入TensorFlow2-0" class="headerlink" title="导入TensorFlow2.0"></a>导入TensorFlow2.0</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
-
-<p>MNIST数据集是一个手写数据集，其中有60,000张训练图片, 和10,000张训练图片，是深度学习常被用来入门的数据集</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#加载mnist数据</span></span><br><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取训练数据和测试数据，将样本从整数转换为浮点数</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="构建深度学习模型"><a href="#构建深度学习模型" class="headerlink" title="构建深度学习模型"></a>构建深度学习模型</h3><p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
-<p>softmax用于多分类过程中，它将多个神经元的输出，映射到（0,1）区间内，可以看成概率来理解，从而来进行多分类！</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#tf.keras.models.Sequential为Keras提供的层叠模型</span></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">  <span class="comment">#输入层，输入的shape是28X28（图片大小是28X28）  ,tf.keras.layers.Flatten()将输入展平，将多维数据展层一维，降维打击</span></span><br><span class="line">  tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">  <span class="comment">#隐藏层一，输出shape是128，激励函数是relu,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">  <span class="comment">#Dropout一些神经元，能够有效地处理在训练过程中产生的过拟合问题</span></span><br><span class="line">  tf.keras.layers.Dropout(<span class="number">0</span>.<span class="number">2</span>),</span><br><span class="line">  <span class="comment">#输出层，shape为10分别对应着0-9这几个手写数字，激励函数为softmax，将特征值转换为在各个分类上的概率，,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-
-<p>构建好模型后，通过调用 compile 方法配置该模型的学习流程</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用adam优化器，损失函数为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
-
-<h3 id="训练并验证模型"><a href="#训练并验证模型" class="headerlink" title="训练并验证模型"></a>训练并验证模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>tensorflow2.0</category>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>tensorflow2.0</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot优雅的参数校验-validation</title>
-    <url>/passages/SpringBoot%E4%BC%98%E9%9B%85%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C-validation/</url>
-    <content><![CDATA[<h1 id="SpringBoot优雅的参数校验-validation"><a href="#SpringBoot优雅的参数校验-validation" class="headerlink" title="SpringBoot优雅的参数校验-validation"></a>SpringBoot优雅的参数校验-validation</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;在后端开发过程中，我们避免不了对前端传过来的参数进行检验。有的人会说，前端检验不就行了吗，为啥还要后端检验一遍？我们前端经常对我说的一句话：”后端不要信任前端，你怎么知道接口不会被拦截，前端就一定不会传错。“。因此，参数校验是非常重要的一个环节，严格参数校验会减少很多出bug的概率，增加接口的安全性，增强程序的健壮性。</p>
-<p>&ensp;&ensp;&ensp;&ensp;当我们在做参数检验的时候，可能会出现这种情况：参数太多，我们要写很多条件判断语句，这样就会显得代码不够整洁，阅读体验也不是很好。<br><img src="http://img.rogermaster.top/uPic/SKO0yt.png" alt="SKO0yt"><br>&ensp;&ensp;&ensp;&ensp;因此我们需要一种优雅的方式来处理上面的问题，进行SpringBoot统一参数校验。那就是今天我们的主角validation啦。</p>
-<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>&ensp;&ensp;&ensp;&ensp;通过@Validated这一注解配合一些参数校验注解(PS:@NotNull，@NotEmpty)。然后对抛出的异常进行全局统一捕获然后返回错误信息。</p>
-<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Validation --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="PostParams"><a href="#PostParams" class="headerlink" title="PostParams"></a>PostParams</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.spring_boot_validation.entity.params;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Valid;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotEmpty;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: Roger</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: post参数类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span>: 2020/7/25 4:31 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostParams</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ID</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"ID不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"名称不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotEmpty</span>(message = <span class="string">"数组里面至少有一个元素"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; array;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Valid</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"item不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Item item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="TestController"><a href="#TestController" class="headerlink" title="TestController"></a>TestController</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"limit不能为空"</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/post-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">postTest</span><span class="params">(@Valid @RequestBody PostParams postParams)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(HttpStatus.CREATED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest2</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test3"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest3</span><span class="params">(@Valid Item item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test4"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest4</span><span class="params">(@NotNull(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                           Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h3><p>参数检验异常统一拦截处理</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ControllerAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestParam上validate失败后抛出的异常是javax.validation.ConstraintViolationException</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerMethodArgumentNotValidException</span><span class="params">(<span class="keyword">final</span> MethodArgumentNotValidException e)</span> </span>&#123;</span><br><span class="line">        List&lt;ObjectError&gt; objectErrors = e.getBindingResult().getAllErrors();</span><br><span class="line">        StringBuilder errorMessages = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        objectErrors.forEach(objectError -&gt; errorMessages.append(objectError.getDefaultMessage()).append(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestBody上validate失败后抛出的异常是MethodArgumentNotValidException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> ConstraintViolationException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 validate失败后抛出的异常是BindException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> BindException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    在使用参数检验的过程中，主要会抛出以上三种异常BindException、MethodArgumentNotValidException、ConstraintViolationException。原因主要是因为跟请求发起的数据格式（content-type）有关系，对于不同的传输数据的格式spring采用不同的HttpMessageConverter（http参数转换器）来进行处理。</p>
-<p>​    请求体(@RequestBody)绑定到java bean上失败时抛出MethodArgumentNotValidException；普通参数(@RequestParam)(非 java bean)校验出错时抛出ConstraintViolationException；请求参数绑定到java bean上失败时抛出BindException；</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>请求POST: <a href="http://localhost:8080/post-test" target="_blank" rel="noopener">http://localhost:8080/post-test</a> ,结果如下</p>
-<p><img src="http://img.rogermaster.top/uPic/QwBokF.png" alt="QwBokF"></p>
-<h3 id="常用的一些注解解析"><a href="#常用的一些注解解析" class="headerlink" title="常用的一些注解解析"></a>常用的一些注解解析</h3><h5 id="Validated-和-Valid-的异同"><a href="#Validated-和-Valid-的异同" class="headerlink" title="@Validated 和 @Valid 的异同"></a>@Validated 和 @Valid 的异同</h5><table>
-<thead>
-<tr>
-<th align="left"><strong>注解</strong></th>
-<th align="left"><strong>范围</strong></th>
-<th><strong>嵌套</strong></th>
-<th><strong>校验组</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">@Validated</td>
-<td align="left">可以标记类、方法、方法参数，不能用在成员属性（字段）上</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td align="left">@Valid</td>
-<td align="left">可以标记方法、构造函数、方法参数和成员属性（字段）上</td>
-<td>支持</td>
-<td>不支持</td>
-</tr>
-</tbody></table>
-<p>通常在使用过程中，我们把@Validated标记在类上，然后@Valid标记在实体中的属性上。在Controller中使用，把@Validated标记在类上。然后针对java bean的参数就用@Valid注解。如下所示：</p>
-<p><img src="http://img.rogermaster.top/uPic/0LcqcD.png" alt="0LcqcD"></p>
-<h4 id="校验注解一览表"><a href="#校验注解一览表" class="headerlink" title="校验注解一览表"></a>校验注解一览表</h4><table>
-<thead>
-<tr>
-<th><strong>注解</strong></th>
-<th><strong>作用</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@Valid</td>
-<td>被注释的元素是一个对象，需要检查此对象的所有字段值</td>
-</tr>
-<tr>
-<td>@Null</td>
-<td>被注释的元素必须为 null</td>
-</tr>
-<tr>
-<td>@NotNull</td>
-<td>被注释的元素必须不为 null</td>
-</tr>
-<tr>
-<td>@AssertTrue</td>
-<td>被注释的元素必须为 true</td>
-</tr>
-<tr>
-<td>@AssertFalse</td>
-<td>被注释的元素必须为 false</td>
-</tr>
-<tr>
-<td>@Min(value)</td>
-<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
-</tr>
-<tr>
-<td>@Max(value)</td>
-<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
-</tr>
-<tr>
-<td>@DecimalMin(value)</td>
-<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
-</tr>
-<tr>
-<td>@DecimalMax(value)</td>
-<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
-</tr>
-<tr>
-<td>@Size(max, min)</td>
-<td>被注释的元素的大小必须在指定的范围内</td>
-</tr>
-<tr>
-<td>@Digits (integer, fraction)</td>
-<td>被注释的元素必须是一个数字，其值必须在可接受的范围内</td>
-</tr>
-<tr>
-<td>@Past</td>
-<td>被注释的元素必须是一个过去的日期</td>
-</tr>
-<tr>
-<td>@Future</td>
-<td>被注释的元素必须是一个将来的日期</td>
-</tr>
-<tr>
-<td>@Pattern(value)</td>
-<td>被注释的元素必须符合指定的正则表达式</td>
-</tr>
-<tr>
-<td>@Email</td>
-<td>被注释的元素必须是电子邮箱地址</td>
-</tr>
-<tr>
-<td>@Length(min=, max=)</td>
-<td>被注释的字符串的大小必须在指定的范围内</td>
-</tr>
-<tr>
-<td>@NotEmpty</td>
-<td>被注释的字符串的必须非空</td>
-</tr>
-<tr>
-<td>@Range(min=, max=)</td>
-<td>被注释的元素必须在合适的范围内</td>
-</tr>
-<tr>
-<td>@NotBlank</td>
-<td>被注释的字符串的必须非空</td>
-</tr>
-<tr>
-<td>@URL(protocol=,host=, port=,regexp=, flags=)</td>
-<td>被注释的字符串必须是一个有效的url</td>
-</tr>
-</tbody></table>
-<h3 id="嵌套验证"><a href="#嵌套验证" class="headerlink" title="嵌套验证"></a>嵌套验证</h3><p>我们很多时候会存在这样的业务场景，前端会给后端传递一个list，我们不仅要限制每次请求list内的个数，同时还要对list内基本元素的属性值进行校验。这个时候就需要进行嵌套验证了，实现的方式很简单。在list上添加@Vaild就可以实现了。</p>
-<p><img src="http://img.rogermaster.top/uPic/UqPx8n.png" alt="UqPx8n"></p>
-]]></content>
-      <categories>
-        <category>spring boot</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tensorflow2.0入门系列（二）</title>
-    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%BA%8C%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="tensorflow2-0入门系列（二）"><a href="#tensorflow2-0入门系列（二）" class="headerlink" title="tensorflow2.0入门系列（二）"></a>tensorflow2.0入门系列（二）</h1><h3 id="导入相关包"><a href="#导入相关包" class="headerlink" title="导入相关包"></a>导入相关包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
-
-<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：</p>
-<table>
-<thead>
-<tr>
-<th align="left">Label</th>
-<th align="center">Class</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">0</td>
-<td align="center">T-shirt/top</td>
-</tr>
-<tr>
-<td align="left">1</td>
-<td align="center">Trouser</td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="center">Pullover</td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="center">Dress</td>
-</tr>
-<tr>
-<td align="left">4</td>
-<td align="center">Coat</td>
-</tr>
-<tr>
-<td align="left">5</td>
-<td align="center">Sandal</td>
-</tr>
-<tr>
-<td align="left">6</td>
-<td align="center">Shirt</td>
-</tr>
-<tr>
-<td align="left">7</td>
-<td align="center">Sneaker</td>
-</tr>
-<tr>
-<td align="left">8</td>
-<td align="center">Bag</td>
-</tr>
-<tr>
-<td align="left">9</td>
-<td align="center">Ankle boot</td>
-</tr>
-</tbody></table>
-<h3 id="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"><a href="#导入时装MNIST数据集，作为MNIST手写时装数据集的扩展" class="headerlink" title="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"></a>导入时装MNIST数据集，作为MNIST手写时装数据集的扩展</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fashion_mnist = keras.datasets.fashion_mnist</span><br><span class="line"></span><br><span class="line">(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()</span><br></pre></td></tr></table></figure>
-
-<p>每个图像都映射到一个标签。 由于类名不包含在数据集中，因此将它们存储在此处以便在后面绘制图像时使用</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#新建列表用于存儲每個标签所对应的类型</span></span><br><span class="line">class_names = [<span class="string">'T-shirt/top'</span>, <span class="string">'Trouser'</span>, <span class="string">'Pullover'</span>, <span class="string">'Dress'</span>, <span class="string">'Coat'</span>,<span class="string">'Sandal'</span>, <span class="string">'Shirt'</span>, <span class="string">'Sneaker'</span>, <span class="string">'Bag'</span>, <span class="string">'Ankle boot'</span>]</span><br></pre></td></tr></table></figure>
-
-<h3 id="数据扩展"><a href="#数据扩展" class="headerlink" title="数据扩展"></a>数据扩展</h3><p>（ps下方展示的代码仅可用于了解一些基本的数据操作扩展方法，并非核心代码）</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#获取数据集的Shape</span></span><br><span class="line">print(train_images)</span><br><span class="line"><span class="comment">#输出(60000, 28, 28)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#获取数据集的数量</span></span><br><span class="line">print(len(train_images))</span><br><span class="line"><span class="comment">#输出60000</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>在训练网络之前必须对数据进行预处理。<br>一是方便我们的神经网络能够快速的识别里面的特征。<br>二是能够有效的帮助我们训练出一个成功的模型。<br>我们可以借助matplotlib这个绘图工具包帮助我们直观的感受数据集，以及训练过程。当然TensorFlow也提供了tensorboard用于可视化，暂时我们先不做讲解<br>我们可以先试着借助matplotlib画出我们数据集中的某张图片：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.imshow(train_images[<span class="number">0</span>])</span><br><span class="line"><span class="comment">#颜色比例彩条</span></span><br><span class="line">plt.colorbar()</span><br><span class="line"><span class="comment">#不显示网格线</span></span><br><span class="line">plt.grid(<span class="literal">False</span>)</span><br><span class="line"><span class="comment">#保存图像</span></span><br><span class="line">plt.savefig(<span class="string">'some_one.png'</span>)</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://pvqnwtxgq.bkt.clouddn.com/some_one.png" alt="输出结果"><br>在将它们送到神经网络模型之前，我们为了将这些值缩放到0到1的范围，我们将值除以255.训练集和测试集以相同的方式进行预处理</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">train_images = train_images / <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line">test_images = test_images / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<p>为了验证数据格式是否正确以及我们是否已准备好构建和训练网络，让我们显示训练集中的前25个图像并在每个图像下方显示类名</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建图</span></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">25</span>):</span><br><span class="line">    <span class="comment">#创建子图，5行5列，第i+1个</span></span><br><span class="line">    plt.subplot(<span class="number">5</span>,<span class="number">5</span>,i+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">#X轴坐标刻度设置</span></span><br><span class="line">    plt.xticks([])</span><br><span class="line">    <span class="comment">#Y轴坐标刻度设置</span></span><br><span class="line">    plt.yticks([])</span><br><span class="line">    plt.grid(<span class="literal">False</span>)</span><br><span class="line">    <span class="comment">#cmap: 颜色图谱（colormap), 默认绘制为RGB(A)颜色空间，这里使用的是二值图</span></span><br><span class="line">    plt.imshow(train_images[i])</span><br><span class="line">    plt.colorbar()</span><br><span class="line">    <span class="comment">#设置X轴标签</span></span><br><span class="line">    plt.xlabel(class_names[train_labels[i]])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>可以通过右边的彩色比例条可以明显看出图像值已经缩放到0-1的范围</p>
-<h3 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h3><h4 id="设置神经网络层"><a href="#设置神经网络层" class="headerlink" title="设置神经网络层"></a>设置神经网络层</h4><p>这里还是采用Keras提供的层叠模型</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = keras.Sequential([</span><br><span class="line">    <span class="comment"># 输入层</span></span><br><span class="line">    keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">    <span class="comment"># 隐藏层一，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">    <span class="comment"># 输出层，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-
-<h4 id="配置模型"><a href="#配置模型" class="headerlink" title="配置模型"></a>配置模型</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用Adam优化器，loss计算方法为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
-
-<h3 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#训练总轮数为5轮</span></span><br><span class="line">model.fit(train_images, train_labels, epochs=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h3><p>看准确度</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">test_loss, test_acc = model.evaluate(test_images, test_labels)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'\nTest accuracy:'</span>, test_acc)</span><br></pre></td></tr></table></figure>
-
-<h3 id="进行预测"><a href="#进行预测" class="headerlink" title="进行预测"></a>进行预测</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = model.predict(test_images)</span><br></pre></td></tr></table></figure>
-
-<p>现在我们去其中第一个结果看看预测情况：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(predictions[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-
-<p>输出：[2.4625590e-08 6.4621108e-10 6.6212579e-08 1.8379983e-11 4.6871547e-09<br>4.0910607e-05 3.9370971e-07 9.7850722e-04 2.8181713e-09 9.9898010e-01]<br>预测是10个数字的数组。 它们代表模型的“信心”，即图像对应于10种不同服装中的每一种。 我们可以看到哪个标签具有最高的置信度值<br>我们可以使用np.argmax()来直接计算出置信度最高的所对应的标签</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(np.argmax(predictions[<span class="number">0</span>]))</span><br><span class="line"><span class="comment">#输出 9</span></span><br></pre></td></tr></table></figure>
-
-<p>我们再对比一下真正的标签</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(test_labels[<span class="number">0</span>])</span><br><span class="line"><span class="comment"># 输出 9</span></span><br></pre></td></tr></table></figure>
-
-<p>我们同样可以借助matplotlib直观的表现出来<br>首先我们可以构建画小图的函数和画预测值直方图的函数：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_image</span><span class="params">(i, predictions_array, true_label, img)</span>:</span></span><br><span class="line">  predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks([])</span><br><span class="line">  plt.yticks([])</span><br><span class="line"></span><br><span class="line">  plt.imshow(img, cmap=plt.cm.binary)</span><br><span class="line"></span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line">  <span class="keyword">if</span> predicted_label == true_label:</span><br><span class="line">    color = <span class="string">'blue'</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    color = <span class="string">'red'</span></span><br><span class="line"></span><br><span class="line">  plt.xlabel(<span class="string">"&#123;&#125; &#123;:2.0f&#125;% (&#123;&#125;)"</span>.format(class_names[predicted_label],</span><br><span class="line">                                <span class="number">100</span>*np.max(predictions_array),</span><br><span class="line">                                class_names[true_label]),</span><br><span class="line">                                color=color)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_value_array</span><span class="params">(i, predictions_array, true_label)</span>:</span></span><br><span class="line">  predictions_array, true_label = predictions_array[i], true_label[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks(range(<span class="number">10</span>), class_names, rotation=<span class="number">90</span>)</span><br><span class="line">  plt.yticks([])</span><br><span class="line">  thisplot = plt.bar(range(<span class="number">10</span>), predictions_array, color=<span class="string">"#777777"</span>)</span><br><span class="line">  plt.ylim([<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line"></span><br><span class="line">  thisplot[predicted_label].set_color(<span class="string">'red'</span>)</span><br><span class="line">  thisplot[true_label].set_color(<span class="string">'blue'</span>)</span><br></pre></td></tr></table></figure>
-
-<p>我们可以看看15张图片的表现情况</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">num_rows = <span class="number">5</span></span><br><span class="line">num_cols = <span class="number">3</span></span><br><span class="line">num_images = num_rows*num_cols</span><br><span class="line">plt.figure(figsize=(<span class="number">2</span>*<span class="number">2</span>*num_cols, <span class="number">2</span>*num_rows))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_images):</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">1</span>)</span><br><span class="line">  plot_image(i, predictions, test_labels, test_images)</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">2</span>)</span><br><span class="line">  plot_value_array(i, predictions, test_labels)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://pvqnwtxgq.bkt.clouddn.com/15_pre.png" alt="预测情况"></p>
-]]></content>
-      <categories>
-        <category>tensorflow2.0</category>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>tensorflow2.0</tag>
-        <tag>深度学习</tag>
       </tags>
   </entry>
   <entry>
@@ -1462,6 +1114,359 @@
         <tag>大数据</tag>
         <tag>Hadoop</tag>
         <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot优雅的参数校验-validation</title>
+    <url>/passages/SpringBoot%E4%BC%98%E9%9B%85%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C-validation/</url>
+    <content><![CDATA[<h1 id="SpringBoot优雅的参数校验-validation"><a href="#SpringBoot优雅的参数校验-validation" class="headerlink" title="SpringBoot优雅的参数校验-validation"></a>SpringBoot优雅的参数校验-validation</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;在后端开发过程中，我们避免不了对前端传过来的参数进行检验。有的人会说，前端检验不就行了吗，为啥还要后端检验一遍？我们前端经常对我说的一句话：”后端不要信任前端，你怎么知道接口不会被拦截，前端就一定不会传错。“。因此，参数校验是非常重要的一个环节，严格参数校验会减少很多出bug的概率，增加接口的安全性，增强程序的健壮性。</p>
+<p>&ensp;&ensp;&ensp;&ensp;当我们在做参数检验的时候，可能会出现这种情况：参数太多，我们要写很多条件判断语句，这样就会显得代码不够整洁，阅读体验也不是很好。<br><img src="http://img.rogermaster.top/uPic/SKO0yt.png" alt="SKO0yt"><br>&ensp;&ensp;&ensp;&ensp;因此我们需要一种优雅的方式来处理上面的问题，进行SpringBoot统一参数校验。那就是今天我们的主角validation啦。</p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>&ensp;&ensp;&ensp;&ensp;通过@Validated这一注解配合一些参数校验注解(PS:@NotNull，@NotEmpty)。然后对抛出的异常进行全局统一捕获然后返回错误信息。</p>
+<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Validation --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PostParams"><a href="#PostParams" class="headerlink" title="PostParams"></a>PostParams</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.spring_boot_validation.entity.params;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Valid;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotEmpty;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: Roger</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: post参数类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span>: 2020/7/25 4:31 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostParams</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ID</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"ID不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"名称不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotEmpty</span>(message = <span class="string">"数组里面至少有一个元素"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; array;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Valid</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"item不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Item item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TestController"><a href="#TestController" class="headerlink" title="TestController"></a>TestController</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"limit不能为空"</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/post-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">postTest</span><span class="params">(@Valid @RequestBody PostParams postParams)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(HttpStatus.CREATED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest2</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test3"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest3</span><span class="params">(@Valid Item item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test4"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest4</span><span class="params">(@NotNull(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                           Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h3><p>参数检验异常统一拦截处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ControllerAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestParam上validate失败后抛出的异常是javax.validation.ConstraintViolationException</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerMethodArgumentNotValidException</span><span class="params">(<span class="keyword">final</span> MethodArgumentNotValidException e)</span> </span>&#123;</span><br><span class="line">        List&lt;ObjectError&gt; objectErrors = e.getBindingResult().getAllErrors();</span><br><span class="line">        StringBuilder errorMessages = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        objectErrors.forEach(objectError -&gt; errorMessages.append(objectError.getDefaultMessage()).append(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestBody上validate失败后抛出的异常是MethodArgumentNotValidException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> ConstraintViolationException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 validate失败后抛出的异常是BindException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> BindException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    在使用参数检验的过程中，主要会抛出以上三种异常BindException、MethodArgumentNotValidException、ConstraintViolationException。原因主要是因为跟请求发起的数据格式（content-type）有关系，对于不同的传输数据的格式spring采用不同的HttpMessageConverter（http参数转换器）来进行处理。</p>
+<p>​    请求体(@RequestBody)绑定到java bean上失败时抛出MethodArgumentNotValidException；普通参数(@RequestParam)(非 java bean)校验出错时抛出ConstraintViolationException；请求参数绑定到java bean上失败时抛出BindException；</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>请求POST: <a href="http://localhost:8080/post-test" target="_blank" rel="noopener">http://localhost:8080/post-test</a> ,结果如下</p>
+<p><img src="http://img.rogermaster.top/uPic/QwBokF.png" alt="QwBokF"></p>
+<h3 id="常用的一些注解解析"><a href="#常用的一些注解解析" class="headerlink" title="常用的一些注解解析"></a>常用的一些注解解析</h3><h5 id="Validated-和-Valid-的异同"><a href="#Validated-和-Valid-的异同" class="headerlink" title="@Validated 和 @Valid 的异同"></a>@Validated 和 @Valid 的异同</h5><table>
+<thead>
+<tr>
+<th align="left"><strong>注解</strong></th>
+<th align="left"><strong>范围</strong></th>
+<th><strong>嵌套</strong></th>
+<th><strong>校验组</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@Validated</td>
+<td align="left">可以标记类、方法、方法参数，不能用在成员属性（字段）上</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td align="left">@Valid</td>
+<td align="left">可以标记方法、构造函数、方法参数和成员属性（字段）上</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+</tbody></table>
+<p>通常在使用过程中，我们把@Validated标记在类上，然后@Valid标记在实体中的属性上。在Controller中使用，把@Validated标记在类上。然后针对java bean的参数就用@Valid注解。如下所示：</p>
+<p><img src="http://img.rogermaster.top/uPic/0LcqcD.png" alt="0LcqcD"></p>
+<h4 id="校验注解一览表"><a href="#校验注解一览表" class="headerlink" title="校验注解一览表"></a>校验注解一览表</h4><table>
+<thead>
+<tr>
+<th><strong>注解</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Valid</td>
+<td>被注释的元素是一个对象，需要检查此对象的所有字段值</td>
+</tr>
+<tr>
+<td>@Null</td>
+<td>被注释的元素必须为 null</td>
+</tr>
+<tr>
+<td>@NotNull</td>
+<td>被注释的元素必须不为 null</td>
+</tr>
+<tr>
+<td>@AssertTrue</td>
+<td>被注释的元素必须为 true</td>
+</tr>
+<tr>
+<td>@AssertFalse</td>
+<td>被注释的元素必须为 false</td>
+</tr>
+<tr>
+<td>@Min(value)</td>
+<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td>@Max(value)</td>
+<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td>@DecimalMin(value)</td>
+<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td>@DecimalMax(value)</td>
+<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td>@Size(max, min)</td>
+<td>被注释的元素的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td>@Digits (integer, fraction)</td>
+<td>被注释的元素必须是一个数字，其值必须在可接受的范围内</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>被注释的元素必须是一个过去的日期</td>
+</tr>
+<tr>
+<td>@Future</td>
+<td>被注释的元素必须是一个将来的日期</td>
+</tr>
+<tr>
+<td>@Pattern(value)</td>
+<td>被注释的元素必须符合指定的正则表达式</td>
+</tr>
+<tr>
+<td>@Email</td>
+<td>被注释的元素必须是电子邮箱地址</td>
+</tr>
+<tr>
+<td>@Length(min=, max=)</td>
+<td>被注释的字符串的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td>@NotEmpty</td>
+<td>被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td>@Range(min=, max=)</td>
+<td>被注释的元素必须在合适的范围内</td>
+</tr>
+<tr>
+<td>@NotBlank</td>
+<td>被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td>@URL(protocol=,host=, port=,regexp=, flags=)</td>
+<td>被注释的字符串必须是一个有效的url</td>
+</tr>
+</tbody></table>
+<h3 id="嵌套验证"><a href="#嵌套验证" class="headerlink" title="嵌套验证"></a>嵌套验证</h3><p>我们很多时候会存在这样的业务场景，前端会给后端传递一个list，我们不仅要限制每次请求list内的个数，同时还要对list内基本元素的属性值进行校验。这个时候就需要进行嵌套验证了，实现的方式很简单。在list上添加@Vaild就可以实现了。</p>
+<p><img src="http://img.rogermaster.top/uPic/UqPx8n.png" alt="UqPx8n"></p>
+]]></content>
+      <categories>
+        <category>spring boot</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot中使用flyway做好数据库版本控制</title>
+    <url>/passages/SpringBoot%E4%B8%AD%E4%BD%BF%E7%94%A8flyway%E5%81%9A%E5%A5%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</url>
+    <content><![CDATA[<h2 id="为什么需要数据库版本控制"><a href="#为什么需要数据库版本控制" class="headerlink" title="为什么需要数据库版本控制"></a>为什么需要数据库版本控制</h2><p>​    在真实的项目开发中，我们一般有三套环境：开发、测试、生产。在开发阶段我们一般都是在开发环境中进行操作，项目开发肯定不止一个人，在开发的过程中，我们肯定会对数据库的库表进行一些修改操作。并且这些操作需要同步到这三套环境中。但是多人协同，人为操作难免会出现疏忽，有时候修改了开发环境忘记了去修改其他环境。很多情况下都需要对数据库的变化做跟踪，以便于我们回退到某个版本。因此我们需要有这样一个工具来帮助我们管理数据库版本，做好各个环境同步更新。</p>
+<h2 id="为什么选择Flyway"><a href="#为什么选择Flyway" class="headerlink" title="为什么选择Flyway"></a>为什么选择Flyway</h2><p>​    现在比较常用的数据库版本管理工具有Flyway和Liquibase。Spring Boot提供了这两者的内建支持，可以很快应用到产品中。</p>
+<p>​    使用Flyway的好处在于使用简单，直接书写我们比较熟悉的sql脚本即可，不需要进行额外的学习。Liquibase的优点在于它能跨平台、跨库，但是需要我们花时间去学习他的脚本编写规则。如果你的项目中没有跨数据库的需要，那么flyway完全够用了。</p>
+<h2 id="Flyway的工作模式"><a href="#Flyway的工作模式" class="headerlink" title="Flyway的工作模式"></a>Flyway的工作模式</h2><p>​    flyway在项目运行的时候会判断你的数据库中是否存在<em>flyway_schema_history</em>表，如果没有就会创建。这个表主要用于记录数据库的状态，Flyway的版本控住主要也是依赖这张表的。</p>
+<p>​    当<em>flyway_schema_history</em>这张表存在，。当检测到你有新的版本需要迁移的时候，Flyway会逐一对比<em>flyway_schema_history</em>表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按版本号次序迁移到数据库中。</p>
+<p><img src="http://img.rogermaster.top/uPic/TkDIKR.png" alt="TkDIKR"></p>
+<p>应用每个迁移时，<em>flyway_schema_history</em>表将相应更新：</p>
+<p><img src="http://img.rogermaster.top/uPic/GC3nO8.png" alt="GC3nO8"></p>
+<p>​    flyway在升级数据库的时候，会检查已经执行过的版本对应的脚本是否发生变化，包括脚本文件名，以及脚本内容。如果flyway检测到发生了变化，则抛出错误，并终止升级。</p>
+<p>​    如果已经执行过的脚本没有发生变化，flyway会跳过这些脚本，依次执行后续版本的脚本，并在记录表中插入对应的升级记录。</p>
+<p>​    所以，flyway总是幂等的，而且可以支持跨版本的升级。</p>
+<p>​    Migrations就是我们用SQL编写的脚本。为了让我们编写的SQL脚本生效，还需要按照Flyway指定的方式进行命名。</p>
+<p><img src="http://img.rogermaster.top/uPic/nuNib6.png" alt="nuNib6"></p>
+<ul>
+<li><strong>Prefix</strong>: <code>V</code>代表版本化，<code>U</code>代表撤销，<code>R</code>代表可重复迁移。</li>
+<li><strong>Version</strong>: 带点或下划线的版本，可以随意分隔多个部分（不适合重复迁移）。</li>
+<li><strong>Separator</strong>: <code>__</code> (两个下划线)</li>
+<li><strong>Description</strong>: 下划线或空格分隔单词</li>
+<li><strong>Suffix</strong>: <code>.sql</code></li>
+</ul>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="1、添加依赖"><a href="#1、添加依赖" class="headerlink" title="1、添加依赖"></a>1、添加依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flyway-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、配置application-yml文件"><a href="#2、配置application-yml文件" class="headerlink" title="2、配置application.yml文件"></a>2、配置application.yml文件</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  datasource:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">jdbc:mysql://localhost:3306/test?useSSL=false&amp;allowMultiQueries=true</span></span><br><span class="line"><span class="attr">    username:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    password:</span> <span class="number">123456</span></span><br><span class="line"><span class="attr">    driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据库版本控制</span></span><br><span class="line"><span class="attr">  flyway:</span></span><br><span class="line">    <span class="comment"># 启用或禁用 flyway</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 字符编码</span></span><br><span class="line"><span class="attr">    encoding:</span> <span class="string">utf-8</span></span><br><span class="line">    <span class="comment"># 对执行迁移时基准版本的描述</span></span><br><span class="line"><span class="attr">    baseline-description:</span> <span class="string">test</span></span><br><span class="line">    <span class="comment"># 若连接的数据库非空库，是否初始化</span></span><br><span class="line">    <span class="comment"># 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.</span></span><br><span class="line"><span class="attr">    baseline-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 指定 baseline 的版本号,缺省值为 1, 低于该版本号的 SQL 文件, migrate 的时候被忽略</span></span><br><span class="line">    <span class="comment"># 开始执行基准迁移时对现有的schema的版本打标签，默认值为1.</span></span><br><span class="line"><span class="attr">    baseline-version:</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 是否开启校验</span></span><br><span class="line">    <span class="comment"># 迁移时是否校验，默认为 true</span></span><br><span class="line"><span class="attr">    validate-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 默认脚本加载路径：/db/migration</span></span><br><span class="line">    <span class="comment"># locations: ["classpath:/db/migration"]</span></span><br><span class="line">    <span class="comment"># flyway 的 clean 命令会删除指定 schema 下的所有 table，默认 false</span></span><br><span class="line"><span class="attr">    clean-disabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 发环境最好开启 outOfOrder, 生产环境关闭 outOfOrder</span></span><br><span class="line">    <span class="comment"># 是否允许无序的迁移，默认 false</span></span><br><span class="line"><span class="attr">    out-of-order:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 检查迁移脚本的位置是否存在，默认false</span></span><br><span class="line"><span class="attr">    check-location:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当读取元数据表时是否忽略错误的迁移，默认false</span></span><br><span class="line"><span class="attr">    ignore-future-migrations:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当初始化好连接时要执行的SQL</span></span><br><span class="line"><span class="attr">    init-sqls:</span> <span class="string">show</span> <span class="string">tables;</span></span><br><span class="line">    <span class="comment"># 迁移时使用的JDBC URL，如果没有指定的话，将使用配置的主数据源</span></span><br><span class="line">    <span class="comment"># url:</span></span><br><span class="line">    <span class="comment"># 迁移数据库的用户名</span></span><br><span class="line">    <span class="comment"># user:</span></span><br><span class="line">    <span class="comment"># 目标数据库的密码</span></span><br><span class="line">    <span class="comment"># password:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的前缀，默认$&#123;</span></span><br><span class="line">    <span class="comment">#placeholder-prefix:</span></span><br><span class="line">    <span class="comment"># 是否要被替换，默认true</span></span><br><span class="line">    <span class="comment">#placeholder-replacement:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的后缀，默认&#125;</span></span><br><span class="line">    <span class="comment">#placeholder-suffix:</span></span><br><span class="line">    <span class="comment"># 设置placeholder的value</span></span><br><span class="line">    <span class="comment">#placeholders.[placeholder name]</span></span><br><span class="line">    <span class="comment"># 设定需要flywary迁移的schema，大小写敏感，默认为连接默认的schema</span></span><br><span class="line">    <span class="comment">#schemas: flyway</span></span><br><span class="line">    <span class="comment"># 迁移文件的前缀，默认为V</span></span><br><span class="line">    <span class="comment">#sql-migration-prefix:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的文件名分隔符，默认__</span></span><br><span class="line">    <span class="comment">#sql-migration-separator:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的后缀，默认为.sql</span></span><br><span class="line">    <span class="comment">#sql-migration-suffix:</span></span><br><span class="line">    <span class="comment"># 使用的元数据表名，默认为schema_version</span></span><br><span class="line">    <span class="comment">#table: flyway_schema_history</span></span><br><span class="line">    <span class="comment"># 迁移时使用的目标版本，默认为latest version</span></span><br><span class="line">    <span class="comment">#target:</span></span><br></pre></td></tr></table></figure>
+
+<p>flyway下没有配置url、user、password的话将会使用springboot的数据源。</p>
+<h3 id="3、在db-migration包下新建V1-initialization-table-sql文件。"><a href="#3、在db-migration包下新建V1-initialization-table-sql文件。" class="headerlink" title="3、在db.migration包下新建V1__initialization_table.sql文件。"></a>3、在db.migration包下新建V1__initialization_table.sql文件。</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> zerofill <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'自增ID'</span>,</span><br><span class="line">  <span class="string">`user_name`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'姓名'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_general_ci ROW_FORMAT=DYNAMIC <span class="keyword">COMMENT</span>=<span class="string">'用户表'</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>flyway脚本默认放在classpath:/db/migration目录下面，如果想换位置，可以自定义一个位置spring.flyway.locations即为脚本存放的位置。</p>
+</blockquote>
+<h3 id="4、开始验证"><a href="#4、开始验证" class="headerlink" title="4、开始验证"></a>4、开始验证</h3><p>目前只有test库中没有任何表：</p>
+<p><img src="http://img.rogermaster.top/uPic/JEo9XF.png" alt="JEo9XF"></p>
+<p>我们开始启动项目看看：</p>
+<p><img src="http://img.rogermaster.top/uPic/NQVITI.png" alt="NQVITI"></p>
+<p>通过日志信息，我们可以看到已经迁移成功了，我们去数据库看看。</p>
+<p><img src="http://img.rogermaster.top/uPic/PI8774.png" alt="PI8774"></p>
+<p>表结构：</p>
+<p><img src="http://img.rogermaster.top/uPic/UTMMNl.png" alt="UTMMNl"></p>
+<p>现在我们来给user表新增一个字段试试。</p>
+<p>V1.1__addField_col.sql</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="keyword">user</span> <span class="keyword">add</span> mail <span class="built_in">varchar</span>(<span class="number">128</span>) <span class="keyword">comment</span> <span class="string">'用户邮箱'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>运行项目看看</p>
+<p><img src="http://img.rogermaster.top/uPic/hIlzSt.png" alt="hIlzSt"></p>
+<p>表结构：</p>
+<p><img src="http://img.rogermaster.top/uPic/IDeE9S.png" alt="IDeE9S"></p>
+]]></content>
+      <categories>
+        <category>spring boot</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tensorflow2.0入门系列(一)</title>
+    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="tensorflow2入门教程（-）"><a href="#tensorflow2入门教程（-）" class="headerlink" title="tensorflow2入门教程（-）"></a>tensorflow2入门教程（-）</h1><h3 id="导入TensorFlow2-0"><a href="#导入TensorFlow2-0" class="headerlink" title="导入TensorFlow2.0"></a>导入TensorFlow2.0</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">import tensorflow as tf</span><br></pre></td></tr></table></figure>
+
+<p>MNIST数据集是一个手写数据集，其中有60,000张训练图片, 和10,000张训练图片，是深度学习常被用来入门的数据集</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#加载mnist数据</span></span><br><span class="line">mnist = tf.keras.datasets.mnist</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取训练数据和测试数据，将样本从整数转换为浮点数</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line">x_train, x_test = x_train / <span class="number">255.0</span>, x_test / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="构建深度学习模型"><a href="#构建深度学习模型" class="headerlink" title="构建深度学习模型"></a>构建深度学习模型</h3><p>首先，我们来看一下ReLU激活函数的形式，如下图:<br><img src="https://img-blog.csdn.net/20161113161105403" alt="ReLU函数图像"><br>relu，即Rectified Linear Unit，整流线性单元，激活部分神经元，增加稀疏性，当x小于0时，输出值为0，当x大于0时，输出值为x.</p>
+<p>softmax用于多分类过程中，它将多个神经元的输出，映射到（0,1）区间内，可以看成概率来理解，从而来进行多分类！</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#tf.keras.models.Sequential为Keras提供的层叠模型</span></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">  <span class="comment">#输入层，输入的shape是28X28（图片大小是28X28）  ,tf.keras.layers.Flatten()将输入展平，将多维数据展层一维，降维打击</span></span><br><span class="line">  tf.keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">  <span class="comment">#隐藏层一，输出shape是128，激励函数是relu,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">  <span class="comment">#Dropout一些神经元，能够有效地处理在训练过程中产生的过拟合问题</span></span><br><span class="line">  tf.keras.layers.Dropout(<span class="number">0</span>.<span class="number">2</span>),</span><br><span class="line">  <span class="comment">#输出层，shape为10分别对应着0-9这几个手写数字，激励函数为softmax，将特征值转换为在各个分类上的概率，,tf.keras.layers.Dense()全连接层</span></span><br><span class="line">  tf.keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+
+<p>构建好模型后，通过调用 compile 方法配置该模型的学习流程</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用adam优化器，损失函数为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="训练并验证模型"><a href="#训练并验证模型" class="headerlink" title="训练并验证模型"></a>训练并验证模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#输入数据x_train,y_train;训练次数5次</span></span><br><span class="line">model.fit(x_train, y_train, epochs=<span class="number">5</span>)</span><br><span class="line"><span class="comment">#测试模型</span></span><br><span class="line">model.evaluate(x_test, y_test)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>tensorflow2.0</category>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>tensorflow2.0</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/passages/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>tensorflow2.0入门系列（二）</title>
+    <url>/passages/tensorflow2-0%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%BA%8C%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="tensorflow2-0入门系列（二）"><a href="#tensorflow2-0入门系列（二）" class="headerlink" title="tensorflow2.0入门系列（二）"></a>tensorflow2.0入门系列（二）</h1><h3 id="导入相关包"><a href="#导入相关包" class="headerlink" title="导入相关包"></a>导入相关包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+
+<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Label</th>
+<th align="center">Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="center">T-shirt/top</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="center">Trouser</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="center">Pullover</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="center">Dress</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="center">Coat</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="center">Sandal</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="center">Shirt</td>
+</tr>
+<tr>
+<td align="left">7</td>
+<td align="center">Sneaker</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="center">Bag</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="center">Ankle boot</td>
+</tr>
+</tbody></table>
+<h3 id="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"><a href="#导入时装MNIST数据集，作为MNIST手写时装数据集的扩展" class="headerlink" title="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"></a>导入时装MNIST数据集，作为MNIST手写时装数据集的扩展</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">fashion_mnist = keras.datasets.fashion_mnist</span><br><span class="line"></span><br><span class="line">(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()</span><br></pre></td></tr></table></figure>
+
+<p>每个图像都映射到一个标签。 由于类名不包含在数据集中，因此将它们存储在此处以便在后面绘制图像时使用</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#新建列表用于存儲每個标签所对应的类型</span></span><br><span class="line">class_names = [<span class="string">'T-shirt/top'</span>, <span class="string">'Trouser'</span>, <span class="string">'Pullover'</span>, <span class="string">'Dress'</span>, <span class="string">'Coat'</span>,<span class="string">'Sandal'</span>, <span class="string">'Shirt'</span>, <span class="string">'Sneaker'</span>, <span class="string">'Bag'</span>, <span class="string">'Ankle boot'</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据扩展"><a href="#数据扩展" class="headerlink" title="数据扩展"></a>数据扩展</h3><p>（ps下方展示的代码仅可用于了解一些基本的数据操作扩展方法，并非核心代码）</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#获取数据集的Shape</span></span><br><span class="line">print(train_images)</span><br><span class="line"><span class="comment">#输出(60000, 28, 28)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#获取数据集的数量</span></span><br><span class="line">print(len(train_images))</span><br><span class="line"><span class="comment">#输出60000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>在训练网络之前必须对数据进行预处理。<br>一是方便我们的神经网络能够快速的识别里面的特征。<br>二是能够有效的帮助我们训练出一个成功的模型。<br>我们可以借助matplotlib这个绘图工具包帮助我们直观的感受数据集，以及训练过程。当然TensorFlow也提供了tensorboard用于可视化，暂时我们先不做讲解<br>我们可以先试着借助matplotlib画出我们数据集中的某张图片：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.imshow(train_images[<span class="number">0</span>])</span><br><span class="line"><span class="comment">#颜色比例彩条</span></span><br><span class="line">plt.colorbar()</span><br><span class="line"><span class="comment">#不显示网格线</span></span><br><span class="line">plt.grid(<span class="literal">False</span>)</span><br><span class="line"><span class="comment">#保存图像</span></span><br><span class="line">plt.savefig(<span class="string">'some_one.png'</span>)</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://pvqnwtxgq.bkt.clouddn.com/some_one.png" alt="输出结果"><br>在将它们送到神经网络模型之前，我们为了将这些值缩放到0到1的范围，我们将值除以255.训练集和测试集以相同的方式进行预处理</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">train_images = train_images / <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line">test_images = test_images / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
+
+<p>为了验证数据格式是否正确以及我们是否已准备好构建和训练网络，让我们显示训练集中的前25个图像并在每个图像下方显示类名</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#创建图</span></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">25</span>):</span><br><span class="line">    <span class="comment">#创建子图，5行5列，第i+1个</span></span><br><span class="line">    plt.subplot(<span class="number">5</span>,<span class="number">5</span>,i+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">#X轴坐标刻度设置</span></span><br><span class="line">    plt.xticks([])</span><br><span class="line">    <span class="comment">#Y轴坐标刻度设置</span></span><br><span class="line">    plt.yticks([])</span><br><span class="line">    plt.grid(<span class="literal">False</span>)</span><br><span class="line">    <span class="comment">#cmap: 颜色图谱（colormap), 默认绘制为RGB(A)颜色空间，这里使用的是二值图</span></span><br><span class="line">    plt.imshow(train_images[i])</span><br><span class="line">    plt.colorbar()</span><br><span class="line">    <span class="comment">#设置X轴标签</span></span><br><span class="line">    plt.xlabel(class_names[train_labels[i]])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>可以通过右边的彩色比例条可以明显看出图像值已经缩放到0-1的范围</p>
+<h3 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h3><h4 id="设置神经网络层"><a href="#设置神经网络层" class="headerlink" title="设置神经网络层"></a>设置神经网络层</h4><p>这里还是采用Keras提供的层叠模型</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = keras.Sequential([</span><br><span class="line">    <span class="comment"># 输入层</span></span><br><span class="line">    keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">    <span class="comment"># 隐藏层一，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">    <span class="comment"># 输出层，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置模型"><a href="#配置模型" class="headerlink" title="配置模型"></a>配置模型</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#采用Adam优化器，loss计算方法为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#训练总轮数为5轮</span></span><br><span class="line">model.fit(train_images, train_labels, epochs=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h3><p>看准确度</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">test_loss, test_acc = model.evaluate(test_images, test_labels)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'\nTest accuracy:'</span>, test_acc)</span><br></pre></td></tr></table></figure>
+
+<h3 id="进行预测"><a href="#进行预测" class="headerlink" title="进行预测"></a>进行预测</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">predictions = model.predict(test_images)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们去其中第一个结果看看预测情况：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(predictions[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+<p>输出：[2.4625590e-08 6.4621108e-10 6.6212579e-08 1.8379983e-11 4.6871547e-09<br>4.0910607e-05 3.9370971e-07 9.7850722e-04 2.8181713e-09 9.9898010e-01]<br>预测是10个数字的数组。 它们代表模型的“信心”，即图像对应于10种不同服装中的每一种。 我们可以看到哪个标签具有最高的置信度值<br>我们可以使用np.argmax()来直接计算出置信度最高的所对应的标签</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(np.argmax(predictions[<span class="number">0</span>]))</span><br><span class="line"><span class="comment">#输出 9</span></span><br></pre></td></tr></table></figure>
+
+<p>我们再对比一下真正的标签</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(test_labels[<span class="number">0</span>])</span><br><span class="line"><span class="comment"># 输出 9</span></span><br></pre></td></tr></table></figure>
+
+<p>我们同样可以借助matplotlib直观的表现出来<br>首先我们可以构建画小图的函数和画预测值直方图的函数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_image</span><span class="params">(i, predictions_array, true_label, img)</span>:</span></span><br><span class="line">  predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks([])</span><br><span class="line">  plt.yticks([])</span><br><span class="line"></span><br><span class="line">  plt.imshow(img, cmap=plt.cm.binary)</span><br><span class="line"></span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line">  <span class="keyword">if</span> predicted_label == true_label:</span><br><span class="line">    color = <span class="string">'blue'</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    color = <span class="string">'red'</span></span><br><span class="line"></span><br><span class="line">  plt.xlabel(<span class="string">"&#123;&#125; &#123;:2.0f&#125;% (&#123;&#125;)"</span>.format(class_names[predicted_label],</span><br><span class="line">                                <span class="number">100</span>*np.max(predictions_array),</span><br><span class="line">                                class_names[true_label]),</span><br><span class="line">                                color=color)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_value_array</span><span class="params">(i, predictions_array, true_label)</span>:</span></span><br><span class="line">  predictions_array, true_label = predictions_array[i], true_label[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks(range(<span class="number">10</span>), class_names, rotation=<span class="number">90</span>)</span><br><span class="line">  plt.yticks([])</span><br><span class="line">  thisplot = plt.bar(range(<span class="number">10</span>), predictions_array, color=<span class="string">"#777777"</span>)</span><br><span class="line">  plt.ylim([<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line"></span><br><span class="line">  thisplot[predicted_label].set_color(<span class="string">'red'</span>)</span><br><span class="line">  thisplot[true_label].set_color(<span class="string">'blue'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看看15张图片的表现情况</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">num_rows = <span class="number">5</span></span><br><span class="line">num_cols = <span class="number">3</span></span><br><span class="line">num_images = num_rows*num_cols</span><br><span class="line">plt.figure(figsize=(<span class="number">2</span>*<span class="number">2</span>*num_cols, <span class="number">2</span>*num_rows))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_images):</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">1</span>)</span><br><span class="line">  plot_image(i, predictions, test_labels, test_images)</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">2</span>)</span><br><span class="line">  plot_value_array(i, predictions, test_labels)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://pvqnwtxgq.bkt.clouddn.com/15_pre.png" alt="预测情况"></p>
+]]></content>
+      <categories>
+        <category>tensorflow2.0</category>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>tensorflow2.0</tag>
+        <tag>深度学习</tag>
       </tags>
   </entry>
   <entry>
