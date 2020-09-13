@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-11 13:24:34" itemprop="dateModified" datetime="2020-09-11T13:24:34+08:00">2020-09-11</time>
+                <time title="修改时间：2020-09-11 13:26:41" itemprop="dateModified" datetime="2020-09-11T13:26:41+08:00">2020-09-11</time>
               </span>
             
           
@@ -718,7 +718,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-07 23:26:44" itemprop="dateModified" datetime="2020-09-07T23:26:44+08:00">2020-09-07</time>
+                <time title="修改时间：2020-09-13 17:08:32" itemprop="dateModified" datetime="2020-09-13T17:08:32+08:00">2020-09-13</time>
               </span>
             
           
@@ -876,9 +876,7 @@
 <li>与spark中的其他组进行协调，协调资源等等（SchedulerBackend）</li>
 <li>生成并发送task到executor（taskScheduler）</li>
 </ul>
-<p><strong>driver运行在哪里（yarn模式）</strong><br>yarn-cluster模式下:client将用户程序提交到到spark集群中就与spark集群断开联系了(client可以在启动应用程序后消失)，此时client将不会发挥其他任何作用，仅仅负责提交。在此模式下,driver运行在AM(ApplicationMaster)里，可以理解为AM包括了driver的功能就像Driver运行在AM里一样，此时的AM既能够向AM申请资源并进行分配，又能完成driver划分RDD提交task等工作。</p>
-<p>yarn-client模式下:Driver运行在客户端上，先有driver再用AM，此时driver负责RDD生成、task生成和分发，向AM申请资源等 ,AM负责向RM申请资源，其他的都由driver来完成。</p>
-<h2 id="四、核心组件"><a href="#四、核心组件" class="headerlink" title="四、核心组件"></a>四、核心组件</h2><p>Spark 基于 Spark Core 扩展了四个核心组件，分别用于满足不同领域的计算需求。</p>
+<h2 id="五、核心组件"><a href="#五、核心组件" class="headerlink" title="五、核心组件"></a>五、核心组件</h2><p>Spark 基于 Spark Core 扩展了四个核心组件，分别用于满足不同领域的计算需求。</p>
 <p><img src="http://img.rogermaster.top/uPic/0HsQfr.jpg" alt="0HsQfr"></p>
 <h3 id="Spark-SQL"><a href="#Spark-SQL" class="headerlink" title="Spark SQL"></a>Spark SQL</h3><p>Spark SQL 主要用于结构化数据的处理。其具有以下特点：</p>
 <ul>
@@ -901,7 +899,55 @@
 <li><strong>实用工具</strong>：线性代数，统计，数据处理等。</li>
 </ul>
 <h3 id="Graphx"><a href="#Graphx" class="headerlink" title="Graphx"></a>Graphx</h3><p>GraphX 是 Spark 中用于图形计算和图形并行计算的新组件。在高层次上，GraphX 通过引入一个新的图形抽象来扩展 RDD(一种具有附加到每个顶点和边缘的属性的定向多重图形)。为了支持图计算，GraphX 提供了一组基本运算符（如： subgraph，joinVertices 和 aggregateMessages）以及优化后的 Pregel API。此外，GraphX 还包括越来越多的图形算法和构建器，以简化图形分析任务。</p>
-<h2 id="五、RDD简介"><a href="#五、RDD简介" class="headerlink" title="五、RDD简介"></a>五、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
+<h2 id="六、spark作业运行流程"><a href="#六、spark作业运行流程" class="headerlink" title="六、spark作业运行流程"></a>六、spark作业运行流程</h2><p>Spark 有3 种运行模式，包括 Standalone、YARN 和 Mesos，其中，Mesos 和 YARN模式类似。目前用得比较多的是 Standalone 模式和 YARN 模式。下面将详细介绍 Standalone模式和 YARN 模式的启动方式及运行流程。</p>
+<h3 id="Standalone模式"><a href="#Standalone模式" class="headerlink" title="Standalone模式"></a>Standalone模式</h3><p>Standalone模式是Spark实现的资源调度框架，其主要的节点有Client节点、Master节点和Worker节点。Driver既可以运行在Master节点上，也可以运行在本地Client端。</p>
+<p>当以 Standalone 模式向 Spark 集群提交作业时，作业的运行流程如图所示。</p>
+<p><img src="http://img.rogermaster.top/uPic/YSmAE8.png" alt="YSmAE8"></p>
+<p>（1）首先，SparkContext 连接到 Master，向 Master 注册并申请资源。</p>
+<p>（2）Worker 定期发送心跳信息给 Master 并报告 Executor 状态。</p>
+<p>（3）Master 根据 SparkContext 的资源申请要求和 Worker 心跳周期内报告的信息决定在哪个 Worker 上分配资源,然后在该 Worker 上获取资源,启动 StandaloneExecutorBackend。</p>
+<p>（4）StandaloneExecutorBackend向 SparkContext注册。</p>
+<p>（5）SparkContext 将 Application 代码发送给 StandaloneExecutorBackend，并且 SparkContext 解析 Application 代码，构建 DAG 图，并提交给 DAG Scheduler，分解成 Stage（当碰到 Action 操作时，就会催生 Job，每个 Job 中含有一个或多个 Stage)，然后将 Stage（或者称为 TaskSet）提交给 Task Scheduler，Task Scheduler 负责将Task 分配到相应的 Worker,最后提交给 StandaloneExecutorBackend 执行。</p>
+<p>（6）StandaloneExecutorBackend 会建立 Executor 线程池，开始执行 Task，并向 SparkContext 报告，直至 Task 完成。</p>
+<p>（7）所有 Task 完成后，SparkContext 向 Master 注销，释放资源。</p>
+<h3 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h3><p>提交命令：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/node001:7077,node002:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi ../examples</span><span class="regexp">/jars/spark</span> examples_2.<span class="number">11</span>-<span class="number">2.3</span>.<span class="number">1</span>.jar  <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.rogermaster.top/uPic/otclL4.jpg" alt="otclL4"></p>
+<p> （1）Client模式下提交任务，在客户端启动Driver进程。<br> （2）Driver会向Master申请启动Application启动的资源。<br> （3）资源申请成功，Driver端将Task发送到Worker端执行。<br> （4）Worker将Task执行结果返回到Driver端。</p>
+<p>client模式适用于测试调试程序。Driver进程是在客户端启动的，这里的客户端就是指提交应用程序的当前节点。在Driver端可以看到task执行的情况。生产环境下不能使用client模式，因为Driver可能会回收task执行结果数据，假设要提交100个application到集群运行，Driver每次都会在client端启动，那么就会导致客户端所在节点的Driver收集100个application的结果数据，导致100次网卡流量暴增的问题。</p>
+<h3 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h3><p>提交命令：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/node001:7077,node002:7077 --deploy-mode cluster --class</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.rogermaster.top/uPic/FvfZNe.jpg" alt="FvfZNe"></p>
+<p>（1）Standalone-Cluster模式提交App后，会向Master请求启动Driver。<br>（2）Master接收请求之后，随机在集群中一台节点启动Driver进程。<br>（3）Driver启动后为当前的应用程序申请资源。<br>（4）Driver端发送task到worker节点上执行。<br>（5）worker将执行情况和执行结果返回给Driver端。</p>
+<p>Driver进程是在集群某一台Worker上启动的，<strong>在客户端是无法查看task的执行情况的</strong>。假设要提交100个application到集群运行,<strong>每次Driver会随机在集群中某一台Worker上启动</strong>，那么这100次网卡流量暴增的问题就散布在集群上。</p>
+<h3 id="Yarn模式"><a href="#Yarn模式" class="headerlink" title="Yarn模式"></a>Yarn模式</h3><h4 id="Yarn-cluster"><a href="#Yarn-cluster" class="headerlink" title="Yarn-cluster"></a>Yarn-cluster</h4><p>提交命令：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode cluster --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkP</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在集群模式下，Driver 运行在 Application Master 上，Application Master 进程同时负责驱动 Application 和从 YARN 中申请资源。该进程运行在 YARN Container 内，所以启动Application Master 的 Client 可以立即关闭，而不必持续到 Application 的声明周期。</p>
+<p><img src="http://img.rogermaster.top/uPic/Pz8yvg.jpg" alt="Pz8yvg"></p>
+<p>（1）Client(客户端)生成作业信息提交给 ResourceManager。</p>
+<p>（2）ResourceManager 在某一个 NodeManager （由 YARN 决定）启动 Container，并将Application Master 分配给该 NodeManager。</p>
+<p>（3）NodeManager 接收到 ResourceManager 的分配，启动 Application Master 并初始化作业，此时 NodeManager 就称为 Driver。</p>
+<p>（4）Application 向 ResourceManager 申请资源，ResourceManager 分配资源的同时通知其他 NodeManager 启动相应的 Executor。</p>
+<p>（5）Executfor 向 NodeManager 上的 Application Master 注册汇报并完成相应的任务。图 1-19 是 YARN 客户端模式的作业运行流程。Application Master 仅仅从 YARN 中申请资源给 Executor，之后 Client 会与 Container通信进行作业的调度。</p>
+<p>应用的运行结果不能在客户端显示（可以在 history server 中查看），所以最好将结果保存在 HDFS 而非 stdout 输出，客户端的终端显示的是作为 Yarn 的 job 的简单运行状况。在此模式下,Driver运行在AM(ApplicationMaster)里，可以理解为AM包括了Driver的功能就像Driver运行在AM里一样，此时的AM既能够向AM申请资源并进行分配，又能完成Driver划分RDD提交task等工作。</p>
+<h4 id="Yarn-client"><a href="#Yarn-client" class="headerlink" title="Yarn-client"></a>Yarn-client</h4><p>提交命令：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode client --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">Spark</span></span></span><br></pre></td></tr></table></figure>
+
+<p>下图是Yarn-client模式的作业运行流程。Application Master 仅仅从 YARN 中申请资源给 Etecutia，之后 Client会与 Container 通信进行作业的调度。</p>
+<p><img src="http://img.rogermaster.top/uPic/AjwTGM.jpg" alt="AjwTGM"></p>
+<p>YARN-Client 模式的作业运行流程描述如下。</p>
+<p>（1）客户端生成作业信息提交给 ResourceManager。</p>
+<p>（2）ResourceManager 在本地 NodeManager启动 Container，并将 Application Master分配给该 NodeManager。</p>
+<p>（3）NodeManager 接收到 ResourceManager 的分配，启动 Application Master 并初始化作业，此时这个 NodeManager 就称为 Driver。</p>
+<p>（4）Application 向 ResourceManager 申请资源，ResourceManager 分配资源同时通知其他 NodeMamager 启动相应的 Executor。</p>
+<p>（5）Executor 向本地启动的 Application Master 注册汇报并完成相应的任务。</p>
+<p>Driver运行在客户端上，先有driver再用AM，此时driver负责RDD生成、task生成和分发，向AM申请资源等 ,AM负责向RM申请资源，其他的都由driver来完成。</p>
+<p>从上面两张图可看出 YARN-Cluster 和 YARN-Client 的区别。在 YARN-Cluster模式下，SparkDriver 运行在 Application Master（AM）中，它负责向 YARN 申请资源，并监督作业的运行状况。当用户提交了作业之后，就可以关掉 Client，作业会继续在 YARN上运行,所以 YARN-Cluster 模式不适合运行交互类型的作业。然而在 YARN-Client 模式下,AM 仅仅向 YARN 请求 Executor，Client 会与请求得到的 Container 通信来调度它们工作，也就是说 Client 不能离开。</p>
+<p>总结起来就是，集群模式的 Spark Driver 运行在 AM 中，而客户端模式的 Spark Driven运行在客户端。所以，YARN-Cluster 适用于生产，而 YARN-Client 适用于交互和调试，也就是希望快速地看到应用的输出信息。</p>
+<h2 id="七、RDD简介"><a href="#七、RDD简介" class="headerlink" title="七、RDD简介"></a>七、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
 <ul>
 <li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
 <li>RDD 拥有一个用于计算分区的函数 compute；</li>
@@ -909,7 +955,7 @@
 <li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
 <li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
 </ul>
-<h2 id="六、宽依赖和窄依赖"><a href="#六、宽依赖和窄依赖" class="headerlink" title="六、宽依赖和窄依赖"></a>六、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
+<h2 id="八、宽依赖和窄依赖"><a href="#八、宽依赖和窄依赖" class="headerlink" title="八、宽依赖和窄依赖"></a>八、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
 <ul>
 <li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
 <li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
@@ -921,7 +967,7 @@
 <li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
 <li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
 </ul>
-<h2 id="七、spark-常用的算子"><a href="#七、spark-常用的算子" class="headerlink" title="七、spark 常用的算子"></a>七、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
+<h2 id="九、spark-常用的算子"><a href="#九、spark-常用的算子" class="headerlink" title="九、spark 常用的算子"></a>九、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
 <thead>
 <tr>
 <th>Transformation 算子</th>
@@ -1058,7 +1104,7 @@
 </tr>
 <tr>
 <td><strong>foreach</strong>(<em>func</em>)</td>
-<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数</td>
+<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数b</td>
 </tr>
 </tbody></table>
 
@@ -1532,48 +1578,48 @@
 
 <p><strong>1. 显示当前目录结构</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 显示当前目录结构</span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归显示当前目录结构</span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 显示根目录下内容</span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
 
 <p><strong>2. 创建目录</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 创建目录</span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 递归创建目录</span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
 
 <p><strong>3. 删除操作</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 删除文件</span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span> 递归删除目录和文件</span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>4. 从本地加载文件到 HDFS</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
 
 <p><strong>5. 从 HDFS 导出文件到本地</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>6. 查看文件内容</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 二选一执行即可</span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
 
 <p><strong>7. 显示文件的最后一千字节</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>8. 拷贝文件</strong></p>
 <p>shell命令：</p>
@@ -1598,7 +1644,7 @@
 <li>-nl 在每个文件的末尾添加换行符（LF）</li>
 <li>-skip-empty-file 跳过空文件</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
 
 <p><strong>12. 统计文件系统的可用空间信息</strong></p>
 <p>shell命令：</p>
@@ -1616,7 +1662,7 @@
 
 <p><strong>14. 权限控制</strong></p>
 <p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 权限控制和Linux上使用方式一致</span><br><span class="line"><span class="meta">#</span> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span> 修改文件的拥有者  用户必须是超级用户。</span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
 
 <p><strong>15. 文件检测</strong></p>
 <p>shell命令：</p>
@@ -1632,7 +1678,7 @@
 <li>-w：如果路径存在且授予写入权限，则返回 0。</li>
 <li>-z：如果文件长度为零，则返回 0。</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 示例</span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
 
 <p>java API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>
