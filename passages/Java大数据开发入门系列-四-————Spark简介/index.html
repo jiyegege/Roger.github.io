@@ -111,8 +111,7 @@
 <meta property="og:image" content="http://img.rogermaster.top/uPic/FvfZNe.jpg">
 <meta property="og:image" content="http://img.rogermaster.top/uPic/Pz8yvg.jpg">
 <meta property="og:image" content="http://img.rogermaster.top/uPic/AjwTGM.jpg">
-<meta property="og:image" content="http://img.rogermaster.top/uPic/EMhehb.jpg">
-<meta property="og:updated_time" content="2020-09-13T09:08:32.631Z">
+<meta property="og:updated_time" content="2020-09-14T15:07:14.560Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java大数据开发入门系列(四)————Spark简介">
 <meta name="twitter:description" content="一、简介Spark 于 2009 年诞生于加州大学伯克利分校 AMPLab，2013 年被捐赠给 Apache 软件基金会，2014 年 2 月成为 Apache 的顶级项目。相对于 MapReduce 的批处理计算，Spark 可以带来上百倍的性能提升，因此它成为继 MapReduce 之后，最为广泛使用的分布式计算框架。 二、Spark产生背景Spark 是在 MapReduce 的基础上产生">
@@ -445,7 +444,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-13 17:08:32" itemprop="dateModified" datetime="2020-09-13T17:08:32+08:00">2020-09-13</time>
+                <time title="修改时间：2020-09-14 23:07:14" itemprop="dateModified" datetime="2020-09-14T23:07:14+08:00">2020-09-14</time>
               </span>
             
           
@@ -672,166 +671,6 @@
 <p>Driver运行在客户端上，先有driver再用AM，此时driver负责RDD生成、task生成和分发，向AM申请资源等 ,AM负责向RM申请资源，其他的都由driver来完成。</p>
 <p>从上面两张图可看出 YARN-Cluster 和 YARN-Client 的区别。在 YARN-Cluster模式下，SparkDriver 运行在 Application Master（AM）中，它负责向 YARN 申请资源，并监督作业的运行状况。当用户提交了作业之后，就可以关掉 Client，作业会继续在 YARN上运行,所以 YARN-Cluster 模式不适合运行交互类型的作业。然而在 YARN-Client 模式下,AM 仅仅向 YARN 请求 Executor，Client 会与请求得到的 Container 通信来调度它们工作，也就是说 Client 不能离开。</p>
 <p>总结起来就是，集群模式的 Spark Driver 运行在 AM 中，而客户端模式的 Spark Driven运行在客户端。所以，YARN-Cluster 适用于生产，而 YARN-Client 适用于交互和调试，也就是希望快速地看到应用的输出信息。</p>
-<h2 id="七、RDD简介"><a href="#七、RDD简介" class="headerlink" title="七、RDD简介"></a>七、RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
-<ul>
-<li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
-<li>RDD 拥有一个用于计算分区的函数 compute；</li>
-<li>RDD 会保存彼此间的依赖关系，RDD 的每次转换都会生成一个新的依赖关系，这种 RDD 之间的依赖关系就像流水线一样。在部分分区数据丢失后，可以通过这种依赖关系重新计算丢失的分区数据，而不是对 RDD 的所有分区进行重新计算；</li>
-<li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
-<li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
-</ul>
-<h2 id="八、宽依赖和窄依赖"><a href="#八、宽依赖和窄依赖" class="headerlink" title="八、宽依赖和窄依赖"></a>八、宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
-<ul>
-<li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
-<li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
-</ul>
-<p>如下图，每一个方框表示一个 RDD，带有颜色的矩形表示分区：</p>
-<p><img src="http://img.rogermaster.top/uPic/EMhehb.jpg" alt="EMhehb"></p>
-<p>区分这两种依赖是非常有用的：</p>
-<ul>
-<li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
-<li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
-</ul>
-<h2 id="九、spark-常用的算子"><a href="#九、spark-常用的算子" class="headerlink" title="九、spark 常用的算子"></a>九、spark 常用的算子</h2><h3 id="spark-常用的-Transformation-算子"><a href="#spark-常用的-Transformation-算子" class="headerlink" title="spark 常用的 Transformation 算子"></a>spark 常用的 Transformation 算子</h3><table>
-<thead>
-<tr>
-<th>Transformation 算子</th>
-<th>Meaning（含义）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>map</strong>(<em>func</em>)</td>
-<td>对原 RDD 中每个元素运用 <em>func</em> 函数，并生成新的 RDD</td>
-</tr>
-<tr>
-<td><strong>filter</strong>(<em>func</em>)</td>
-<td>对原 RDD 中每个元素使用<em>func</em> 函数进行过滤，并生成新的 RDD</td>
-</tr>
-<tr>
-<td><strong>flatMap</strong>(<em>func</em>)</td>
-<td>与 map 类似，但是每一个输入的 item 被映射成 0 个或多个输出的 items（ <em>func</em> 返回类型需要为 Seq ）。</td>
-</tr>
-<tr>
-<td><strong>mapPartitions</strong>(<em>func</em>)</td>
-<td>与 map 类似，但函数单独在 RDD 的每个分区上运行， <em>func</em>函数的类型为 Iterator<t> =&gt; Iterator<u> ，其中 T 是 RDD 的类型，即 RDD[T]</u></t></td>
-</tr>
-<tr>
-<td><strong>mapPartitionsWithIndex</strong>(<em>func</em>)</td>
-<td>与 mapPartitions 类似，但 <em>func</em> 类型为 (Int, Iterator<t>) =&gt; Iterator<u> ，其中第一个参数为分区索引</u></t></td>
-</tr>
-<tr>
-<td><strong>sample</strong>(<em>withReplacement</em>, <em>fraction</em>, <em>seed</em>)</td>
-<td>数据采样，有三个可选参数：设置是否放回（withReplacement）、采样的百分比（<em>fraction</em>）、随机数生成器的种子（seed）；</td>
-</tr>
-<tr>
-<td><strong>union</strong>(<em>otherDataset</em>)</td>
-<td>合并两个 RDD</td>
-</tr>
-<tr>
-<td><strong>intersection</strong>(<em>otherDataset</em>)</td>
-<td>求两个 RDD 的交集</td>
-</tr>
-<tr>
-<td><strong>distinct</strong>([<em>numTasks</em>]))</td>
-<td>去重</td>
-</tr>
-<tr>
-<td><strong>groupByKey</strong>([<em>numTasks</em>])</td>
-<td>按照 key 值进行分区，即在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, Iterable<v>) <strong>Note:</strong> 如果分组是为了在每一个 key 上执行聚合操作（例如，sum 或 average)，此时使用 <code>reduceByKey</code> 或 <code>aggregateByKey</code> 性能会更好 <strong>Note:</strong> 默认情况下，并行度取决于父 RDD 的分区数。可以传入 <code>numTasks</code> 参数进行修改。</v></td>
-</tr>
-<tr>
-<td><strong>reduceByKey</strong>(<em>func</em>, [<em>numTasks</em>])</td>
-<td>按照 key 值进行分组，并对分组后的数据执行归约操作。</td>
-</tr>
-<tr>
-<td><strong>aggregateByKey</strong>(<em>zeroValue</em>,<em>numPartitions</em>)(<em>seqOp</em>, <em>combOp</em>, [<em>numTasks</em>])</td>
-<td>当调用（K，V）对的数据集时，返回（K，U）对的数据集，其中使用给定的组合函数和 zeroValue 聚合每个键的值。与 groupByKey 类似，reduce 任务的数量可通过第二个参数进行配置。</td>
-</tr>
-<tr>
-<td><strong>sortByKey</strong>([<em>ascending</em>], [<em>numTasks</em>])</td>
-<td>按照 key 进行排序，其中的 key 需要实现 Ordered 特质，即可比较</td>
-</tr>
-<tr>
-<td><strong>join</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
-<td>在一个 (K, V) 和 (K, W) 类型的 dataset 上调用时，返回一个 (K, (V, W)) pairs 的 dataset，等价于内连接操作。如果想要执行外连接，可以使用 <code>leftOuterJoin</code>, <code>rightOuterJoin</code> 和 <code>fullOuterJoin</code> 等算子。</td>
-</tr>
-<tr>
-<td><strong>cogroup</strong>(<em>otherDataset</em>, [<em>numTasks</em>])</td>
-<td>在一个 (K, V) 对的 dataset 上调用时，返回一个 (K, (Iterable<v>, Iterable<w>)) tuples 的 dataset。</w></v></td>
-</tr>
-<tr>
-<td><strong>cartesian</strong>(<em>otherDataset</em>)</td>
-<td>在一个 T 和 U 类型的 dataset 上调用时，返回一个 (T, U) 类型的 dataset（即笛卡尔积）。</td>
-</tr>
-<tr>
-<td><strong>coalesce</strong>(<em>numPartitions</em>)</td>
-<td>将 RDD 中的分区数减少为 numPartitions。</td>
-</tr>
-<tr>
-<td><strong>repartition</strong>(<em>numPartitions</em>)</td>
-<td>随机重新调整 RDD 中的数据以创建更多或更少的分区，并在它们之间进行平衡。</td>
-</tr>
-<tr>
-<td><strong>repartitionAndSortWithinPartitions</strong>(<em>partitioner</em>)</td>
-<td>根据给定的 partitioner（分区器）对 RDD 进行重新分区，并对分区中的数据按照 key 值进行排序。这比调用 <code>repartition</code> 然后再 sorting（排序）效率更高，因为它可以将排序过程推送到 shuffle 操作所在的机器。</td>
-</tr>
-</tbody></table>
-<h3 id="Spark-常用的-Action-算子"><a href="#Spark-常用的-Action-算子" class="headerlink" title="Spark 常用的 Action 算子"></a>Spark 常用的 Action 算子</h3><table>
-<thead>
-<tr>
-<th>Action（动作）</th>
-<th>Meaning（含义）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>reduce</strong>(<em>func</em>)</td>
-<td>使用函数<em>func</em>执行归约操作</td>
-</tr>
-<tr>
-<td><strong>collect</strong>()</td>
-<td>以一个 array 数组的形式返回 dataset 的所有元素，适用于小结果集。</td>
-</tr>
-<tr>
-<td><strong>count</strong>()</td>
-<td>返回 dataset 中元素的个数。</td>
-</tr>
-<tr>
-<td><strong>first</strong>()</td>
-<td>返回 dataset 中的第一个元素，等价于 take(1)。</td>
-</tr>
-<tr>
-<td><strong>take</strong>(<em>n</em>)</td>
-<td>将数据集中的前 <em>n</em> 个元素作为一个 array 数组返回。</td>
-</tr>
-<tr>
-<td><strong>takeSample</strong>(<em>withReplacement</em>, <em>num</em>, [<em>seed</em>])</td>
-<td>对一个 dataset 进行随机抽样</td>
-</tr>
-<tr>
-<td><strong>takeOrdered</strong>(<em>n</em>, <em>[ordering]</em>)</td>
-<td>按自然顺序（natural order）或自定义比较器（custom comparator）排序后返回前 <em>n</em> 个元素。只适用于小结果集，因为所有数据都会被加载到驱动程序的内存中进行排序。</td>
-</tr>
-<tr>
-<td><strong>saveAsTextFile</strong>(<em>path</em>)</td>
-<td>将 dataset 中的元素以文本文件的形式写入本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。Spark 将对每个元素调用 toString 方法，将元素转换为文本文件中的一行记录。</td>
-</tr>
-<tr>
-<td><strong>saveAsSequenceFile</strong>(<em>path</em>)</td>
-<td>将 dataset 中的元素以 Hadoop SequenceFile 的形式写入到本地文件系统、HDFS 或其它 Hadoop 支持的文件系统中。该操作要求 RDD 中的元素需要实现 Hadoop 的 Writable 接口。对于 Scala 语言而言，它可以将 Spark 中的基本数据类型自动隐式转换为对应 Writable 类型。(目前仅支持 Java and Scala)</td>
-</tr>
-<tr>
-<td><strong>saveAsObjectFile</strong>(<em>path</em>)</td>
-<td>使用 Java 序列化后存储，可以使用 <code>SparkContext.objectFile()</code> 进行加载。(目前仅支持 Java and Scala)</td>
-</tr>
-<tr>
-<td><strong>countByKey</strong>()</td>
-<td>计算每个键出现的次数。</td>
-</tr>
-<tr>
-<td><strong>foreach</strong>(<em>func</em>)</td>
-<td>遍历 RDD 中每个元素，并对其执行<em>fun</em>函数b</td>
-</tr>
-</tbody></table>
 
       
     </div>
@@ -963,7 +802,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1082,7 +921,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Spark产生背景"><span class="nav-number">2.</span> <span class="nav-text">二、Spark产生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、特点"><span class="nav-number">3.</span> <span class="nav-text">三、特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Spark的组成"><span class="nav-number">4.</span> <span class="nav-text">三、Spark的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、集群架构"><span class="nav-number">5.</span> <span class="nav-text">四、集群架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、核心组件"><span class="nav-number">6.</span> <span class="nav-text">五、核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-SQL"><span class="nav-number">6.1.</span> <span class="nav-text">Spark SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Streaming"><span class="nav-number">6.2.</span> <span class="nav-text">Spark Streaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MLlib"><span class="nav-number">6.3.</span> <span class="nav-text">MLlib</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graphx"><span class="nav-number">6.4.</span> <span class="nav-text">Graphx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、spark作业运行流程"><span class="nav-number">7.</span> <span class="nav-text">六、spark作业运行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone模式"><span class="nav-number">7.1.</span> <span class="nav-text">Standalone模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Client（Driver在client运行）"><span class="nav-number">7.2.</span> <span class="nav-text">Standalone-Client（Driver在client运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Cluster（Driver在Worker运行）"><span class="nav-number">7.3.</span> <span class="nav-text">Standalone-Cluster（Driver在Worker运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn模式"><span class="nav-number">7.4.</span> <span class="nav-text">Yarn模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-cluster"><span class="nav-number">7.4.1.</span> <span class="nav-text">Yarn-cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-client"><span class="nav-number">7.4.2.</span> <span class="nav-text">Yarn-client</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、RDD简介"><span class="nav-number">8.</span> <span class="nav-text">七、RDD简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、宽依赖和窄依赖"><span class="nav-number">9.</span> <span class="nav-text">八、宽依赖和窄依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、spark-常用的算子"><span class="nav-number">10.</span> <span class="nav-text">九、spark 常用的算子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spark-常用的-Transformation-算子"><span class="nav-number">10.1.</span> <span class="nav-text">spark 常用的 Transformation 算子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-常用的-Action-算子"><span class="nav-number">10.2.</span> <span class="nav-text">Spark 常用的 Action 算子</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Spark产生背景"><span class="nav-number">2.</span> <span class="nav-text">二、Spark产生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、特点"><span class="nav-number">3.</span> <span class="nav-text">三、特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Spark的组成"><span class="nav-number">4.</span> <span class="nav-text">三、Spark的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、集群架构"><span class="nav-number">5.</span> <span class="nav-text">四、集群架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、核心组件"><span class="nav-number">6.</span> <span class="nav-text">五、核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-SQL"><span class="nav-number">6.1.</span> <span class="nav-text">Spark SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Streaming"><span class="nav-number">6.2.</span> <span class="nav-text">Spark Streaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MLlib"><span class="nav-number">6.3.</span> <span class="nav-text">MLlib</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graphx"><span class="nav-number">6.4.</span> <span class="nav-text">Graphx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、spark作业运行流程"><span class="nav-number">7.</span> <span class="nav-text">六、spark作业运行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone模式"><span class="nav-number">7.1.</span> <span class="nav-text">Standalone模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Client（Driver在client运行）"><span class="nav-number">7.2.</span> <span class="nav-text">Standalone-Client（Driver在client运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Cluster（Driver在Worker运行）"><span class="nav-number">7.3.</span> <span class="nav-text">Standalone-Cluster（Driver在Worker运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn模式"><span class="nav-number">7.4.</span> <span class="nav-text">Yarn模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-cluster"><span class="nav-number">7.4.1.</span> <span class="nav-text">Yarn-cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-client"><span class="nav-number">7.4.2.</span> <span class="nav-text">Yarn-client</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
