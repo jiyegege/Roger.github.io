@@ -1151,7 +1151,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-14 23:07:14" itemprop="dateModified" datetime="2020-09-14T23:07:14+08:00">2020-09-14</time>
+                <time title="修改时间：2020-09-17 12:44:27" itemprop="dateModified" datetime="2020-09-17T12:44:27+08:00">2020-09-17</time>
               </span>
             
           
@@ -1293,7 +1293,7 @@
 </tr>
 </tbody></table>
 <p>Spark架构采用了分布式计算中的Master-Slave模型。Master是对应集群中的含有Master进程的节点，Slave是集群中含有Worker进程的节点。Master作为整个集群的控制器，负责整个集群的正常运行；Worker相当于是计算节点，接收主节点命令与进行状态汇报；Executor负责任务的执行；Client作为用户的客户端负责提交应用，Driver负责控制一个应用的执行。</p>
-<p><a href="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" target="_blank" rel="noopener"><img src="https://camo.githubusercontent.com/ab723935b3ac3fb5e85e12483af3aa81da1686e7/68747470733a2f2f67697465652e636f6d2f68656962616979696e672f426967446174612d4e6f7465732f7261772f6d61737465722f70696374757265732f737061726b2de99b86e7bea4e6a8a1e5bc8f2e706e67" alt="img"></a></p>
+<p><img src="http://img.rogermaster.top/uPic/E2kvnO.jpg" alt="E2kvnO"></p>
 <p><strong>执行过程</strong>：</p>
 <ol>
 <li>用户程序创建 SparkContext 后，它会连接到集群资源管理器，集群资源管理器会为用户程序分配计算资源，并启动 Executor；</li>
@@ -1344,19 +1344,27 @@
 <p>（6）StandaloneExecutorBackend 会建立 Executor 线程池，开始执行 Task，并向 SparkContext 报告，直至 Task 完成。</p>
 <p>（7）所有 Task 完成后，SparkContext 向 Master 注销，释放资源。</p>
 <h3 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h3><p>提交命令：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/node001:7077,node002:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi ../examples</span><span class="regexp">/jars/spark</span> examples_2.<span class="number">11</span>-<span class="number">2.3</span>.<span class="number">1</span>.jar  <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/otclL4.jpg" alt="otclL4"></p>
 <p> （1）Client模式下提交任务，在客户端启动Driver进程。<br> （2）Driver会向Master申请启动Application启动的资源。<br> （3）资源申请成功，Driver端将Task发送到Worker端执行。<br> （4）Worker将Task执行结果返回到Driver端。</p>
+<p><strong>work端进程</strong></p>
+<p><img src="http://img.rogermaster.top/uPic/WLlPqD.png" alt="WLlPqD"></p>
+<p><strong>master端进程</strong></p>
+<p><img src="http://img.rogermaster.top/uPic/JDwCHC.png" alt="JDwCHC"></p>
 <p>client模式适用于测试调试程序。Driver进程是在客户端启动的，这里的客户端就是指提交应用程序的当前节点。在Driver端可以看到task执行的情况。生产环境下不能使用client模式，因为Driver可能会回收task执行结果数据，假设要提交100个application到集群运行，Driver每次都会在client端启动，那么就会导致客户端所在节点的Driver收集100个application的结果数据，导致100次网卡流量暴增的问题。</p>
 <h3 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h3><p>提交命令：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/node001:7077,node002:7077 --deploy-mode cluster --class</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode cluster --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/FvfZNe.jpg" alt="FvfZNe"></p>
 <p>（1）Standalone-Cluster模式提交App后，会向Master请求启动Driver。<br>（2）Master接收请求之后，随机在集群中一台节点启动Driver进程。<br>（3）Driver启动后为当前的应用程序申请资源。<br>（4）Driver端发送task到worker节点上执行。<br>（5）worker将执行情况和执行结果返回给Driver端。</p>
+<p><strong>work端进程</strong></p>
+<p><img src="http://img.rogermaster.top/uPic/4ceQUy.png" alt="4ceQUy"></p>
+<p><strong>master端进程</strong></p>
+<p><img src="http://img.rogermaster.top/uPic/JDwCHC.png" alt="JDwCHC"></p>
 <p>Driver进程是在集群某一台Worker上启动的，<strong>在客户端是无法查看task的执行情况的</strong>。假设要提交100个application到集群运行,<strong>每次Driver会随机在集群中某一台Worker上启动</strong>，那么这100次网卡流量暴增的问题就散布在集群上。</p>
 <h3 id="Yarn模式"><a href="#Yarn模式" class="headerlink" title="Yarn模式"></a>Yarn模式</h3><h4 id="Yarn-cluster"><a href="#Yarn-cluster" class="headerlink" title="Yarn-cluster"></a>Yarn-cluster</h4><p>提交命令：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode cluster --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkP</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode cluster --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkPi</span> /<span class="title">usr</span>/<span class="title">hdp</span>/3.0.1.0-187/<span class="title">spark2</span>/<span class="title">examples</span>/<span class="title">jars</span>/<span class="title">spark</span>-<span class="title">examples_2</span>.11-2.3.1.3.0.1.0-187.<span class="title">jar</span></span></span><br></pre></td></tr></table></figure>
 
 <p>在集群模式下，Driver 运行在 Application Master 上，Application Master 进程同时负责驱动 Application 和从 YARN 中申请资源。该进程运行在 YARN Container 内，所以启动Application Master 的 Client 可以立即关闭，而不必持续到 Application 的声明周期。</p>
 <p><img src="http://img.rogermaster.top/uPic/Pz8yvg.jpg" alt="Pz8yvg"></p>
@@ -1365,9 +1373,11 @@
 <p>（3）NodeManager 接收到 ResourceManager 的分配，启动 Application Master 并初始化作业，此时 NodeManager 就称为 Driver。</p>
 <p>（4）Application 向 ResourceManager 申请资源，ResourceManager 分配资源的同时通知其他 NodeManager 启动相应的 Executor。</p>
 <p>（5）Executfor 向 NodeManager 上的 Application Master 注册汇报并完成相应的任务。图 1-19 是 YARN 客户端模式的作业运行流程。Application Master 仅仅从 YARN 中申请资源给 Executor，之后 Client 会与 Container通信进行作业的调度。</p>
+<p>进程</p>
+<p><img src="http://img.rogermaster.top/uPic/gebTgh.png" alt="gebTgh"></p>
 <p>应用的运行结果不能在客户端显示（可以在 history server 中查看），所以最好将结果保存在 HDFS 而非 stdout 输出，客户端的终端显示的是作为 Yarn 的 job 的简单运行状况。在此模式下,Driver运行在AM(ApplicationMaster)里，可以理解为AM包括了Driver的功能就像Driver运行在AM里一样，此时的AM既能够向AM申请资源并进行分配，又能完成Driver划分RDD提交task等工作。</p>
 <h4 id="Yarn-client"><a href="#Yarn-client" class="headerlink" title="Yarn-client"></a>Yarn-client</h4><p>提交命令：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode client --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">Spark</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master yarn --deploy-mode client --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkPi</span> /<span class="title">usr</span>/<span class="title">hdp</span>/3.0.1.0-187/<span class="title">spark2</span>/<span class="title">examples</span>/<span class="title">jars</span>/<span class="title">spark</span>-<span class="title">examples_2</span>.11-2.3.1.3.0.1.0-187.<span class="title">jar</span></span></span><br></pre></td></tr></table></figure>
 
 <p>下图是Yarn-client模式的作业运行流程。Application Master 仅仅从 YARN 中申请资源给 Etecutia，之后 Client会与 Container 通信进行作业的调度。</p>
 <p><img src="http://img.rogermaster.top/uPic/AjwTGM.jpg" alt="AjwTGM"></p>
@@ -1377,6 +1387,7 @@
 <p>（3）NodeManager 接收到 ResourceManager 的分配，启动 Application Master 并初始化作业，此时这个 NodeManager 就称为 Driver。</p>
 <p>（4）Application 向 ResourceManager 申请资源，ResourceManager 分配资源同时通知其他 NodeMamager 启动相应的 Executor。</p>
 <p>（5）Executor 向本地启动的 Application Master 注册汇报并完成相应的任务。</p>
+<p><img src="http://img.rogermaster.top/uPic/4Ta6xn.png" alt="4Ta6xn"></p>
 <p>Driver运行在客户端上，先有driver再用AM，此时driver负责RDD生成、task生成和分发，向AM申请资源等 ,AM负责向RM申请资源，其他的都由driver来完成。</p>
 <p>从上面两张图可看出 YARN-Cluster 和 YARN-Client 的区别。在 YARN-Cluster模式下，SparkDriver 运行在 Application Master（AM）中，它负责向 YARN 申请资源，并监督作业的运行状况。当用户提交了作业之后，就可以关掉 Client，作业会继续在 YARN上运行,所以 YARN-Cluster 模式不适合运行交互类型的作业。然而在 YARN-Client 模式下,AM 仅仅向 YARN 请求 Executor，Client 会与请求得到的 Container 通信来调度它们工作，也就是说 Client 不能离开。</p>
 <p>总结起来就是，集群模式的 Spark Driver 运行在 AM 中，而客户端模式的 Spark Driven运行在客户端。所以，YARN-Cluster 适用于生产，而 YARN-Client 适用于交互和调试，也就是希望快速地看到应用的输出信息。</p>
