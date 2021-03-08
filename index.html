@@ -371,6 +371,319 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/Maven使用教程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Roger">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Roger's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/passages/Maven使用教程/" class="post-title-link" itemprop="url">Maven使用教程</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-03-07 20:40:50" itemprop="dateCreated datePublished" datetime="2021-03-07T20:40:50+08:00">2021-03-07</time>
+            </span>
+          
+
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-08 22:57:35" itemprop="dateModified" datetime="2021-03-08T22:57:35+08:00">2021-03-08</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring-boot/" itemprop="url" rel="index"><span itemprop="name">spring boot</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Maven介绍"><a href="#Maven介绍" class="headerlink" title="Maven介绍"></a>Maven介绍</h1><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
+<p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。</p>
+<p>Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
+<h2 id="Maven-POM"><a href="#Maven-POM" class="headerlink" title="Maven POM"></a>Maven POM</h2><p>POM( Project Object Model，项目对象模型 ) 是 Maven 工程的基本工作单元，是一个XML文件，包含了项目的基本信息，用于描述项目如何构建，声明项目依赖，等等。</p>
+<p>执行任务或目标时，Maven 会在当前目录中查找 POM。它读取 POM，获取所需的配置信息，然后执行目标。</p>
+<p>POM 中可以指定以下配置：</p>
+<ul>
+<li><p>项目依赖</p>
+</li>
+<li><p>插件</p>
+</li>
+<li><p>执行目标</p>
+</li>
+<li><p>项目构建 profile</p>
+</li>
+<li><p>项目版本</p>
+</li>
+<li><p>项目开发者列表</p>
+</li>
+<li><p>相关邮件列表信息</p>
+</li>
+</ul>
+<p>所有 POM 文件都需要 project 元素和三个必需字段：groupId，artifactId，version。</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>modelVersion</td>
+<td>模型版本</td>
+</tr>
+<tr>
+<td>groupId</td>
+<td>这是工程组的标识。它在一个组织或者项目中通常是唯一的</td>
+</tr>
+<tr>
+<td>artifactId</td>
+<td>这是工程的标识。它通常是工程的名称</td>
+</tr>
+<tr>
+<td>version</td>
+<td>这是工程的版本号。在 artifact 的仓库中，它用来区分不同的版本</td>
+</tr>
+</tbody></table>
+<h2 id="父（Super）POM"><a href="#父（Super）POM" class="headerlink" title="父（Super）POM"></a>父（Super）POM</h2><p>在 Java 中，所有的类都继承自 <code>Object</code> 超类，而在 maven 中也存在 The Super POM，所有 maven 工程的pom 文件都继承自该文件，那这个 The Super POM 中设置了什么呢？</p>
+<p>下面展示的 maven 3.5.4 版本的 <a href="https://maven.apache.org/pom.html#the-super-pom" target="_blank" rel="noopener">The Super POM</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">repository</span>&gt;</span>...<span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginRepository</span>&gt;</span>...<span class="tag">&lt;/<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.basedir&#125;/target<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/classes<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">finalName</span>&gt;</span>$&#123;project.artifactId&#125;-$&#123;project.version&#125;<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testOutputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/test-classes<span class="tag">&lt;/<span class="name">testOutputDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sourceDirectory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/java<span class="tag">&lt;/<span class="name">sourceDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scriptSourceDirectory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/scripts<span class="tag">&lt;/<span class="name">scriptSourceDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testSourceDirectory</span>&gt;</span>$&#123;project.basedir&#125;/src/test/java<span class="tag">&lt;/<span class="name">testSourceDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testResources</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">testResource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.basedir&#125;/src/test/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">testResource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">testResources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- <span class="doctag">NOTE:</span> These plugins will be removed from future versions of the super POM --&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- They are kept for the moment as they are very unlikely to conflict with lifecycle mappings (MNG-4453) --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-dependency-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        ...</span><br><span class="line">      <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">reporting</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/site<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">reporting</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">profiles</span>&gt;</span>...<span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我对上面的 pom 文件进行了删减，仅展示了部分内容，它们可以概括为以下 3 个部分：</p>
+<ul>
+<li>默认的 repository</li>
+</ul>
+<p>maven 默认使用官方提供的 central repository，这也是你可以开箱即用的原因，而在安装阶段配置国内的镜像源就是为了替换默认的设置。</p>
+<ul>
+<li>标准的目录骨架</li>
+</ul>
+<p>在 <code>build</code> 标签中，可以看到如 <code>sourceDirectory</code> 、 <code>testSourceDirectory</code> 、 <code>outputDirectory</code> 等标签，这些标签为我们设置了默认的 maven 目录骨架，明确了源代码目录、测试目录、输出目录等各种目录，使得我们在接触一个任何一个 maven 工程时都可以快速找到相对应的代码入口。</p>
+<p>这也提示我们，其实我们可以自定义 maven 目录结构，但完全不推荐这么做。</p>
+<ul>
+<li>默认的插件版本</li>
+</ul>
+<p>在 The Super POM 中还定义了多个默认插件的版本，使得你省去了配置插件的工作，当然你也可以自己设置插件的版本号。</p>
+<p>Maven 使用 effective pom（Super pom 加上工程自己的配置）来执行相关的目标，它帮助开发者在 pom.xml 中做尽可能少的配置，当然这些配置可以被重写。</p>
+<p>使用以下命令来查看 Super POM 默认配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn <span class="built_in">help</span>:effective-pom</span><br></pre></td></tr></table></figure>
+
+<p>Effective POM 的结果是经过继承、插值之后，使配置生效。</p>
+<h2 id="常用POM标签解析"><a href="#常用POM标签解析" class="headerlink" title="常用POM标签解析"></a>常用POM标签解析</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。模型本身的版本很少改变，虽然如此，但它仍然是必不可少的，这是为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目。并且构建时生成的路径也是由此生成， 如com.mycompany.app生成的相对路径为：/com/mycompany/app --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 构件的标识符，它和group ID一起唯一标识一个构件。换句话说，你不能有两个不同的项目拥有同样的artifact ID和groupID；在某个</span></span><br><span class="line"><span class="comment">          特定的group ID下，artifact ID也必须是唯一的。构件是项目产生的或使用的一个东西，Maven为项目产生的构件包括：JARs，源 码，二进制发布和WARs等。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven_test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--项目产生的构件类型，例如jar、war、ear、pom。插件可以创建他们自己的构件类型，所以前面列的不是全部构件类型 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--项目当前版本，格式为:主版本.次版本.增量版本-限定版本号 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--项目的名称, Maven产生的文档用 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven-test<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--&amp;lt;!&amp;ndash;描述了这个项目构建环境中的前提条件。 &amp;ndash;&amp;gt;</span></span><br><span class="line"><span class="comment">    &lt;prerequisites&gt;</span></span><br><span class="line"><span class="comment">      &amp;lt;!&amp;ndash;构建该项目或使用该插件所需要的Maven的最低版本 &amp;ndash;&amp;gt;</span></span><br><span class="line"><span class="comment">      &lt;maven /&gt;</span></span><br><span class="line"><span class="comment">    &lt;/prerequisites&gt;--&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--以值替代名称，Properties可以在整个POM中使用，也可以作为触发条件（见settings.xml配置文件里activation元素的说明）。格式是&lt;name&gt;value&lt;/name&gt;。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.reporting.outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.reporting.outputEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">log4j2-version</span>&gt;</span>2.13.3<span class="tag">&lt;/<span class="name">log4j2-version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">camel.version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">camel.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">camel-main.version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">camel-main.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 继承自该项目的所有子项目的默认依赖信息。这部分的依赖信息不会被立即解析,而是当子项目声明一个依赖（必须描述group ID和 artifact</span></span><br><span class="line"><span class="comment">          ID信息），如果group ID和artifact ID以外的一些信息没有描述，则通过group ID和artifact ID 匹配到这里的依赖，并使用这里的依赖信息。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--该元素描述了项目相关的所有依赖。 这些依赖组成了项目构建过程中的一个个环节。它们自动从项目定义的仓库中下载。要获取更多信息，请看项目依赖机制。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- Camel BOM --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.camel<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>camel-bom<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--依赖范围。在项目发布过程中，帮助决定哪些构件被包括进来。欲知详情请参考依赖机制。 - compile ：默认范围，用于编译 - provided：类似于编译，但支持你期待jdk或者容器提供，类似于classpath</span></span><br><span class="line"><span class="comment">                        - runtime: 在执行时需要使用 - test: 用于test任务时使用 - system: 需要外在提供相应的元素。通过systemPath来取得</span></span><br><span class="line"><span class="comment">                        - systemPath: 仅用于范围为system。提供相应的路径 - optional: 当项目自身被依赖时，标注依赖是否传递。用于连续依赖时使用</span></span><br><span class="line"><span class="comment">                        - import: 这个作用域只支持&lt;dependencyManagement&gt;部分中的pom类型的依赖关系，它表示该依赖关系要被指定的POM的&lt;dependencyManagement&gt;部分中的有效依赖列表所取代。</span></span><br><span class="line"><span class="comment">                        它表示该依赖关系将被指定的 POM 的 &lt;dependencyManagement&gt; 部分中的有效依赖列表所替换。</span></span><br><span class="line"><span class="comment">                        由于它们被替换，所以具有导入范围的依赖关系实际上并不参与限制依赖关系的转义。--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应，</span></span><br><span class="line"><span class="comment">                        尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。如果设置extensions为 true，就可以在 plugin里定义新的类型。所以前面的类型的例子不完整。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.camel<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>camel-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;camel.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.camel<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>camel-main<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;camel-main.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- logging --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.logging.log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j-slf4j-impl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;log4j2-version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- testing --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.camel<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>camel-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--构建项目需要的信息 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">defaultGoal</span>&gt;</span>install<span class="tag">&lt;/<span class="name">defaultGoal</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!--使用的插件列表 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--作为DOM对象的配置 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-resources-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">encoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">encoding</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">&lt;!-- Allows the example to be run via 'mvn camel:run' --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.camel<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>camel-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">logClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">logClasspath</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>org.example.MainApp<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--发现依赖和扩展的远程仓库列表。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--包含需要连接到远程仓库的信息 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--远程仓库唯一标识符。可以用来匹配在settings.xml文件里配置的远程仓库 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>maven-ali<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--远程仓库名称 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun-repo<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--远程仓库URL，按protocol://hostname/path形式 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>https://maven.aliyun.com/repository/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--如何处理远程仓库里发布版本的下载 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">releases</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--true或者false表示该仓库是否为下载某种类型构件（发布版，快照版）开启。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">releases</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 如何处理远程仓库里快照版本的下载。有了releases和snapshots这两组配置，POM就可以在每个单独的仓库中，为每种类型的构件采取不同的</span></span><br><span class="line"><span class="comment">                策略。例如，可能有人会决定只为开发目的开启对快照版本下载的支持。参见repositories/repository/releases元素 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--该元素指定更新发生的频率。Maven会比较本地POM和远程POM的时间戳。这里的选项是：always（一直），daily（默认，每日），interval：X（这里X是以分钟为单位的时间间隔），或者never（从不）。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">updatePolicy</span>&gt;</span>always<span class="tag">&lt;/<span class="name">updatePolicy</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--当Maven验证构件校验文件失败时该怎么做：ignore（忽略），fail（失败），或者warn（警告）。 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">checksumPolicy</span>&gt;</span>fail<span class="tag">&lt;/<span class="name">checksumPolicy</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--项目分发信息，在执行mvn deploy后表示要发布的位置。有了这些信息就可以把网站部署到远程服务器或者把构件部署到远程仓库。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--部署项目产生的构件到远程仓库需要的信息 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>roger-public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Roger-maven3<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://127.0.0.1:8081/repository/maven-releases/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--构件的快照部署到哪里？如果没有配置该元素，默认部署到repository元素配置的仓库，参见distributionManagement/repository元素 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">snapshotRepository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>roger-public<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Roger-maven3 Snapshot Repository<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://127.0.0.1:8081/repository/maven-snapshots/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">snapshotRepository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Maven生命周期"><a href="#Maven生命周期" class="headerlink" title="Maven生命周期"></a>Maven生命周期</h1><p>Maven 构建生命周期定义了一个项目构建跟发布的过程。</p>
+<p>一个典型的 Maven 构建（build）生命周期是由以下几个阶段的序列组成的：</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2018/09/maven-package-build-phase.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th><strong>阶段</strong></th>
+<th><strong>处理</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>validate</td>
+<td>验证项目</td>
+<td>验证项目是否正确且所有必须信息是可用的</td>
+</tr>
+<tr>
+<td>compile</td>
+<td>执行编译</td>
+<td>源代码编译在此阶段完成</td>
+</tr>
+<tr>
+<td>test</td>
+<td>测试</td>
+<td>使用适当的单元测试框架（例如JUnit）运行测试。</td>
+</tr>
+<tr>
+<td>package</td>
+<td>打包</td>
+<td>创建JAR/WAR包如在 pom.xml 中定义提及的包</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>检查</td>
+<td>对集成测试的结果进行检查，以保证质量达标</td>
+</tr>
+<tr>
+<td>install</td>
+<td>安装</td>
+<td>安装打包的项目到本地仓库，以供其他项目使用</td>
+</tr>
+<tr>
+<td>deploy</td>
+<td>部署</td>
+<td>拷贝最终的工程包到远程仓库中，以共享给其他开发人员和工程</td>
+</tr>
+</tbody></table>
+<p>maven 定义了三种<strong>构建**</strong>生命周期<strong>（Build Lifecycle），分别是 **clean</strong>、<strong>default</strong>、<strong>site</strong>，它们分别用于不同的任务：</p>
+<ul>
+<li>clean 生命周期：处理工程构建前的清理工作；</li>
+<li>default 生命周期：处理工程的编译、打包、部署；</li>
+<li>site 生命周期：生成工程的文档。</li>
+</ul>
+<p>每一种构建生命周期都由多个<strong>构建阶段</strong>（Build Phase）组成，如 clean 生命周期就由 pre-clean、clean、post-clean 三个构建阶段组成，而 default 声明周期则有 23 个构建阶段，详细内容可查看<a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#lifecycle-reference" target="_blank" rel="noopener">官方文档</a>。</p>
+<h2 id="maven-插件"><a href="#maven-插件" class="headerlink" title="maven 插件"></a>maven 插件</h2><p>虽然 maven 定义了构建生命周期和构建阶段，并指明了每个阶段的任务目标，但这些目标都是由 maven 插件（plugin）实现的，可以将构建阶段类比为一个 Java 接口，而将插件类比为一个 Java 实现类。</p>
+<p>maven 插件有一个很重要的概念：<strong>goal</strong>，你可以直译为“目标”，但整个知识库仍直接使用英语原文。一个插件可以有多个 goal，一个 goal 对应一个功能，比如 <code>maven-compiler-plugin</code> 插件，就有两个 goal： <code>compile</code> 和 <code>testCompile</code> ，前者表示编译工程代码，后者表示编译工程测试代码。</p>
+<h2 id="内置生命周期绑定"><a href="#内置生命周期绑定" class="headerlink" title="内置生命周期绑定"></a>内置生命周期绑定</h2><p>“生命周期绑定”指的是将“生命周期的构建阶段”与“plugin:goal”绑定，而“内置（build-in）”指的是这是 maven 默认的。需要特别指出的是：<strong>不是所有构建阶段都（默认）绑定了 plugin:goal</strong>。</p>
+<p>下面列出了几个常见的生命周期绑定，详细内容请查阅<a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#built-in-lifecycle-bindings" target="_blank" rel="noopener">官方文档</a>：</p>
+<p><img src="http://img.rogermaster.top/uPic/iXmrpw.png" alt="iXmrpw"></p>
+<h2 id="构建阶段的有序性"><a href="#构建阶段的有序性" class="headerlink" title="构建阶段的有序性"></a>构建阶段的有序性</h2><p>使用 <code>mvn compile</code> 命令编译代码时的输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ mvn compile</span><br><span class="line">[INFO] Scanning for projects...</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] ------------------&lt; com.example:first-maven-project &gt;-------------------</span><br><span class="line">[INFO] Building first-maven-project 1.0</span><br><span class="line">[INFO] --------------------------------[ jar ]---------------------------------</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ first-maven-project ---</span><br><span class="line">[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!</span><br><span class="line">[INFO] Copying 0 resource</span><br><span class="line">[INFO] </span><br><span class="line">[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ first-maven-project ---</span><br><span class="line">[INFO] Changes detected - recompiling the module!</span><br><span class="line">[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!</span><br><span class="line">[INFO] Compiling 1 source file to /home/liming/Program/maven-tutorial/build-first-maven-project/target/classes</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] BUILD SUCCESS</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br><span class="line">[INFO] Total time:  1.006 s</span><br><span class="line">[INFO] Finished at: 2020-10-31T09:40:56+08:00</span><br><span class="line">[INFO] ------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>首先， <code>mvn compile</code> 命令表示执行（default 生命周期的）compile 阶段，而 compile 阶段默认绑定了 <code>maven-compiler-plugin:compile</code> ，所以 <code>mvn compile</code> 命令就相当于执行 <code>mvn compiler:compile</code> 命令，因此在第 12 行你看到了对应的提示。</p>
+<p>那为什么在执行 <code>maven-compiler-plugin:compile</code> 前会先执行 <code>maven-resources-plugin:resources</code> 呢？这就与“构建阶段的有序性”有关了。</p>
+<p>“<strong>构建阶段的有序性</strong>”是指在同一种生命周期内，不同构建阶段的执行是有序的，执行某个阶段前，必须先执行完该阶段的所有前置阶段。如 compile 阶段属于 default 生命周期，而 process-resources 阶段在 compile 阶段之前，且默认绑定了 <code>maven-resources-plugin:resources</code> ，所以你看到第 8 行的提示。</p>
+<p>前面说过，maven 并未对所有阶段都绑定 plugin:goal，所以即使构建阶段有序，有些阶段也可能并未真正执行。</p>
+<p>至此，构建第一个 maven 工程时留下的疑惑就只剩下第 9 行和第 14 行的警告了，这个问题将在后文进行解答。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/Java大数据开发入门系列-四-————Spark之RDD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1151,7 +1464,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-17 12:44:27" itemprop="dateModified" datetime="2020-09-17T12:44:27+08:00">2020-09-17</time>
+                <time title="修改时间：2020-09-17 21:52:22" itemprop="dateModified" datetime="2020-09-17T21:52:22+08:00">2020-09-17</time>
               </span>
             
           
@@ -1343,7 +1656,7 @@
 <p>（5）SparkContext 将 Application 代码发送给 StandaloneExecutorBackend，并且 SparkContext 解析 Application 代码，构建 DAG 图，并提交给 DAG Scheduler，分解成 Stage（当碰到 Action 操作时，就会催生 Job，每个 Job 中含有一个或多个 Stage)，然后将 Stage（或者称为 TaskSet）提交给 Task Scheduler，Task Scheduler 负责将Task 分配到相应的 Worker,最后提交给 StandaloneExecutorBackend 执行。</p>
 <p>（6）StandaloneExecutorBackend 会建立 Executor 线程池，开始执行 Task，并向 SparkContext 报告，直至 Task 完成。</p>
 <p>（7）所有 Task 完成后，SparkContext 向 Master 注销，释放资源。</p>
-<h3 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h3><p>提交命令：</p>
+<h4 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h4><p>提交命令：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/otclL4.jpg" alt="otclL4"></p>
@@ -1353,7 +1666,7 @@
 <p><strong>master端进程</strong></p>
 <p><img src="http://img.rogermaster.top/uPic/JDwCHC.png" alt="JDwCHC"></p>
 <p>client模式适用于测试调试程序。Driver进程是在客户端启动的，这里的客户端就是指提交应用程序的当前节点。在Driver端可以看到task执行的情况。生产环境下不能使用client模式，因为Driver可能会回收task执行结果数据，假设要提交100个application到集群运行，Driver每次都会在client端启动，那么就会导致客户端所在节点的Driver收集100个application的结果数据，导致100次网卡流量暴增的问题。</p>
-<h3 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h3><p>提交命令：</p>
+<h4 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h4><p>提交命令：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode cluster --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/FvfZNe.jpg" alt="FvfZNe"></p>
@@ -3235,284 +3548,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/passages/tensorflow2-0入门系列（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Roger">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/uploads/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Roger's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/passages/tensorflow2-0入门系列（二）/" class="post-title-link" itemprop="url">tensorflow2.0入门系列（二）</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-08-06 10:21:35" itemprop="dateCreated datePublished" datetime="2019-08-06T10:21:35+08:00">2019-08-06</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-08-24 13:57:24" itemprop="dateModified" datetime="2019-08-24T13:57:24+08:00">2019-08-24</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tensorflow2-0/" itemprop="url" rel="index"><span itemprop="name">tensorflow2.0</span></a></span>
-
-                
-                
-                  ，
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tensorflow2-0/深度学习/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="tensorflow2-0入门系列（二）"><a href="#tensorflow2-0入门系列（二）" class="headerlink" title="tensorflow2.0入门系列（二）"></a>tensorflow2.0入门系列（二）</h1><h3 id="导入相关包"><a href="#导入相关包" class="headerlink" title="导入相关包"></a>导入相关包</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
-
-<p>Fashion MNIST数据集，包含10个类别中的70,000个灰度图像。 图像显示了（28 x 28）的单个服装物品.<br>60,000张图像来训练网络和10,000张图像来评估网络学习图像分类的准确程度<br>图像为28x28 NumPy数组，像素值范围为0到255.标签是一个整数数组，范围从0到9.这些对应于图像所代表的服装类别：</p>
-<table>
-<thead>
-<tr>
-<th align="left">Label</th>
-<th align="center">Class</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">0</td>
-<td align="center">T-shirt/top</td>
-</tr>
-<tr>
-<td align="left">1</td>
-<td align="center">Trouser</td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="center">Pullover</td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="center">Dress</td>
-</tr>
-<tr>
-<td align="left">4</td>
-<td align="center">Coat</td>
-</tr>
-<tr>
-<td align="left">5</td>
-<td align="center">Sandal</td>
-</tr>
-<tr>
-<td align="left">6</td>
-<td align="center">Shirt</td>
-</tr>
-<tr>
-<td align="left">7</td>
-<td align="center">Sneaker</td>
-</tr>
-<tr>
-<td align="left">8</td>
-<td align="center">Bag</td>
-</tr>
-<tr>
-<td align="left">9</td>
-<td align="center">Ankle boot</td>
-</tr>
-</tbody></table>
-<h3 id="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"><a href="#导入时装MNIST数据集，作为MNIST手写时装数据集的扩展" class="headerlink" title="导入时装MNIST数据集，作为MNIST手写时装数据集的扩展"></a>导入时装MNIST数据集，作为MNIST手写时装数据集的扩展</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fashion_mnist = keras.datasets.fashion_mnist</span><br><span class="line"></span><br><span class="line">(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()</span><br></pre></td></tr></table></figure>
-
-<p>每个图像都映射到一个标签。 由于类名不包含在数据集中，因此将它们存储在此处以便在后面绘制图像时使用</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#新建列表用于存儲每個标签所对应的类型</span></span><br><span class="line">class_names = [<span class="string">'T-shirt/top'</span>, <span class="string">'Trouser'</span>, <span class="string">'Pullover'</span>, <span class="string">'Dress'</span>, <span class="string">'Coat'</span>,<span class="string">'Sandal'</span>, <span class="string">'Shirt'</span>, <span class="string">'Sneaker'</span>, <span class="string">'Bag'</span>, <span class="string">'Ankle boot'</span>]</span><br></pre></td></tr></table></figure>
-
-<h3 id="数据扩展"><a href="#数据扩展" class="headerlink" title="数据扩展"></a>数据扩展</h3><p>（ps下方展示的代码仅可用于了解一些基本的数据操作扩展方法，并非核心代码）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取数据集的Shape</span></span><br><span class="line">print(train_images)</span><br><span class="line"><span class="comment">#输出(60000, 28, 28)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#获取数据集的数量</span></span><br><span class="line">print(len(train_images))</span><br><span class="line"><span class="comment">#输出60000</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>在训练网络之前必须对数据进行预处理。<br>一是方便我们的神经网络能够快速的识别里面的特征。<br>二是能够有效的帮助我们训练出一个成功的模型。<br>我们可以借助matplotlib这个绘图工具包帮助我们直观的感受数据集，以及训练过程。当然TensorFlow也提供了tensorboard用于可视化，暂时我们先不做讲解<br>我们可以先试着借助matplotlib画出我们数据集中的某张图片：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">plt.figure()</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.imshow(train_images[<span class="number">0</span>])</span><br><span class="line"><span class="comment">#颜色比例彩条</span></span><br><span class="line">plt.colorbar()</span><br><span class="line"><span class="comment">#不显示网格线</span></span><br><span class="line">plt.grid(<span class="literal">False</span>)</span><br><span class="line"><span class="comment">#保存图像</span></span><br><span class="line">plt.savefig(<span class="string">'some_one.png'</span>)</span><br><span class="line"><span class="comment">#显示图像</span></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://pvqnwtxgq.bkt.clouddn.com/some_one.png" alt="输出结果"><br>在将它们送到神经网络模型之前，我们为了将这些值缩放到0到1的范围，我们将值除以255.训练集和测试集以相同的方式进行预处理</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">train_images = train_images / <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line">test_images = test_images / <span class="number">255.0</span></span><br></pre></td></tr></table></figure>
-
-<p>为了验证数据格式是否正确以及我们是否已准备好构建和训练网络，让我们显示训练集中的前25个图像并在每个图像下方显示类名</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建图</span></span><br><span class="line">plt.figure(figsize=(<span class="number">10</span>,<span class="number">10</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">25</span>):</span><br><span class="line">    <span class="comment">#创建子图，5行5列，第i+1个</span></span><br><span class="line">    plt.subplot(<span class="number">5</span>,<span class="number">5</span>,i+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">#X轴坐标刻度设置</span></span><br><span class="line">    plt.xticks([])</span><br><span class="line">    <span class="comment">#Y轴坐标刻度设置</span></span><br><span class="line">    plt.yticks([])</span><br><span class="line">    plt.grid(<span class="literal">False</span>)</span><br><span class="line">    <span class="comment">#cmap: 颜色图谱（colormap), 默认绘制为RGB(A)颜色空间，这里使用的是二值图</span></span><br><span class="line">    plt.imshow(train_images[i])</span><br><span class="line">    plt.colorbar()</span><br><span class="line">    <span class="comment">#设置X轴标签</span></span><br><span class="line">    plt.xlabel(class_names[train_labels[i]])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>可以通过右边的彩色比例条可以明显看出图像值已经缩放到0-1的范围</p>
-<h3 id="构建模型"><a href="#构建模型" class="headerlink" title="构建模型"></a>构建模型</h3><h4 id="设置神经网络层"><a href="#设置神经网络层" class="headerlink" title="设置神经网络层"></a>设置神经网络层</h4><p>这里还是采用Keras提供的层叠模型</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model = keras.Sequential([</span><br><span class="line">    <span class="comment"># 输入层</span></span><br><span class="line">    keras.layers.Flatten(input_shape=(<span class="number">28</span>, <span class="number">28</span>)),</span><br><span class="line">    <span class="comment"># 隐藏层一，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">    <span class="comment"># 输出层，全连接</span></span><br><span class="line">    keras.layers.Dense(<span class="number">10</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-
-<h4 id="配置模型"><a href="#配置模型" class="headerlink" title="配置模型"></a>配置模型</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#采用Adam优化器，loss计算方法为sparse_categorical_crossentropy，评价函数</span></span><br><span class="line">model.compile(optimizer=<span class="string">'adam'</span>,</span><br><span class="line">              loss=<span class="string">'sparse_categorical_crossentropy'</span>,</span><br><span class="line">              metrics=[<span class="string">'accuracy'</span>])</span><br></pre></td></tr></table></figure>
-
-<h3 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#训练总轮数为5轮</span></span><br><span class="line">model.fit(train_images, train_labels, epochs=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-
-<h3 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h3><p>看准确度</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test_loss, test_acc = model.evaluate(test_images, test_labels)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'\nTest accuracy:'</span>, test_acc)</span><br></pre></td></tr></table></figure>
-
-<h3 id="进行预测"><a href="#进行预测" class="headerlink" title="进行预测"></a>进行预测</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">predictions = model.predict(test_images)</span><br></pre></td></tr></table></figure>
-
-<p>现在我们去其中第一个结果看看预测情况：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(predictions[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
-
-<p>输出：[2.4625590e-08 6.4621108e-10 6.6212579e-08 1.8379983e-11 4.6871547e-09<br>4.0910607e-05 3.9370971e-07 9.7850722e-04 2.8181713e-09 9.9898010e-01]<br>预测是10个数字的数组。 它们代表模型的“信心”，即图像对应于10种不同服装中的每一种。 我们可以看到哪个标签具有最高的置信度值<br>我们可以使用np.argmax()来直接计算出置信度最高的所对应的标签</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(np.argmax(predictions[<span class="number">0</span>]))</span><br><span class="line"><span class="comment">#输出 9</span></span><br></pre></td></tr></table></figure>
-
-<p>我们再对比一下真正的标签</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(test_labels[<span class="number">0</span>])</span><br><span class="line"><span class="comment"># 输出 9</span></span><br></pre></td></tr></table></figure>
-
-<p>我们同样可以借助matplotlib直观的表现出来<br>首先我们可以构建画小图的函数和画预测值直方图的函数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_image</span><span class="params">(i, predictions_array, true_label, img)</span>:</span></span><br><span class="line">  predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks([])</span><br><span class="line">  plt.yticks([])</span><br><span class="line"></span><br><span class="line">  plt.imshow(img, cmap=plt.cm.binary)</span><br><span class="line"></span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line">  <span class="keyword">if</span> predicted_label == true_label:</span><br><span class="line">    color = <span class="string">'blue'</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    color = <span class="string">'red'</span></span><br><span class="line"></span><br><span class="line">  plt.xlabel(<span class="string">"&#123;&#125; &#123;:2.0f&#125;% (&#123;&#125;)"</span>.format(class_names[predicted_label],</span><br><span class="line">                                <span class="number">100</span>*np.max(predictions_array),</span><br><span class="line">                                class_names[true_label]),</span><br><span class="line">                                color=color)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_value_array</span><span class="params">(i, predictions_array, true_label)</span>:</span></span><br><span class="line">  predictions_array, true_label = predictions_array[i], true_label[i]</span><br><span class="line">  plt.grid(<span class="literal">False</span>)</span><br><span class="line">  plt.xticks(range(<span class="number">10</span>), class_names, rotation=<span class="number">90</span>)</span><br><span class="line">  plt.yticks([])</span><br><span class="line">  thisplot = plt.bar(range(<span class="number">10</span>), predictions_array, color=<span class="string">"#777777"</span>)</span><br><span class="line">  plt.ylim([<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">  predicted_label = np.argmax(predictions_array)</span><br><span class="line"></span><br><span class="line">  thisplot[predicted_label].set_color(<span class="string">'red'</span>)</span><br><span class="line">  thisplot[true_label].set_color(<span class="string">'blue'</span>)</span><br></pre></td></tr></table></figure>
-
-<p>我们可以看看15张图片的表现情况</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">num_rows = <span class="number">5</span></span><br><span class="line">num_cols = <span class="number">3</span></span><br><span class="line">num_images = num_rows*num_cols</span><br><span class="line">plt.figure(figsize=(<span class="number">2</span>*<span class="number">2</span>*num_cols, <span class="number">2</span>*num_rows))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_images):</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">1</span>)</span><br><span class="line">  plot_image(i, predictions, test_labels, test_images)</span><br><span class="line">  plt.subplot(num_rows, <span class="number">2</span>*num_cols, <span class="number">2</span>*i+<span class="number">2</span>)</span><br><span class="line">  plot_value_array(i, predictions, test_labels)</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p><img src="http://pvqnwtxgq.bkt.clouddn.com/15_pre.png" alt="预测情况"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3562,7 +3597,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3646,7 +3681,9 @@
         
           
         
-        <span class="site-state-item-count">16</span>
+          
+        
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -3685,7 +3722,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">渝ICP备19010391号-1 </a>&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">渝ICP备19010391号-1 </a>&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

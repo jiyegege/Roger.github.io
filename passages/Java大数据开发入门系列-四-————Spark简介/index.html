@@ -117,7 +117,7 @@
 <meta property="og:image" content="http://img.rogermaster.top/uPic/gebTgh.png">
 <meta property="og:image" content="http://img.rogermaster.top/uPic/AjwTGM.jpg">
 <meta property="og:image" content="http://img.rogermaster.top/uPic/4Ta6xn.png">
-<meta property="og:updated_time" content="2020-09-17T04:44:27.341Z">
+<meta property="og:updated_time" content="2020-09-17T13:52:22.766Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java大数据开发入门系列(四)————Spark简介">
 <meta name="twitter:description" content="一、简介Spark 于 2009 年诞生于加州大学伯克利分校 AMPLab，2013 年被捐赠给 Apache 软件基金会，2014 年 2 月成为 Apache 的顶级项目。相对于 MapReduce 的批处理计算，Spark 可以带来上百倍的性能提升，因此它成为继 MapReduce 之后，最为广泛使用的分布式计算框架。 二、Spark产生背景Spark 是在 MapReduce 的基础上产生">
@@ -450,7 +450,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-09-17 12:44:27" itemprop="dateModified" datetime="2020-09-17T12:44:27+08:00">2020-09-17</time>
+                <time title="修改时间：2020-09-17 21:52:22" itemprop="dateModified" datetime="2020-09-17T21:52:22+08:00">2020-09-17</time>
               </span>
             
           
@@ -640,7 +640,7 @@
 <p>（5）SparkContext 将 Application 代码发送给 StandaloneExecutorBackend，并且 SparkContext 解析 Application 代码，构建 DAG 图，并提交给 DAG Scheduler，分解成 Stage（当碰到 Action 操作时，就会催生 Job，每个 Job 中含有一个或多个 Stage)，然后将 Stage（或者称为 TaskSet）提交给 Task Scheduler，Task Scheduler 负责将Task 分配到相应的 Worker,最后提交给 StandaloneExecutorBackend 执行。</p>
 <p>（6）StandaloneExecutorBackend 会建立 Executor 线程池，开始执行 Task，并向 SparkContext 报告，直至 Task 完成。</p>
 <p>（7）所有 Task 完成后，SparkContext 向 Master 注销，释放资源。</p>
-<h3 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h3><p>提交命令：</p>
+<h4 id="Standalone-Client（Driver在client运行）"><a href="#Standalone-Client（Driver在client运行）" class="headerlink" title="Standalone-Client（Driver在client运行）"></a>Standalone-Client（Driver在client运行）</h4><p>提交命令：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode client --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/otclL4.jpg" alt="otclL4"></p>
@@ -650,7 +650,7 @@
 <p><strong>master端进程</strong></p>
 <p><img src="http://img.rogermaster.top/uPic/JDwCHC.png" alt="JDwCHC"></p>
 <p>client模式适用于测试调试程序。Driver进程是在客户端启动的，这里的客户端就是指提交应用程序的当前节点。在Driver端可以看到task执行的情况。生产环境下不能使用client模式，因为Driver可能会回收task执行结果数据，假设要提交100个application到集群运行，Driver每次都会在client端启动，那么就会导致客户端所在节点的Driver收集100个application的结果数据，导致100次网卡流量暴增的问题。</p>
-<h3 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h3><p>提交命令：</p>
+<h4 id="Standalone-Cluster（Driver在Worker运行）"><a href="#Standalone-Cluster（Driver在Worker运行）" class="headerlink" title="Standalone-Cluster（Driver在Worker运行）"></a>Standalone-Cluster（Driver在Worker运行）</h4><p>提交命令：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-submit  --master <span class="symbol">spark:</span>/<span class="regexp">/172.18.0.2:7077 --deploy-mode cluster --class org.apache.spark.examples.SparkPi /spark</span><span class="regexp">/examples/jars</span><span class="regexp">/spark-examples_2.11-2.3.3.jar  10000</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="http://img.rogermaster.top/uPic/FvfZNe.jpg" alt="FvfZNe"></p>
@@ -819,7 +819,7 @@
         
           <a href="/archives">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -903,7 +903,9 @@
         
           
         
-        <span class="site-state-item-count">16</span>
+          
+        
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -938,7 +940,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Spark产生背景"><span class="nav-number">2.</span> <span class="nav-text">二、Spark产生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、特点"><span class="nav-number">3.</span> <span class="nav-text">三、特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Spark的组成"><span class="nav-number">4.</span> <span class="nav-text">三、Spark的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、集群架构"><span class="nav-number">5.</span> <span class="nav-text">四、集群架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、核心组件"><span class="nav-number">6.</span> <span class="nav-text">五、核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-SQL"><span class="nav-number">6.1.</span> <span class="nav-text">Spark SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Streaming"><span class="nav-number">6.2.</span> <span class="nav-text">Spark Streaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MLlib"><span class="nav-number">6.3.</span> <span class="nav-text">MLlib</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graphx"><span class="nav-number">6.4.</span> <span class="nav-text">Graphx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、spark作业运行流程"><span class="nav-number">7.</span> <span class="nav-text">六、spark作业运行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone模式"><span class="nav-number">7.1.</span> <span class="nav-text">Standalone模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Client（Driver在client运行）"><span class="nav-number">7.2.</span> <span class="nav-text">Standalone-Client（Driver在client运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Cluster（Driver在Worker运行）"><span class="nav-number">7.3.</span> <span class="nav-text">Standalone-Cluster（Driver在Worker运行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn模式"><span class="nav-number">7.4.</span> <span class="nav-text">Yarn模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-cluster"><span class="nav-number">7.4.1.</span> <span class="nav-text">Yarn-cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-client"><span class="nav-number">7.4.2.</span> <span class="nav-text">Yarn-client</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Spark产生背景"><span class="nav-number">2.</span> <span class="nav-text">二、Spark产生背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、特点"><span class="nav-number">3.</span> <span class="nav-text">三、特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Spark的组成"><span class="nav-number">4.</span> <span class="nav-text">三、Spark的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、集群架构"><span class="nav-number">5.</span> <span class="nav-text">四、集群架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、核心组件"><span class="nav-number">6.</span> <span class="nav-text">五、核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-SQL"><span class="nav-number">6.1.</span> <span class="nav-text">Spark SQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Streaming"><span class="nav-number">6.2.</span> <span class="nav-text">Spark Streaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MLlib"><span class="nav-number">6.3.</span> <span class="nav-text">MLlib</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graphx"><span class="nav-number">6.4.</span> <span class="nav-text">Graphx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、spark作业运行流程"><span class="nav-number">7.</span> <span class="nav-text">六、spark作业运行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone模式"><span class="nav-number">7.1.</span> <span class="nav-text">Standalone模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Standalone-Client（Driver在client运行）"><span class="nav-number">7.1.1.</span> <span class="nav-text">Standalone-Client（Driver在client运行）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Standalone-Cluster（Driver在Worker运行）"><span class="nav-number">7.1.2.</span> <span class="nav-text">Standalone-Cluster（Driver在Worker运行）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn模式"><span class="nav-number">7.2.</span> <span class="nav-text">Yarn模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-cluster"><span class="nav-number">7.2.1.</span> <span class="nav-text">Yarn-cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn-client"><span class="nav-number">7.2.2.</span> <span class="nav-text">Yarn-client</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -959,7 +961,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">渝ICP备19010391号-1 </a>&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">  <a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">渝ICP备19010391号-1 </a>&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
