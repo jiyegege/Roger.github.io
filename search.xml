@@ -1,9 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>2019京东Java校招笔试</title>
+    <url>/passages/2019%E4%BA%AC%E4%B8%9CJava%E6%A0%A1%E6%8B%9B%E7%AC%94%E8%AF%95/</url>
+    <content><![CDATA[<p>1 TCP协议的拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载。常用的方法有:<br>正确答案 : BC 您的答案 : BC<br>A 慢启动、窗口滑动<br>B 慢开始、拥塞控制<br>C 快重传、快恢复<br>D 快开始、快恢复</p>
+<p>2 Shell 脚本（shell script），是一种为 shell 编写的脚本程序。现有一个test.sh文件，且有可执行权限，文件中内容为：<br>#!/bin/bash<br>aa=’Hello World !’<br>请问下面选项中哪个能正常显示Hello World !<br>正确答案 : D 您的答案 : D<br>A sh test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>B ./test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>C bash test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>D source test.sh &gt;/dev/null 1 &amp;&amp; echo $aa</p>
+<p>3 bash脚本文件一般第一行开头是<br>正确答案 : C 您的答案 : C<br>A //<br>B ##<br>C #!<br>D #/</p>
+<p>4 在bash编程中,算术比较大于、大于等于的运算符是（ ）<br>正确答案 : CD 您的答案 : CD<br>A &gt;<br>B &gt;=<br>C ge<br>D gt</p>
+<p>5 系统管理员编写扫描临时文件的shell程序tmpsc.sh, 测试该程序时提示拒绝执行，解决的方法有（ ）<br>正确答案 : BCD 您的答案 : BC<br>A chmod 644 tmpsc.sh<br>B chmod 755 tmpsc.sh<br>C chmod a+x tmpsc.sh<br>D chmod u+x tmpsc.sh<br>解析：<br>目录/文件的满权限的形式：<br>drwxrwxrwx<br>-rwxrwxrwx 其中：(r:读取，w:写，x:执行)<br>数字对应：(r:4，w:2，x:1)， 命令行中的三个数字对应的授权角色为owner, group, others</p>
+<ol>
+<li>通过数字修改权限<br>chmod 777 [-R]</li>
+<li>符号类型修改<br>u: owner<br>g: group<br>o: others<br>a : all<br>chmod a+x [-R] 所有人都拥有执行权限</li>
+</ol>
+<p>6 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, TimeUnit.SECONDS,</span><br><span class="line"> <span class="keyword">new</span> ArrayBlockingQueue&lt;Runnable&gt;(<span class="number">5</span>), <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>线程池executor在空闲状态下的线程个数是？<br>正确答案 : B 您的答案 : B<br>A 0<br>B 5<br>C 10<br>D 不确定</p>
+<p>7 Object类不含有以下哪种方法？<br>正确答案 : A 您的答案 : A<br>A equal<br>B wait<br>C notify<br>D clone</p>
+<p>8</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line"> list.add(<span class="string">"a"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JDK1.8中，执行以上程序后，该list进行了几次扩容？<br>正确答案 : C 您的答案 : D<br>A 4<br>B 5<br>C 6<br>D 7<br>解析：初始容量被设置为10,那么容量变化的规则是((旧容量 * 3) / 2) + 1，也就是1.5倍增长</p>
+<p>9 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(fun1());</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun1</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">return</span> fun2();</span><br><span class="line"> &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.print(<span class="string">"C"</span>);</span><br><span class="line"> <span class="keyword">return</span> <span class="string">"D"</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，输出结果正确的是？<br>正确答案 : C 您的答案 : C<br>A ABCD<br>B ACDB<br>C ACBD<br>D 不确定</p>
+<p>10 根据类加载器加载类的初始化原理，推断以下代码的输入结果为？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line"> ClassLoader classLoader=ClassLoader.getSystemClassLoader();</span><br><span class="line"> Class clazz=classLoader.loadClass(<span class="string">"A"</span>);</span><br><span class="line"> System.out.print(<span class="string">"Test"</span>);</span><br><span class="line"> clazz.forName(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A TestA<br>B ATestA<br>C ATest<br>D Test</p>
+<p>11 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A AC<br>B ABC<br>C C<br>D BC</p>
+<p>12 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : C 您的答案 : C<br>A AB<br>B ABC<br>C C<br>D BC</p>
+<p>13 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>14 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>15 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="string">"JD"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确答案 : A 您的答案 : A<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
+<p>16 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> String s1 = <span class="string">"abc"</span>;</span><br><span class="line"> String s2 = <span class="string">"abc"</span>;</span><br><span class="line"> System.out.println(s1 == s2);</span><br><span class="line"> String s3 = <span class="keyword">new</span> String(<span class="string">"abc"</span>);</span><br><span class="line"> System.out.println(s1 == s3);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，输出结果正确的是？<br>正确答案 : B 您的答案 : B<br>A true true<br>B true false<br>C false fasle<br>D false true</p>
+<p>17 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> Integer y = <span class="number">10</span>;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateX</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateY</span><span class="params">(Integer value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> updateX(x);</span><br><span class="line"> updateY(y);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行以上程序后，x和y的值分别是多少？<br>正确答案 : A 您的答案 : A<br>A 10,10<br>B 10,30<br>C 30,10<br>D 30,30</p>
+<p>18 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#123;</span><br><span class="line"> System.out.println(<span class="string">"C"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.println(<span class="string">"D"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上程序输出的结果，正确的是？<br>正确答案 : C 您的答案 : C<br>A DCABB<br>B DABCBC<br>C DACBCB<br>D DACBB</p>
+<p>19 兼容接口不同的类在一起工作，采用以下哪种设计模式最好？<br>正确答案 : B 您的答案 : C<br>A 建造者模式<br>B 适配器模式<br>C 桥接模式<br>D 代理模式</p>
+<p>20 下图的UML类结构图表示的是哪种设计模式：<br><img src="http://image.acmcoder.com/v1/acmimg/8750747399346469.png?authorization=bce-auth-v1%2F02fe1db0eea94e8480054b43acd6124f%2F2019-02-20T08%3A25%3A05Z%2F-1%2F%2F35eff08031c0d50f671b070ae7e081ac9cce55b98bbf3c39e5f2f5e1590211ef" alt="图"><br>正确答案 : A 您的答案 : A<br>A 抽象工厂模式<br>B 享元模式<br>C 装饰模式<br>D 责任链模式</p>
+<p>21 以下哪条SQL语句可以返回table1中的全部的key：<br>正确答案 : D 您的答案 : D<br>A select tabel1.key from table1 join tabel2 on table1.key=table2.key<br>B select tabel1.key from table1 right outer join tabel2 on table1.key=table2.key<br>C select tabel1.key from table1 left semi join tabel2 on table1.key=table2.key<br>D select tabel1.key from table1 left outer join tabel2 on table1.key=table2.key</p>
+<p>22 下列有关软连接描述正确的是<br>正确答案 : C 您的答案 : C<br>A 与普通文件没什么不同，inode 都指向同一个文件在硬盘中的区块<br>B 不能对目录创建软链接<br>C 保存了其代表的文件的绝对路径，是另外一种文件，在硬盘上有独立的区块，访问时替换自身路径<br>D 不可以对不存在的文件创建软链接</p>
+<p>23 以下哪种设备工作在数据链路层？<br>正确答案 : B 您的答案 : B<br>A 中继器<br>B 集线器<br>C 交换机<br>D 路由器</p>
+<p>24 一颗二叉树的叶子节点有5个，出度为1的结点有3个，该二叉树的结点总个数是？<br>正确答案 : B 您的答案 : B<br>A 11<br>B 12<br>C 13<br>D 14</p>
+<p>25 若串S=”UP！UP！JD”，则其子串的数目<br>正确答案 : B 您的答案 : B<br>A 33<br>B 37<br>C 39<br>D 35<br>解析：(n*(n+1)/2)+1</p>
+<p>26 已知小顶堆：{51,32,73,23,42,62,99,14,24,3943,58,65,80,120}，请问62对应节点的左子节点是<br>正确答案 : B 您的答案 : B<br>A 99<br>B 73<br>C 3943<br>D 120</p>
+<p>27 关于递归法的说法不正确的是（ ）<br>正确答案 : D 您的答案 : D<br>A 程序结构更简洁<br>B 占用CPU的处理时间更多<br>C 要消耗大量的内存空间，程序执行慢，甚至无法执行<br>D 递归法比递推法的执行效率更高</p>
+<p>28 以下为求0到1000以内所有奇数和的算法，从中选出描述正确的算法（ ）<br>正确答案 : A 您的答案 : A<br>A ①s=0；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>B ①s=0；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束<br>C ①s=1；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>D ①s=1；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束</p>
+<p>29 如何在多线程中避免发生死锁？<br>正确答案 : ABCD 您的答案 : ABCD<br>A 允许进程同时访问某些资源。<br>B 允许进程强行从占有者那里夺取某些资源。<br>C 进程在运行前一次性地向系统申请它所需要的全部资源。<br>D 把资源事先分类编号，按号分配，使进程在申请，占用资源时不会形成环路。</p>
+<p>30 下面有关值类型和引用类型描述正确的是（）？<br>正确答案 : ABC 您的答案 : ABC<br>值类型的变量赋值只是进行数据复制，创建一个同值的新对象，而引用类型变量赋值，仅仅是把对象的引用<br>的指针赋值给变量，使它们共用一个内存地址。<br>A<br>值类型数据是在栈上分配内存空间，它的变量直接包含变量的实例，使用效率相对较高。而引用类型数据是<br>分配在堆上，引用类型的变量通常包含一个指向实例的指针，变量通过指针来引用实例。<br>B<br>C 引用类型一般都具有继承性，但是值类型一般都是封装的，因此值类型不能作为其他任何类型的基类。<br>D 值类型变量的作用域主要是在栈上分配内存空间内，而引用类型变量作用域主要在分配的堆上。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>面试准备</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>笔试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DataSphere Studio1.0本地调试开发指南</title>
     <url>/passages/DataSphere-Studio1-0%E6%9C%AC%E5%9C%B0%E8%B0%83%E8%AF%95%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<h1 id="DataSphere-Studio1-0本地调试开发指南"><a href="#DataSphere-Studio1-0本地调试开发指南" class="headerlink" title="DataSphere Studio1.0本地调试开发指南"></a>DataSphere Studio1.0本地调试开发指南</h1><h2 id="数据库准备"><a href="#数据库准备" class="headerlink" title="数据库准备"></a>数据库准备</h2><p>新建数据库dds，前后执行db目录下的dss_ddl.sql、dss_dml.sql脚本文件</p>
+    <content><![CDATA[<h1 id="DataSphere-Studio1-0本地调试开发指南"><a href="#DataSphere-Studio1-0本地调试开发指南" class="headerlink" title="DataSphere Studio1.0本地调试开发指南"></a>DataSphere Studio1.0本地调试开发指南</h1><p>本指南仅做本地调试开发参考，不做线上部署参考，修改内容后可能会存在打包问题(未做测试ß)</p>
+<h2 id="数据库准备"><a href="#数据库准备" class="headerlink" title="数据库准备"></a>数据库准备</h2><p>新建数据库dds，前后执行db目录下的dss_ddl.sql、dss_dml.sql脚本文件</p>
 <h2 id="Maven构建打包获取dss-appconns下面相关的lib包便于后面调试"><a href="#Maven构建打包获取dss-appconns下面相关的lib包便于后面调试" class="headerlink" title="Maven构建打包获取dss-appconns下面相关的lib包便于后面调试"></a>Maven构建打包获取dss-appconns下面相关的lib包便于后面调试</h2><p>如果您是本地第一次使用，必须在最外层工程pom.xml所在目录先执行以下命令：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mvn -N  install</span><br></pre></td></tr></table></figure>
 
@@ -438,89 +522,6 @@
       </tags>
   </entry>
   <entry>
-    <title>2019京东Java校招笔试</title>
-    <url>/passages/2019%E4%BA%AC%E4%B8%9CJava%E6%A0%A1%E6%8B%9B%E7%AC%94%E8%AF%95/</url>
-    <content><![CDATA[<p>1 TCP协议的拥塞控制就是防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不致过载。常用的方法有:<br>正确答案 : BC 您的答案 : BC<br>A 慢启动、窗口滑动<br>B 慢开始、拥塞控制<br>C 快重传、快恢复<br>D 快开始、快恢复</p>
-<p>2 Shell 脚本（shell script），是一种为 shell 编写的脚本程序。现有一个test.sh文件，且有可执行权限，文件中内容为：<br>#!/bin/bash<br>aa=’Hello World !’<br>请问下面选项中哪个能正常显示Hello World !<br>正确答案 : D 您的答案 : D<br>A sh test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>B ./test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>C bash test.sh &gt;/dev/null 1 &amp;&amp; echo $aa<br>D source test.sh &gt;/dev/null 1 &amp;&amp; echo $aa</p>
-<p>3 bash脚本文件一般第一行开头是<br>正确答案 : C 您的答案 : C<br>A //<br>B ##<br>C #!<br>D #/</p>
-<p>4 在bash编程中,算术比较大于、大于等于的运算符是（ ）<br>正确答案 : CD 您的答案 : CD<br>A &gt;<br>B &gt;=<br>C ge<br>D gt</p>
-<p>5 系统管理员编写扫描临时文件的shell程序tmpsc.sh, 测试该程序时提示拒绝执行，解决的方法有（ ）<br>正确答案 : BCD 您的答案 : BC<br>A chmod 644 tmpsc.sh<br>B chmod 755 tmpsc.sh<br>C chmod a+x tmpsc.sh<br>D chmod u+x tmpsc.sh<br>解析：<br>目录/文件的满权限的形式：<br>drwxrwxrwx<br>-rwxrwxrwx 其中：(r:读取，w:写，x:执行)<br>数字对应：(r:4，w:2，x:1)， 命令行中的三个数字对应的授权角色为owner, group, others</p>
-<ol>
-<li>通过数字修改权限<br>chmod 777 [-R]</li>
-<li>符号类型修改<br>u: owner<br>g: group<br>o: others<br>a : all<br>chmod a+x [-R] 所有人都拥有执行权限</li>
-</ol>
-<p>6 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, TimeUnit.SECONDS,</span><br><span class="line"> <span class="keyword">new</span> ArrayBlockingQueue&lt;Runnable&gt;(<span class="number">5</span>), <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>线程池executor在空闲状态下的线程个数是？<br>正确答案 : B 您的答案 : B<br>A 0<br>B 5<br>C 10<br>D 不确定</p>
-<p>7 Object类不含有以下哪种方法？<br>正确答案 : A 您的答案 : A<br>A equal<br>B wait<br>C notify<br>D clone</p>
-<p>8</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">100</span>;i++)&#123;</span><br><span class="line"> list.add(<span class="string">"a"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>JDK1.8中，执行以上程序后，该list进行了几次扩容？<br>正确答案 : C 您的答案 : D<br>A 4<br>B 5<br>C 6<br>D 7<br>解析：初始容量被设置为10,那么容量变化的规则是((旧容量 * 3) / 2) + 1，也就是1.5倍增长</p>
-<p>9 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(fun1());</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun1</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">return</span> fun2();</span><br><span class="line"> &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.print(<span class="string">"C"</span>);</span><br><span class="line"> <span class="keyword">return</span> <span class="string">"D"</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行以上程序后，输出结果正确的是？<br>正确答案 : C 您的答案 : C<br>A ABCD<br>B ACDB<br>C ACBD<br>D 不确定</p>
-<p>10 根据类加载器加载类的初始化原理，推断以下代码的输入结果为？</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line"> ClassLoader classLoader=ClassLoader.getSystemClassLoader();</span><br><span class="line"> Class clazz=classLoader.loadClass(<span class="string">"A"</span>);</span><br><span class="line"> System.out.print(<span class="string">"Test"</span>);</span><br><span class="line"> clazz.forName(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : A 您的答案 : A<br>A TestA<br>B ATestA<br>C ATest<br>D Test</p>
-<p>11 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : A 您的答案 : A<br>A AC<br>B ABC<br>C C<br>D BC</p>
-<p>12 继承是JAVA语言的一个特性，针对类的继承，虚拟机会如何进行父类和子类的初始化加载呢？请阅读代码选择出该段代码<br>的输入结果。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.print(B.c);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"A"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String c = <span class="string">"C"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : C 您的答案 : C<br>A AB<br>B ABC<br>C C<br>D BC</p>
-<p>13 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
-<p>14 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="keyword">new</span> String(<span class="string">"JD"</span>);</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : D 您的答案 : D<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
-<p>15 JAVA的类加载期负责整个生命周期内的class的初始化和加载工作，就虚拟机的规范来说，以下代码会输出什么结果？</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(Test2.a);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test2</span></span>&#123;</span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String a=<span class="string">"JD"</span>;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.print(<span class="string">"OK"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确答案 : A 您的答案 : A<br>A 只有JD<br>B 只有OK<br>C 输出 JDOK<br>D 输出 OKJD</p>
-<p>16 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> String s1 = <span class="string">"abc"</span>;</span><br><span class="line"> String s2 = <span class="string">"abc"</span>;</span><br><span class="line"> System.out.println(s1 == s2);</span><br><span class="line"> String s3 = <span class="keyword">new</span> String(<span class="string">"abc"</span>);</span><br><span class="line"> System.out.println(s1 == s3);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行以上程序后，输出结果正确的是？<br>正确答案 : B 您的答案 : B<br>A true true<br>B true false<br>C false fasle<br>D false true</p>
-<p>17 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> Integer y = <span class="number">10</span>;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateX</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">updateY</span><span class="params">(Integer value)</span> </span>&#123;</span><br><span class="line"> value = <span class="number">3</span> * value;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> updateX(x);</span><br><span class="line"> updateY(y);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行以上程序后，x和y的值分别是多少？<br>正确答案 : A 您的答案 : A<br>A 10,10<br>B 10,30<br>C 30,10<br>D 30,30</p>
-<p>18 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"A"</span>);</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> <span class="keyword">new</span> Main();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> System.out.println(<span class="string">"B"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> &#123;</span><br><span class="line"> System.out.println(<span class="string">"C"</span>);</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">static</span> &#123;</span><br><span class="line"> System.out.println(<span class="string">"D"</span>);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上程序输出的结果，正确的是？<br>正确答案 : C 您的答案 : C<br>A DCABB<br>B DABCBC<br>C DACBCB<br>D DACBB</p>
-<p>19 兼容接口不同的类在一起工作，采用以下哪种设计模式最好？<br>正确答案 : B 您的答案 : C<br>A 建造者模式<br>B 适配器模式<br>C 桥接模式<br>D 代理模式</p>
-<p>20 下图的UML类结构图表示的是哪种设计模式：<br><img src="http://image.acmcoder.com/v1/acmimg/8750747399346469.png?authorization=bce-auth-v1%2F02fe1db0eea94e8480054b43acd6124f%2F2019-02-20T08%3A25%3A05Z%2F-1%2F%2F35eff08031c0d50f671b070ae7e081ac9cce55b98bbf3c39e5f2f5e1590211ef" alt="图"><br>正确答案 : A 您的答案 : A<br>A 抽象工厂模式<br>B 享元模式<br>C 装饰模式<br>D 责任链模式</p>
-<p>21 以下哪条SQL语句可以返回table1中的全部的key：<br>正确答案 : D 您的答案 : D<br>A select tabel1.key from table1 join tabel2 on table1.key=table2.key<br>B select tabel1.key from table1 right outer join tabel2 on table1.key=table2.key<br>C select tabel1.key from table1 left semi join tabel2 on table1.key=table2.key<br>D select tabel1.key from table1 left outer join tabel2 on table1.key=table2.key</p>
-<p>22 下列有关软连接描述正确的是<br>正确答案 : C 您的答案 : C<br>A 与普通文件没什么不同，inode 都指向同一个文件在硬盘中的区块<br>B 不能对目录创建软链接<br>C 保存了其代表的文件的绝对路径，是另外一种文件，在硬盘上有独立的区块，访问时替换自身路径<br>D 不可以对不存在的文件创建软链接</p>
-<p>23 以下哪种设备工作在数据链路层？<br>正确答案 : B 您的答案 : B<br>A 中继器<br>B 集线器<br>C 交换机<br>D 路由器</p>
-<p>24 一颗二叉树的叶子节点有5个，出度为1的结点有3个，该二叉树的结点总个数是？<br>正确答案 : B 您的答案 : B<br>A 11<br>B 12<br>C 13<br>D 14</p>
-<p>25 若串S=”UP！UP！JD”，则其子串的数目<br>正确答案 : B 您的答案 : B<br>A 33<br>B 37<br>C 39<br>D 35<br>解析：(n*(n+1)/2)+1</p>
-<p>26 已知小顶堆：{51,32,73,23,42,62,99,14,24,3943,58,65,80,120}，请问62对应节点的左子节点是<br>正确答案 : B 您的答案 : B<br>A 99<br>B 73<br>C 3943<br>D 120</p>
-<p>27 关于递归法的说法不正确的是（ ）<br>正确答案 : D 您的答案 : D<br>A 程序结构更简洁<br>B 占用CPU的处理时间更多<br>C 要消耗大量的内存空间，程序执行慢，甚至无法执行<br>D 递归法比递推法的执行效率更高</p>
-<p>28 以下为求0到1000以内所有奇数和的算法，从中选出描述正确的算法（ ）<br>正确答案 : A 您的答案 : A<br>A ①s=0；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>B ①s=0；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束<br>C ①s=1；②i=1；③s=s+i；④i=i+2；⑤如果i≤1000，则返回③；⑥结束<br>D ①s=1；②i=1；③i=i+2；④s=s+i；⑤如果i≤1000，则返回③；⑥结束</p>
-<p>29 如何在多线程中避免发生死锁？<br>正确答案 : ABCD 您的答案 : ABCD<br>A 允许进程同时访问某些资源。<br>B 允许进程强行从占有者那里夺取某些资源。<br>C 进程在运行前一次性地向系统申请它所需要的全部资源。<br>D 把资源事先分类编号，按号分配，使进程在申请，占用资源时不会形成环路。</p>
-<p>30 下面有关值类型和引用类型描述正确的是（）？<br>正确答案 : ABC 您的答案 : ABC<br>值类型的变量赋值只是进行数据复制，创建一个同值的新对象，而引用类型变量赋值，仅仅是把对象的引用<br>的指针赋值给变量，使它们共用一个内存地址。<br>A<br>值类型数据是在栈上分配内存空间，它的变量直接包含变量的实例，使用效率相对较高。而引用类型数据是<br>分配在堆上，引用类型的变量通常包含一个指向实例的指针，变量通过指针来引用实例。<br>B<br>C 引用类型一般都具有继承性，但是值类型一般都是封装的，因此值类型不能作为其他任何类型的基类。<br>D 值类型变量的作用域主要是在栈上分配内存空间内，而引用类型变量作用域主要在分配的堆上。</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-        <category>面试准备</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>笔试</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java大数据开发入门系列(三)————Hive</title>
     <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%B8%89-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Hive/</url>
     <content><![CDATA[<h1 id="文章更新中，请耐心期待"><a href="#文章更新中，请耐心期待" class="headerlink" title="文章更新中，请耐心期待"></a>文章更新中，请耐心期待</h1>]]></content>
@@ -531,6 +532,255 @@
         <tag>大数据</tag>
         <tag>spring boot</tag>
         <tag>Hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java大数据开发入门系列(二)————HDFS</title>
+    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
+    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
+<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
+<ul>
+<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
+<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
+<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
+</ul>
+<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
+<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
+<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
+<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
+<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
+<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
+<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
+<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
+<table>
+<thead>
+<tr>
+<th><strong>RAID 等级</strong></th>
+<th><strong>RAID0</strong></th>
+<th><strong>RAID1</strong></th>
+<th><strong>RAID3</strong></th>
+<th><strong>RAID5</strong></th>
+<th><strong>RAID6</strong></th>
+<th><strong>RAID10</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>别名</strong></td>
+<td>条带</td>
+<td>镜像</td>
+<td>专用奇偶校验条带</td>
+<td>分布奇偶校验条带</td>
+<td>双重奇偶校验条带</td>
+<td>镜像加条带</td>
+</tr>
+<tr>
+<td><strong>容错性</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>冗余类型</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>热备份选择</strong></td>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td><strong>读性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td><strong>随机写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>连续写性能</strong></td>
+<td>高</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>低</td>
+<td>一般</td>
+</tr>
+<tr>
+<td><strong>需要磁盘数</strong></td>
+<td>n≥1</td>
+<td>2n (n≥1)</td>
+<td>n≥3</td>
+<td>n≥3</td>
+<td>n≥4</td>
+<td>2n(n≥2)≥4</td>
+</tr>
+<tr>
+<td><strong>可用容量</strong></td>
+<td>全部</td>
+<td>50%</td>
+<td>(n-1)/n</td>
+<td>(n-1)/n</td>
+<td>(n-2)/n</td>
+<td>50%</td>
+</tr>
+</tbody></table>
+<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
+<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
+<p>HDFS的架构：主从架构，三大角色</p>
+<ol>
+<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
+<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
+<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
+</ol>
+<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
+<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
+<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
+<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
+<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
+<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
+
+<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
+<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
+<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
+<p>FileSystem 是所有 HDFS 操作的主入口。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
+
+<p><strong>1. 显示当前目录结构</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 创建目录</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 删除操作</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 从本地加载文件到 HDFS</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<p><strong>6. 查看文件内容</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
+
+<p><strong>7. 显示文件的最后一千字节</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8. 拷贝文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>9. 移动文件</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
+
+<p><strong>10. 统计当前目录下各文件大小</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>默认单位字节</li>
+<li>-s : 显示所有文件大小总和，</li>
+<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>11. 合并下载多个文件</strong></p>
+<p>shell命令：</p>
+<ul>
+<li>-nl 在每个文件的末尾添加换行符（LF）</li>
+<li>-skip-empty-file 跳过空文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
+
+<p><strong>12. 统计文件系统的可用空间信息</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
+
+<p><strong>13. 更改文件复制因子</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
+<li>-w : 请求命令是否等待复制完成</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
+
+<p><strong>14. 权限控制</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>15. 文件检测</strong></p>
+<p>shell命令：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
+
+<p>可选选项：</p>
+<ul>
+<li>-d：如果路径是目录，返回 0。</li>
+<li>-e：如果路径存在，则返回 0。</li>
+<li>-f：如果路径是文件，则返回 0。</li>
+<li>-s：如果路径不为空，则返回 0。</li>
+<li>-r：如果路径存在且授予读权限，则返回 0。</li>
+<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
+<li>-z：如果文件长度为零，则返回 0。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
+
+<p>java API：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>spring boot</tag>
+        <tag>Hadoop</tag>
       </tags>
   </entry>
   <entry>
@@ -806,255 +1056,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java大数据开发入门系列(二)————HDFS</title>
-    <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E4%BA%8C-%E2%80%94%E2%80%94%E2%80%94%E2%80%94HDFS/</url>
-    <content><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>HDFS （Hadoop Distributed File System）是 Hadoop 下的分布式文件系统，具有高容错、高吞吐量等特性，可以部署在低成本的硬件上。</p>
-<h1 id="二、起因"><a href="#二、起因" class="headerlink" title="二、起因"></a>二、起因</h1><p>要发展大数据，首要问题就是考虑数据存储的问题，大数据存储存在以下核心问题：</p>
-<ul>
-<li>数据存储容量的问题，既然大数据要解决的是数以PB计的数据计算问题，而一般的服务器磁盘容量通常1-2TB，那么如何存储这么大规模的数据。</li>
-<li>数据读写速度的问题，一般磁盘的连续读写速度为几十MB，以这样的速度，几十PB的数据恐怕要读写到天荒地老。</li>
-<li>数据可靠性的问题，磁盘大约是计算机设备中最易损坏的硬件了，在网站一块磁盘使用寿命大概是一年，如果磁盘损坏了，数据怎么办？</li>
-</ul>
-<p>在大数据技术出现之前，人们就需要面对这些关于存储的问题，对应的解决方案就是RAID技术。RAID（独立磁盘冗余阵列）技术主要是为了改善磁盘的存储容量，读写速度，增强磁盘的可用性和容错能力。目前服务器级别的计算机都支持插入多块磁盘（8块或者更多），通过使用RAID技术，实现数据在多块磁盘上的并发读写和数据备份。</p>
-<p><img src="http://img.rogermaster.top/uPic/7GcG3f.jpg" alt="常用RAID技术原理"></p>
-<h2 id="1-RAID-0"><a href="#1-RAID-0" class="headerlink" title="1.RAID 0"></a>1.RAID 0</h2><p>数据在从内存缓冲区写入磁盘时，根据磁盘数量将数据分成<em>N</em>份，这些数据同时并发写入<em>N</em>块磁盘，使得数据整体写入速度是一块磁盘的<em>N</em>倍。读取的时候也一样，因此RAID0具有极快的数据读写速度，但是RAID0不做数据备份，<em>N</em>块磁盘中只要有一块损坏，数据完整性就被破坏，所有磁盘的数据都会损坏。</p>
-<h2 id="2-RAID-1"><a href="#2-RAID-1" class="headerlink" title="2.RAID 1"></a>2.RAID 1</h2><p>数据在写入磁盘时，将一份数据同时写入两块磁盘，这样任何一块磁盘损坏都不会导致数据丢失，插入一块新磁盘就可以通过复制数据的方式自动修复，具有极高的可靠性。</p>
-<h2 id="3-RAID-10"><a href="#3-RAID-10" class="headerlink" title="3.RAID 10"></a>3.RAID 10</h2><p>结合RAID0和RAID1两种方案，将所有磁盘平均分成两份，数据同时在两份磁盘写入，相当于RAID1，但是在每一份磁盘里面的<em>N</em>/2块磁盘上，利用RAID0技术并发读写，既提高可靠性又改善性能，不过RAID10的磁盘利用率较低，有一半的磁盘用来写备份数据。</p>
-<h2 id="4-RAID5"><a href="#4-RAID5" class="headerlink" title="4.RAID5"></a>4.<strong>RAID5</strong></h2><p>相比RAID3，更多被使用的方案是RAID5。RAID5和RAID3很相似，但是校验数据不是写入第<em>N</em>块磁盘，而是螺旋式地写入所有磁盘中。这样校验数据的修改也被平均到所有磁盘上，避免RAID3频繁写坏一块磁盘的情况。</p>
-<h2 id="5-RAID6"><a href="#5-RAID6" class="headerlink" title="5.RAID6"></a>5.<strong>RAID6</strong></h2><p>如果数据需要很高的可靠性，在出现同时损坏两块磁盘的情况下（或者运维管理水平比较落后，坏了一块磁盘但是迟迟没有更换，导致又坏了一块磁盘），仍然需要修复数据，这时候可以使用RAID6。</p>
-<p>RAID6和RAID5类似，但是数据只写入<em>N</em>-2块磁盘，并螺旋式地在两块磁盘中写入校验信息（使用不同算法生成）。</p>
-<table>
-<thead>
-<tr>
-<th><strong>RAID 等级</strong></th>
-<th><strong>RAID0</strong></th>
-<th><strong>RAID1</strong></th>
-<th><strong>RAID3</strong></th>
-<th><strong>RAID5</strong></th>
-<th><strong>RAID6</strong></th>
-<th><strong>RAID10</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>别名</strong></td>
-<td>条带</td>
-<td>镜像</td>
-<td>专用奇偶校验条带</td>
-<td>分布奇偶校验条带</td>
-<td>双重奇偶校验条带</td>
-<td>镜像加条带</td>
-</tr>
-<tr>
-<td><strong>容错性</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>冗余类型</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>热备份选择</strong></td>
-<td>无</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-<td>有</td>
-</tr>
-<tr>
-<td><strong>读性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-<td>高</td>
-</tr>
-<tr>
-<td><strong>随机写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>连续写性能</strong></td>
-<td>高</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>低</td>
-<td>一般</td>
-</tr>
-<tr>
-<td><strong>需要磁盘数</strong></td>
-<td>n≥1</td>
-<td>2n (n≥1)</td>
-<td>n≥3</td>
-<td>n≥3</td>
-<td>n≥4</td>
-<td>2n(n≥2)≥4</td>
-</tr>
-<tr>
-<td><strong>可用容量</strong></td>
-<td>全部</td>
-<td>50%</td>
-<td>(n-1)/n</td>
-<td>(n-1)/n</td>
-<td>(n-2)/n</td>
-<td>50%</td>
-</tr>
-</tbody></table>
-<p>RAID技术只是在单台服务器的多块磁盘上组成阵列，大数据需要更大规模的存储空间和访问速度。因此，Hadoop结合前面的RAID技术和Google提出的GFS论文，创造了HDFS。HDFS（Hadoop分布式文件系统）是根据GFS（Google文件系统）的原理开发的，是GFS的简化版。</p>
-<h1 id="三、HDFS架构原理"><a href="#三、HDFS架构原理" class="headerlink" title="三、HDFS架构原理"></a>三、HDFS架构原理</h1><p><img src="http://img.rogermaster.top/uPic/2vdRRD.jpg" alt="HDFS的架构"></p>
-<p>HDFS的架构：主从架构，三大角色</p>
-<ol>
-<li>Namenode负责整个分布式文件系统的元数据（MetaData）管理，也就是文件路径名，数据block的ID以及存储位置等信息，承担着操作系统中文件分配表（FAT）的角色。HDFS为了保证数据的高可用，会将一个block复制为多份（缺省情况为3份），并将三份相同的block存储在不同的服务器上。这样当有磁盘损坏或者某个DataNode服务器宕机导致其存储的block不能访问的时候，Client会查找其备份的block进行访问。</li>
-<li>Datanode负责文件数据的存储和读写操作，HDFS将文件数据分割成若干块（block），每个DataNode存储一部分block，这样文件就分布存储在整个HDFS服务器集群中。</li>
-<li>SecondaryNamenode严格意义上来说并不属于namenode的备份节点，它主要起到的作用其实是替namenode分担压力，降低负载（元数据的编辑日志合并，也就是edits log）之用</li>
-</ol>
-<h2 id="1-心跳机制"><a href="#1-心跳机制" class="headerlink" title="1.心跳机制"></a>1.心跳机制</h2><p>为了保证集群的高可用性和高可靠性(HA)，DataNode会通过心跳和NameNode保持通信，如果DataNode超时未发送心跳，NameNode就会认为这个DataNode已经失效，立即查找这个DataNode上存储的block有哪些，以及这些block还存储在哪些服务器上，随后通知这些服务器再复制一份block到其他服务器上，保证HDFS存储的block备份数符合用户设置的数目，即使再有服务器宕机，也不会丢失数据。</p>
-<p><img src="http://img.rogermaster.top/uPic/kadksT.jpg" alt="心跳机制"></p>
-<p>1.NameNode启动之后，会开一个ipc server。NameNode 全权管理数据块的复制，它周期性从集群中的每个 DataNode 接收心跳信号和 block 状态报告，接收到心跳信号意味着该 DataNode 节点工作正常，块状态报告包含了该 DataNode 上所有数据块的列表</p>
-<p>2.DataNode启动，连接NameNode注册，每隔3s向NameNode发送一个心跳，并携带状态信息，周期性地向 NameNode 上报 block 报告。NameNode 返回对该 DataNode 的指令，如将数据块复制到另一台机器，或删除某个数据块等，而当某一个 DataNode 超过10min还没向 NameNode 发送心跳，此时 NameNode 就会判定该 DataNode 不可用，此时客户端的读写操作就不会再传达到该 DataNode 上。</p>
-<h2 id="2-安全模式"><a href="#2-安全模式" class="headerlink" title="2.安全模式"></a>2.安全模式</h2><p>Hadoop 集群刚开始启动时会进入安全模式，就用到了心跳机制。在集群刚启动的时候，每一个 DataNode 都会向 NameNode 发送 block 报告，NameNode 会统计它们上报的总block数，除以一开始知道的总个数total，当 block/total &lt; 99.99% 时，会触发安全模式，安全模式下客户端就没法向HDFS写数据，只能进行读数据。</p>
-<p>Namenode感知Datanode掉线死亡时间的计算公式为：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval</span><br></pre></td></tr></table></figure>
-
-<p>HDFS默认超时时间为630秒，heartbeat.recheck.interval(重新检查的时间间隔) 的默认值为5分钟，而 dfs.heartbeat.interval(发送一次心跳的间隔) 默认值为3秒。</p>
-<p>安全模式不仅仅是集群刚启动时等所有的Datanode汇报这一种情况会进入安全模式的，还有就是HDFS数据块丢失达到一个比例的时候，也会自动进入，这个比例默认是0.1%，1000个块丢1个已经很严重的事件了。</p>
-<h1 id="四、HDFS的使用"><a href="#四、HDFS的使用" class="headerlink" title="四、HDFS的使用"></a>四、HDFS的使用</h1><p>关于java api的说明：</p>
-<p>FileSystem 是所有 HDFS 操作的主入口。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Configuration configuration = <span class="keyword">new</span> Configuration();</span><br><span class="line"><span class="comment">// 这里我启动的是单节点的 Hadoop,所以副本系数设置为 1,默认值为 3</span></span><br><span class="line">configuration.set(<span class="string">"dfs.replication"</span>, <span class="string">"1"</span>);</span><br><span class="line"><span class="comment">// HDFS_PATH hdfs连接地址，HDFS_USER hdfs连接用户</span></span><br><span class="line">FileSystem fileSystem = FileSystem.get(<span class="keyword">new</span> URI(HDFS_PATH), configuration, HDFS_USER);</span><br></pre></td></tr></table></figure>
-
-<p><strong>1. 显示当前目录结构</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归显示当前目录结构</span></span><br><span class="line">hadoop fs -ls  -R  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示根目录下内容</span></span><br><span class="line">hadoop fs -ls  /</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileStatus[] statuses = fileSystem.listStatus(<span class="keyword">new</span> Path(<span class="string">"/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>2. 创建目录</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">hadoop fs -mkdir  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归创建目录</span></span><br><span class="line">hadoop fs -mkdir -p  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">fileSystem.mkdirs(<span class="keyword">new</span> Path(<span class="string">"/test0/"</span>));</span><br></pre></td></tr></table></figure>
-
-<p><strong>3. 删除操作</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 删除文件</span></span><br><span class="line">hadoop fs -rm  &lt;path&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 递归删除目录和文件</span></span><br><span class="line">hadoop fs -rm -R  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//返会 Boolean类型</span></span><br><span class="line">fileSystem.delete(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/b.txt"</span>), <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>4. 从本地加载文件到 HDFS</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -put  [localsrc] [dst] </span><br><span class="line">hadoop fs - copyFromLocal [localsrc] [dst]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 如果指定的是目录，则会把目录及其中的文件都复制到指定目录下</span></span><br><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"D:\\BigData-Notes\\notes\\installation"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/"</span>);</span><br><span class="line">fileSystem.copyFromLocalFile(src, dst);</span><br></pre></td></tr></table></figure>
-
-<p><strong>5. 从 HDFS 导出文件到本地</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -get  [dst] [localsrc] </span><br><span class="line">hadoop fs -copyToLocal [dst] [localsrc]</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Path src = <span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/kafka.tgz"</span>);</span><br><span class="line">Path dst = <span class="keyword">new</span> Path(<span class="string">"D:\\app\\"</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 第一个参数控制下载完成后是否删除源文件,默认是 true,即删除;</span></span><br><span class="line"><span class="comment"> * 最后一个参数表示是否将 RawLocalFileSystem 用作本地文件系统;</span></span><br><span class="line"><span class="comment"> * RawLocalFileSystem 默认为 false,通常情况下可以不设置,</span></span><br><span class="line"><span class="comment"> * 但如果你在执行时候抛出 NullPointerException 异常,则代表你的文件系统与程序可能存在不兼容的情况 (window 下常见),</span></span><br><span class="line"><span class="comment"> * 此时可以将 RawLocalFileSystem 设置为 true</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">fileSystem.copyToLocalFile(<span class="keyword">false</span>, src, dst, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>6. 查看文件内容</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 二选一执行即可</span></span><br><span class="line">hadoop fs -text  &lt;path&gt; </span><br><span class="line">hadoop fs -cat  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FSDataInputStream inputStream = fileSystem.open(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br><span class="line">String context = inputStreamToString(inputStream, <span class="string">"utf-8"</span>);</span><br><span class="line">System.out.println(context);</span><br></pre></td></tr></table></figure>
-
-<p><strong>7. 显示文件的最后一千字节</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -tail  &lt;path&gt; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 和Linux下一样，会持续监听文件内容变化 并显示文件的最后一千字节</span></span><br><span class="line">hadoop fs -tail -f  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>8. 拷贝文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -cp [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>9. 移动文件</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -mv [src] [dst]</span><br></pre></td></tr></table></figure>
-
-<p><strong>10. 统计当前目录下各文件大小</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>默认单位字节</li>
-<li>-s : 显示所有文件大小总和，</li>
-<li>-h : 将以更友好的方式显示文件大小（例如 64.0m 而不是 67108864）</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -du  &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>11. 合并下载多个文件</strong></p>
-<p>shell命令：</p>
-<ul>
-<li>-nl 在每个文件的末尾添加换行符（LF）</li>
-<li>-skip-empty-file 跳过空文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -getmerge</span><br><span class="line"><span class="meta">#</span><span class="bash"> 示例 将HDFS上的hbase-policy.xml和hbase-site.xml文件合并后下载到本地的/usr/test.xml</span></span><br><span class="line">hadoop fs -getmerge -nl  /test/hbase-policy.xml /test/hbase-site.xml /usr/test.xml</span><br></pre></td></tr></table></figure>
-
-<p><strong>12. 统计文件系统的可用空间信息</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -df -h /</span><br></pre></td></tr></table></figure>
-
-<p><strong>13. 更改文件复制因子</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -setrep [-R] [-w] &lt;numReplicas&gt; &lt;path&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>更改文件的复制因子。如果 path 是目录，则更改其下所有文件的复制因子</li>
-<li>-w : 请求命令是否等待复制完成</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 示例</span><br><span class="line">hadoop fs -setrep -w 3 /user/hadoop/dir1</span><br></pre></td></tr></table></figure>
-
-<p><strong>14. 权限控制</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 权限控制和Linux上使用方式一致</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 变更文件或目录的所属群组。 用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chgrp [-R] GROUP URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件或目录的访问权限  用户必须是文件的所有者或超级用户。</span></span><br><span class="line">hadoop fs -chmod [-R] &lt;MODE[,MODE]... | OCTALMODE&gt; URI [URI ...]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改文件的拥有者  用户必须是超级用户。</span></span><br><span class="line">hadoop fs -chown [-R] [OWNER][:[GROUP]] URI [URI ]</span><br></pre></td></tr></table></figure>
-
-<p><strong>15. 文件检测</strong></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hadoop fs -test - [defsz]  URI</span><br></pre></td></tr></table></figure>
-
-<p>可选选项：</p>
-<ul>
-<li>-d：如果路径是目录，返回 0。</li>
-<li>-e：如果路径存在，则返回 0。</li>
-<li>-f：如果路径是文件，则返回 0。</li>
-<li>-s：如果路径不为空，则返回 0。</li>
-<li>-r：如果路径存在且授予读权限，则返回 0。</li>
-<li>-w：如果路径存在且授予写入权限，则返回 0。</li>
-<li>-z：如果文件长度为零，则返回 0。</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 示例</span></span><br><span class="line">hadoop fs -test -e filename</span><br></pre></td></tr></table></figure>
-
-<p>java API：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返会Boolean类型</span></span><br><span class="line">fileSystem.exists(<span class="keyword">new</span> Path(<span class="string">"/hdfs-api/test/a.txt"</span>));</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-        <tag>spring boot</tag>
-        <tag>Hadoop</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java大数据开发入门系列(四)————Spark之作业调度</title>
     <url>/passages/Java%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-%E5%9B%9B-%E2%80%94%E2%80%94%E2%80%94%E2%80%94Spark%E4%B9%8B%E4%BD%9C%E4%B8%9A%E8%B0%83%E5%BA%A6/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Spark 有几种计算资源调度的方式。前面讲到，每个Spark应用（SparkContext的实例）都运行一组独立的<code>executor</code>进程。spark运行的集群管理器提供了跨应用之间的资源调度<a href="http://spark.apachecn.org/#/docs/23?id=scheduling-across-applications" target="_blank" rel="noopener">scheduling across applications</a>。其次，在每个Spark应用中，如果多个 <code>jobs</code>（Spark算子）是由不同的线程提交的，那么它们可能会并发运行。如果你的应用是常见的通过网络服务请求，Spark包含一个<a href="#应用内调度">fair scheduler</a>(公平的调度器)来调度每个SparkContext内的资源。在 Spark 应用内部（对应同一个 SparkContext）各个作业之间，Spark 默认 FIFO 调度，同时也可以支持公平调度。</p>
@@ -1178,240 +1179,6 @@
         <tag>大数据</tag>
         <tag>Hadoop</tag>
         <tag>spark</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot优雅的参数校验-validation</title>
-    <url>/passages/SpringBoot%E4%BC%98%E9%9B%85%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C-validation/</url>
-    <content><![CDATA[<h1 id="SpringBoot优雅的参数校验-validation"><a href="#SpringBoot优雅的参数校验-validation" class="headerlink" title="SpringBoot优雅的参数校验-validation"></a>SpringBoot优雅的参数校验-validation</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;在后端开发过程中，我们避免不了对前端传过来的参数进行检验。有的人会说，前端检验不就行了吗，为啥还要后端检验一遍？我们前端经常对我说的一句话：”后端不要信任前端，你怎么知道接口不会被拦截，前端就一定不会传错。“。因此，参数校验是非常重要的一个环节，严格参数校验会减少很多出bug的概率，增加接口的安全性，增强程序的健壮性。</p>
-<p>&ensp;&ensp;&ensp;&ensp;当我们在做参数检验的时候，可能会出现这种情况：参数太多，我们要写很多条件判断语句，这样就会显得代码不够整洁，阅读体验也不是很好。<br><img src="http://img.rogermaster.top/uPic/SKO0yt.png" alt="SKO0yt"><br>&ensp;&ensp;&ensp;&ensp;因此我们需要一种优雅的方式来处理上面的问题，进行SpringBoot统一参数校验。那就是今天我们的主角validation啦。</p>
-<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>&ensp;&ensp;&ensp;&ensp;通过@Validated这一注解配合一些参数校验注解(PS:@NotNull，@NotEmpty)。然后对抛出的异常进行全局统一捕获然后返回错误信息。</p>
-<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Validation --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="PostParams"><a href="#PostParams" class="headerlink" title="PostParams"></a>PostParams</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.spring_boot_validation.entity.params;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Valid;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotEmpty;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: Roger</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: post参数类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span>: 2020/7/25 4:31 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostParams</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ID</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"ID不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"名称不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotEmpty</span>(message = <span class="string">"数组里面至少有一个元素"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; array;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Valid</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"item不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Item item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="TestController"><a href="#TestController" class="headerlink" title="TestController"></a>TestController</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"limit不能为空"</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/post-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">postTest</span><span class="params">(@Valid @RequestBody PostParams postParams)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(HttpStatus.CREATED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest2</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test3"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest3</span><span class="params">(@Valid Item item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test4"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest4</span><span class="params">(@NotNull(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                           Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h3><p>参数检验异常统一拦截处理</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ControllerAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestParam上validate失败后抛出的异常是javax.validation.ConstraintViolationException</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerMethodArgumentNotValidException</span><span class="params">(<span class="keyword">final</span> MethodArgumentNotValidException e)</span> </span>&#123;</span><br><span class="line">        List&lt;ObjectError&gt; objectErrors = e.getBindingResult().getAllErrors();</span><br><span class="line">        StringBuilder errorMessages = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        objectErrors.forEach(objectError -&gt; errorMessages.append(objectError.getDefaultMessage()).append(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestBody上validate失败后抛出的异常是MethodArgumentNotValidException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> ConstraintViolationException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 validate失败后抛出的异常是BindException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> BindException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    在使用参数检验的过程中，主要会抛出以上三种异常BindException、MethodArgumentNotValidException、ConstraintViolationException。原因主要是因为跟请求发起的数据格式（content-type）有关系，对于不同的传输数据的格式spring采用不同的HttpMessageConverter（http参数转换器）来进行处理。</p>
-<p>​    请求体(@RequestBody)绑定到java bean上失败时抛出MethodArgumentNotValidException；普通参数(@RequestParam)(非 java bean)校验出错时抛出ConstraintViolationException；请求参数绑定到java bean上失败时抛出BindException；</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>请求POST: <a href="http://localhost:8080/post-test" target="_blank" rel="noopener">http://localhost:8080/post-test</a> ,结果如下</p>
-<p><img src="http://img.rogermaster.top/uPic/QwBokF.png" alt="QwBokF"></p>
-<h3 id="常用的一些注解解析"><a href="#常用的一些注解解析" class="headerlink" title="常用的一些注解解析"></a>常用的一些注解解析</h3><h5 id="Validated-和-Valid-的异同"><a href="#Validated-和-Valid-的异同" class="headerlink" title="@Validated 和 @Valid 的异同"></a>@Validated 和 @Valid 的异同</h5><table>
-<thead>
-<tr>
-<th align="left"><strong>注解</strong></th>
-<th align="left"><strong>范围</strong></th>
-<th><strong>嵌套</strong></th>
-<th><strong>校验组</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">@Validated</td>
-<td align="left">可以标记类、方法、方法参数，不能用在成员属性（字段）上</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td align="left">@Valid</td>
-<td align="left">可以标记方法、构造函数、方法参数和成员属性（字段）上</td>
-<td>支持</td>
-<td>不支持</td>
-</tr>
-</tbody></table>
-<p>通常在使用过程中，我们把@Validated标记在类上，然后@Valid标记在实体中的属性上。在Controller中使用，把@Validated标记在类上。然后针对java bean的参数就用@Valid注解。如下所示：</p>
-<p><img src="http://img.rogermaster.top/uPic/0LcqcD.png" alt="0LcqcD"></p>
-<h4 id="校验注解一览表"><a href="#校验注解一览表" class="headerlink" title="校验注解一览表"></a>校验注解一览表</h4><table>
-<thead>
-<tr>
-<th><strong>注解</strong></th>
-<th><strong>作用</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@Valid</td>
-<td>被注释的元素是一个对象，需要检查此对象的所有字段值</td>
-</tr>
-<tr>
-<td>@Null</td>
-<td>被注释的元素必须为 null</td>
-</tr>
-<tr>
-<td>@NotNull</td>
-<td>被注释的元素必须不为 null</td>
-</tr>
-<tr>
-<td>@AssertTrue</td>
-<td>被注释的元素必须为 true</td>
-</tr>
-<tr>
-<td>@AssertFalse</td>
-<td>被注释的元素必须为 false</td>
-</tr>
-<tr>
-<td>@Min(value)</td>
-<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
-</tr>
-<tr>
-<td>@Max(value)</td>
-<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
-</tr>
-<tr>
-<td>@DecimalMin(value)</td>
-<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
-</tr>
-<tr>
-<td>@DecimalMax(value)</td>
-<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
-</tr>
-<tr>
-<td>@Size(max, min)</td>
-<td>被注释的元素的大小必须在指定的范围内</td>
-</tr>
-<tr>
-<td>@Digits (integer, fraction)</td>
-<td>被注释的元素必须是一个数字，其值必须在可接受的范围内</td>
-</tr>
-<tr>
-<td>@Past</td>
-<td>被注释的元素必须是一个过去的日期</td>
-</tr>
-<tr>
-<td>@Future</td>
-<td>被注释的元素必须是一个将来的日期</td>
-</tr>
-<tr>
-<td>@Pattern(value)</td>
-<td>被注释的元素必须符合指定的正则表达式</td>
-</tr>
-<tr>
-<td>@Email</td>
-<td>被注释的元素必须是电子邮箱地址</td>
-</tr>
-<tr>
-<td>@Length(min=, max=)</td>
-<td>被注释的字符串的大小必须在指定的范围内</td>
-</tr>
-<tr>
-<td>@NotEmpty</td>
-<td>被注释的字符串的必须非空</td>
-</tr>
-<tr>
-<td>@Range(min=, max=)</td>
-<td>被注释的元素必须在合适的范围内</td>
-</tr>
-<tr>
-<td>@NotBlank</td>
-<td>被注释的字符串的必须非空</td>
-</tr>
-<tr>
-<td>@URL(protocol=,host=, port=,regexp=, flags=)</td>
-<td>被注释的字符串必须是一个有效的url</td>
-</tr>
-</tbody></table>
-<h3 id="嵌套验证"><a href="#嵌套验证" class="headerlink" title="嵌套验证"></a>嵌套验证</h3><p>我们很多时候会存在这样的业务场景，前端会给后端传递一个list，我们不仅要限制每次请求list内的个数，同时还要对list内基本元素的属性值进行校验。这个时候就需要进行嵌套验证了，实现的方式很简单。在list上添加@Vaild就可以实现了。</p>
-<p><img src="http://img.rogermaster.top/uPic/UqPx8n.png" alt="UqPx8n"></p>
-]]></content>
-      <categories>
-        <category>spring boot</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>anconda常用命令</title>
-    <url>/passages/anconda%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="http://pvqnwtxgq.bkt.clouddn.com/conda.png" alt="常用命令图"></p>
-<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>anaconda</category>
-      </categories>
-      <tags>
-        <tag>anaconda</tag>
-        <tag>命令行</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>apache2 常用操作命令</title>
-    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
-]]></content>
-      <categories>
-        <category>服务器部署</category>
-      </categories>
-      <tags>
-        <tag>服务器部署</tag>
-        <tag>liunx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot中使用flyway做好数据库版本控制</title>
-    <url>/passages/SpringBoot%E4%B8%AD%E4%BD%BF%E7%94%A8flyway%E5%81%9A%E5%A5%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</url>
-    <content><![CDATA[<h2 id="为什么需要数据库版本控制"><a href="#为什么需要数据库版本控制" class="headerlink" title="为什么需要数据库版本控制"></a>为什么需要数据库版本控制</h2><p>​    在真实的项目开发中，我们一般有三套环境：开发、测试、生产。在开发阶段我们一般都是在开发环境中进行操作，项目开发肯定不止一个人，在开发的过程中，我们肯定会对数据库的库表进行一些修改操作。并且这些操作需要同步到这三套环境中。但是多人协同，人为操作难免会出现疏忽，有时候修改了开发环境忘记了去修改其他环境。很多情况下都需要对数据库的变化做跟踪，以便于我们回退到某个版本。因此我们需要有这样一个工具来帮助我们管理数据库版本，做好各个环境同步更新。</p>
-<h2 id="为什么选择Flyway"><a href="#为什么选择Flyway" class="headerlink" title="为什么选择Flyway"></a>为什么选择Flyway</h2><p>​    现在比较常用的数据库版本管理工具有Flyway和Liquibase。Spring Boot提供了这两者的内建支持，可以很快应用到产品中。</p>
-<p>​    使用Flyway的好处在于使用简单，直接书写我们比较熟悉的sql脚本即可，不需要进行额外的学习。Liquibase的优点在于它能跨平台、跨库，但是需要我们花时间去学习他的脚本编写规则。如果你的项目中没有跨数据库的需要，那么flyway完全够用了。</p>
-<h2 id="Flyway的工作模式"><a href="#Flyway的工作模式" class="headerlink" title="Flyway的工作模式"></a>Flyway的工作模式</h2><p>​    flyway在项目运行的时候会判断你的数据库中是否存在<em>flyway_schema_history</em>表，如果没有就会创建。这个表主要用于记录数据库的状态，Flyway的版本控住主要也是依赖这张表的。</p>
-<p>​    当<em>flyway_schema_history</em>这张表存在，。当检测到你有新的版本需要迁移的时候，Flyway会逐一对比<em>flyway_schema_history</em>表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按版本号次序迁移到数据库中。</p>
-<p><img src="http://img.rogermaster.top/uPic/TkDIKR.png" alt="TkDIKR"></p>
-<p>应用每个迁移时，<em>flyway_schema_history</em>表将相应更新：</p>
-<p><img src="http://img.rogermaster.top/uPic/GC3nO8.png" alt="GC3nO8"></p>
-<p>​    flyway在升级数据库的时候，会检查已经执行过的版本对应的脚本是否发生变化，包括脚本文件名，以及脚本内容。如果flyway检测到发生了变化，则抛出错误，并终止升级。</p>
-<p>​    如果已经执行过的脚本没有发生变化，flyway会跳过这些脚本，依次执行后续版本的脚本，并在记录表中插入对应的升级记录。</p>
-<p>​    所以，flyway总是幂等的，而且可以支持跨版本的升级。</p>
-<p>​    Migrations就是我们用SQL编写的脚本。为了让我们编写的SQL脚本生效，还需要按照Flyway指定的方式进行命名。</p>
-<p><img src="http://img.rogermaster.top/uPic/nuNib6.png" alt="nuNib6"></p>
-<ul>
-<li><strong>Prefix</strong>: <code>V</code>代表版本化，<code>U</code>代表撤销，<code>R</code>代表可重复迁移。</li>
-<li><strong>Version</strong>: 带点或下划线的版本，可以随意分隔多个部分（不适合重复迁移）。</li>
-<li><strong>Separator</strong>: <code>__</code> (两个下划线)</li>
-<li><strong>Description</strong>: 下划线或空格分隔单词</li>
-<li><strong>Suffix</strong>: <code>.sql</code></li>
-</ul>
-<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="1、添加依赖"><a href="#1、添加依赖" class="headerlink" title="1、添加依赖"></a>1、添加依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flyway-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、配置application-yml文件"><a href="#2、配置application-yml文件" class="headerlink" title="2、配置application.yml文件"></a>2、配置application.yml文件</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  datasource:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">jdbc:mysql://localhost:3306/test?useSSL=false&amp;allowMultiQueries=true</span></span><br><span class="line"><span class="attr">    username:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    password:</span> <span class="number">123456</span></span><br><span class="line"><span class="attr">    driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据库版本控制</span></span><br><span class="line"><span class="attr">  flyway:</span></span><br><span class="line">    <span class="comment"># 启用或禁用 flyway</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 字符编码</span></span><br><span class="line"><span class="attr">    encoding:</span> <span class="string">utf-8</span></span><br><span class="line">    <span class="comment"># 对执行迁移时基准版本的描述</span></span><br><span class="line"><span class="attr">    baseline-description:</span> <span class="string">test</span></span><br><span class="line">    <span class="comment"># 若连接的数据库非空库，是否初始化</span></span><br><span class="line">    <span class="comment"># 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.</span></span><br><span class="line"><span class="attr">    baseline-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 指定 baseline 的版本号,缺省值为 1, 低于该版本号的 SQL 文件, migrate 的时候被忽略</span></span><br><span class="line">    <span class="comment"># 开始执行基准迁移时对现有的schema的版本打标签，默认值为1.</span></span><br><span class="line"><span class="attr">    baseline-version:</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 是否开启校验</span></span><br><span class="line">    <span class="comment"># 迁移时是否校验，默认为 true</span></span><br><span class="line"><span class="attr">    validate-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 默认脚本加载路径：/db/migration</span></span><br><span class="line">    <span class="comment"># locations: ["classpath:/db/migration"]</span></span><br><span class="line">    <span class="comment"># flyway 的 clean 命令会删除指定 schema 下的所有 table，默认 false</span></span><br><span class="line"><span class="attr">    clean-disabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 发环境最好开启 outOfOrder, 生产环境关闭 outOfOrder</span></span><br><span class="line">    <span class="comment"># 是否允许无序的迁移，默认 false</span></span><br><span class="line"><span class="attr">    out-of-order:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 检查迁移脚本的位置是否存在，默认false</span></span><br><span class="line"><span class="attr">    check-location:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当读取元数据表时是否忽略错误的迁移，默认false</span></span><br><span class="line"><span class="attr">    ignore-future-migrations:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当初始化好连接时要执行的SQL</span></span><br><span class="line"><span class="attr">    init-sqls:</span> <span class="string">show</span> <span class="string">tables;</span></span><br><span class="line">    <span class="comment"># 迁移时使用的JDBC URL，如果没有指定的话，将使用配置的主数据源</span></span><br><span class="line">    <span class="comment"># url:</span></span><br><span class="line">    <span class="comment"># 迁移数据库的用户名</span></span><br><span class="line">    <span class="comment"># user:</span></span><br><span class="line">    <span class="comment"># 目标数据库的密码</span></span><br><span class="line">    <span class="comment"># password:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的前缀，默认$&#123;</span></span><br><span class="line">    <span class="comment">#placeholder-prefix:</span></span><br><span class="line">    <span class="comment"># 是否要被替换，默认true</span></span><br><span class="line">    <span class="comment">#placeholder-replacement:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的后缀，默认&#125;</span></span><br><span class="line">    <span class="comment">#placeholder-suffix:</span></span><br><span class="line">    <span class="comment"># 设置placeholder的value</span></span><br><span class="line">    <span class="comment">#placeholders.[placeholder name]</span></span><br><span class="line">    <span class="comment"># 设定需要flywary迁移的schema，大小写敏感，默认为连接默认的schema</span></span><br><span class="line">    <span class="comment">#schemas: flyway</span></span><br><span class="line">    <span class="comment"># 迁移文件的前缀，默认为V</span></span><br><span class="line">    <span class="comment">#sql-migration-prefix:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的文件名分隔符，默认__</span></span><br><span class="line">    <span class="comment">#sql-migration-separator:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的后缀，默认为.sql</span></span><br><span class="line">    <span class="comment">#sql-migration-suffix:</span></span><br><span class="line">    <span class="comment"># 使用的元数据表名，默认为schema_version</span></span><br><span class="line">    <span class="comment">#table: flyway_schema_history</span></span><br><span class="line">    <span class="comment"># 迁移时使用的目标版本，默认为latest version</span></span><br><span class="line">    <span class="comment">#target:</span></span><br></pre></td></tr></table></figure>
-
-<p>flyway下没有配置url、user、password的话将会使用springboot的数据源。</p>
-<h3 id="3、在db-migration包下新建V1-initialization-table-sql文件。"><a href="#3、在db-migration包下新建V1-initialization-table-sql文件。" class="headerlink" title="3、在db.migration包下新建V1__initialization_table.sql文件。"></a>3、在db.migration包下新建V1__initialization_table.sql文件。</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> zerofill <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'自增ID'</span>,</span><br><span class="line">  <span class="string">`user_name`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'姓名'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_general_ci ROW_FORMAT=DYNAMIC <span class="keyword">COMMENT</span>=<span class="string">'用户表'</span>;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>flyway脚本默认放在classpath:/db/migration目录下面，如果想换位置，可以自定义一个位置spring.flyway.locations即为脚本存放的位置。</p>
-</blockquote>
-<h3 id="4、开始验证"><a href="#4、开始验证" class="headerlink" title="4、开始验证"></a>4、开始验证</h3><p>目前只有test库中没有任何表：</p>
-<p><img src="http://img.rogermaster.top/uPic/JEo9XF.png" alt="JEo9XF"></p>
-<p>我们开始启动项目看看：</p>
-<p><img src="http://img.rogermaster.top/uPic/NQVITI.png" alt="NQVITI"></p>
-<p>通过日志信息，我们可以看到已经迁移成功了，我们去数据库看看。</p>
-<p><img src="http://img.rogermaster.top/uPic/PI8774.png" alt="PI8774"></p>
-<p>表结构：</p>
-<p><img src="http://img.rogermaster.top/uPic/UTMMNl.png" alt="UTMMNl"></p>
-<p>现在我们来给user表新增一个字段试试。</p>
-<p>V1.1__addField_col.sql</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="keyword">user</span> <span class="keyword">add</span> mail <span class="built_in">varchar</span>(<span class="number">128</span>) <span class="keyword">comment</span> <span class="string">'用户邮箱'</span>;</span><br></pre></td></tr></table></figure>
-
-<p>运行项目看看</p>
-<p><img src="http://img.rogermaster.top/uPic/hIlzSt.png" alt="hIlzSt"></p>
-<p>表结构：</p>
-<p><img src="http://img.rogermaster.top/uPic/IDeE9S.png" alt="IDeE9S"></p>
-]]></content>
-      <categories>
-        <category>spring boot</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>spring</tag>
       </tags>
   </entry>
   <entry>
@@ -1612,24 +1379,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/passages/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>Maven使用教程</title>
     <url>/passages/Maven%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<h1 id="Maven介绍"><a href="#Maven介绍" class="headerlink" title="Maven介绍"></a>Maven介绍</h1><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
@@ -1776,8 +1525,260 @@
         <category>spring boot</category>
       </categories>
       <tags>
-        <tag>spring</tag>
         <tag>maven</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot中使用flyway做好数据库版本控制</title>
+    <url>/passages/SpringBoot%E4%B8%AD%E4%BD%BF%E7%94%A8flyway%E5%81%9A%E5%A5%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/</url>
+    <content><![CDATA[<h2 id="为什么需要数据库版本控制"><a href="#为什么需要数据库版本控制" class="headerlink" title="为什么需要数据库版本控制"></a>为什么需要数据库版本控制</h2><p>​    在真实的项目开发中，我们一般有三套环境：开发、测试、生产。在开发阶段我们一般都是在开发环境中进行操作，项目开发肯定不止一个人，在开发的过程中，我们肯定会对数据库的库表进行一些修改操作。并且这些操作需要同步到这三套环境中。但是多人协同，人为操作难免会出现疏忽，有时候修改了开发环境忘记了去修改其他环境。很多情况下都需要对数据库的变化做跟踪，以便于我们回退到某个版本。因此我们需要有这样一个工具来帮助我们管理数据库版本，做好各个环境同步更新。</p>
+<h2 id="为什么选择Flyway"><a href="#为什么选择Flyway" class="headerlink" title="为什么选择Flyway"></a>为什么选择Flyway</h2><p>​    现在比较常用的数据库版本管理工具有Flyway和Liquibase。Spring Boot提供了这两者的内建支持，可以很快应用到产品中。</p>
+<p>​    使用Flyway的好处在于使用简单，直接书写我们比较熟悉的sql脚本即可，不需要进行额外的学习。Liquibase的优点在于它能跨平台、跨库，但是需要我们花时间去学习他的脚本编写规则。如果你的项目中没有跨数据库的需要，那么flyway完全够用了。</p>
+<h2 id="Flyway的工作模式"><a href="#Flyway的工作模式" class="headerlink" title="Flyway的工作模式"></a>Flyway的工作模式</h2><p>​    flyway在项目运行的时候会判断你的数据库中是否存在<em>flyway_schema_history</em>表，如果没有就会创建。这个表主要用于记录数据库的状态，Flyway的版本控住主要也是依赖这张表的。</p>
+<p>​    当<em>flyway_schema_history</em>这张表存在，。当检测到你有新的版本需要迁移的时候，Flyway会逐一对比<em>flyway_schema_history</em>表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按版本号次序迁移到数据库中。</p>
+<p><img src="http://img.rogermaster.top/uPic/TkDIKR.png" alt="TkDIKR"></p>
+<p>应用每个迁移时，<em>flyway_schema_history</em>表将相应更新：</p>
+<p><img src="http://img.rogermaster.top/uPic/GC3nO8.png" alt="GC3nO8"></p>
+<p>​    flyway在升级数据库的时候，会检查已经执行过的版本对应的脚本是否发生变化，包括脚本文件名，以及脚本内容。如果flyway检测到发生了变化，则抛出错误，并终止升级。</p>
+<p>​    如果已经执行过的脚本没有发生变化，flyway会跳过这些脚本，依次执行后续版本的脚本，并在记录表中插入对应的升级记录。</p>
+<p>​    所以，flyway总是幂等的，而且可以支持跨版本的升级。</p>
+<p>​    Migrations就是我们用SQL编写的脚本。为了让我们编写的SQL脚本生效，还需要按照Flyway指定的方式进行命名。</p>
+<p><img src="http://img.rogermaster.top/uPic/nuNib6.png" alt="nuNib6"></p>
+<ul>
+<li><strong>Prefix</strong>: <code>V</code>代表版本化，<code>U</code>代表撤销，<code>R</code>代表可重复迁移。</li>
+<li><strong>Version</strong>: 带点或下划线的版本，可以随意分隔多个部分（不适合重复迁移）。</li>
+<li><strong>Separator</strong>: <code>__</code> (两个下划线)</li>
+<li><strong>Description</strong>: 下划线或空格分隔单词</li>
+<li><strong>Suffix</strong>: <code>.sql</code></li>
+</ul>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="1、添加依赖"><a href="#1、添加依赖" class="headerlink" title="1、添加依赖"></a>1、添加依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flyway-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、配置application-yml文件"><a href="#2、配置application-yml文件" class="headerlink" title="2、配置application.yml文件"></a>2、配置application.yml文件</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  datasource:</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">jdbc:mysql://localhost:3306/test?useSSL=false&amp;allowMultiQueries=true</span></span><br><span class="line"><span class="attr">    username:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    password:</span> <span class="number">123456</span></span><br><span class="line"><span class="attr">    driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据库版本控制</span></span><br><span class="line"><span class="attr">  flyway:</span></span><br><span class="line">    <span class="comment"># 启用或禁用 flyway</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 字符编码</span></span><br><span class="line"><span class="attr">    encoding:</span> <span class="string">utf-8</span></span><br><span class="line">    <span class="comment"># 对执行迁移时基准版本的描述</span></span><br><span class="line"><span class="attr">    baseline-description:</span> <span class="string">test</span></span><br><span class="line">    <span class="comment"># 若连接的数据库非空库，是否初始化</span></span><br><span class="line">    <span class="comment"># 当迁移时发现目标schema非空，而且带有没有元数据的表时，是否自动执行基准迁移，默认false.</span></span><br><span class="line"><span class="attr">    baseline-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 指定 baseline 的版本号,缺省值为 1, 低于该版本号的 SQL 文件, migrate 的时候被忽略</span></span><br><span class="line">    <span class="comment"># 开始执行基准迁移时对现有的schema的版本打标签，默认值为1.</span></span><br><span class="line"><span class="attr">    baseline-version:</span> <span class="number">0</span></span><br><span class="line">    <span class="comment"># 是否开启校验</span></span><br><span class="line">    <span class="comment"># 迁移时是否校验，默认为 true</span></span><br><span class="line"><span class="attr">    validate-on-migrate:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># 默认脚本加载路径：/db/migration</span></span><br><span class="line">    <span class="comment"># locations: ["classpath:/db/migration"]</span></span><br><span class="line">    <span class="comment"># flyway 的 clean 命令会删除指定 schema 下的所有 table，默认 false</span></span><br><span class="line"><span class="attr">    clean-disabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 发环境最好开启 outOfOrder, 生产环境关闭 outOfOrder</span></span><br><span class="line">    <span class="comment"># 是否允许无序的迁移，默认 false</span></span><br><span class="line"><span class="attr">    out-of-order:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 检查迁移脚本的位置是否存在，默认false</span></span><br><span class="line"><span class="attr">    check-location:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当读取元数据表时是否忽略错误的迁移，默认false</span></span><br><span class="line"><span class="attr">    ignore-future-migrations:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 当初始化好连接时要执行的SQL</span></span><br><span class="line"><span class="attr">    init-sqls:</span> <span class="string">show</span> <span class="string">tables;</span></span><br><span class="line">    <span class="comment"># 迁移时使用的JDBC URL，如果没有指定的话，将使用配置的主数据源</span></span><br><span class="line">    <span class="comment"># url:</span></span><br><span class="line">    <span class="comment"># 迁移数据库的用户名</span></span><br><span class="line">    <span class="comment"># user:</span></span><br><span class="line">    <span class="comment"># 目标数据库的密码</span></span><br><span class="line">    <span class="comment"># password:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的前缀，默认$&#123;</span></span><br><span class="line">    <span class="comment">#placeholder-prefix:</span></span><br><span class="line">    <span class="comment"># 是否要被替换，默认true</span></span><br><span class="line">    <span class="comment">#placeholder-replacement:</span></span><br><span class="line">    <span class="comment"># 设置每个placeholder的后缀，默认&#125;</span></span><br><span class="line">    <span class="comment">#placeholder-suffix:</span></span><br><span class="line">    <span class="comment"># 设置placeholder的value</span></span><br><span class="line">    <span class="comment">#placeholders.[placeholder name]</span></span><br><span class="line">    <span class="comment"># 设定需要flywary迁移的schema，大小写敏感，默认为连接默认的schema</span></span><br><span class="line">    <span class="comment">#schemas: flyway</span></span><br><span class="line">    <span class="comment"># 迁移文件的前缀，默认为V</span></span><br><span class="line">    <span class="comment">#sql-migration-prefix:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的文件名分隔符，默认__</span></span><br><span class="line">    <span class="comment">#sql-migration-separator:</span></span><br><span class="line">    <span class="comment"># 迁移脚本的后缀，默认为.sql</span></span><br><span class="line">    <span class="comment">#sql-migration-suffix:</span></span><br><span class="line">    <span class="comment"># 使用的元数据表名，默认为schema_version</span></span><br><span class="line">    <span class="comment">#table: flyway_schema_history</span></span><br><span class="line">    <span class="comment"># 迁移时使用的目标版本，默认为latest version</span></span><br><span class="line">    <span class="comment">#target:</span></span><br></pre></td></tr></table></figure>
+
+<p>flyway下没有配置url、user、password的话将会使用springboot的数据源。</p>
+<h3 id="3、在db-migration包下新建V1-initialization-table-sql文件。"><a href="#3、在db-migration包下新建V1-initialization-table-sql文件。" class="headerlink" title="3、在db.migration包下新建V1__initialization_table.sql文件。"></a>3、在db.migration包下新建V1__initialization_table.sql文件。</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> zerofill <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT <span class="keyword">COMMENT</span> <span class="string">'自增ID'</span>,</span><br><span class="line">  <span class="string">`user_name`</span> <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8mb4 <span class="keyword">COLLATE</span> utf8mb4_general_ci <span class="keyword">DEFAULT</span> <span class="literal">NULL</span> <span class="keyword">COMMENT</span> <span class="string">'姓名'</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_general_ci ROW_FORMAT=DYNAMIC <span class="keyword">COMMENT</span>=<span class="string">'用户表'</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>flyway脚本默认放在classpath:/db/migration目录下面，如果想换位置，可以自定义一个位置spring.flyway.locations即为脚本存放的位置。</p>
+</blockquote>
+<h3 id="4、开始验证"><a href="#4、开始验证" class="headerlink" title="4、开始验证"></a>4、开始验证</h3><p>目前只有test库中没有任何表：</p>
+<p><img src="http://img.rogermaster.top/uPic/JEo9XF.png" alt="JEo9XF"></p>
+<p>我们开始启动项目看看：</p>
+<p><img src="http://img.rogermaster.top/uPic/NQVITI.png" alt="NQVITI"></p>
+<p>通过日志信息，我们可以看到已经迁移成功了，我们去数据库看看。</p>
+<p><img src="http://img.rogermaster.top/uPic/PI8774.png" alt="PI8774"></p>
+<p>表结构：</p>
+<p><img src="http://img.rogermaster.top/uPic/UTMMNl.png" alt="UTMMNl"></p>
+<p>现在我们来给user表新增一个字段试试。</p>
+<p>V1.1__addField_col.sql</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="keyword">user</span> <span class="keyword">add</span> mail <span class="built_in">varchar</span>(<span class="number">128</span>) <span class="keyword">comment</span> <span class="string">'用户邮箱'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>运行项目看看</p>
+<p><img src="http://img.rogermaster.top/uPic/hIlzSt.png" alt="hIlzSt"></p>
+<p>表结构：</p>
+<p><img src="http://img.rogermaster.top/uPic/IDeE9S.png" alt="IDeE9S"></p>
+]]></content>
+      <categories>
+        <category>spring boot</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot优雅的参数校验-validation</title>
+    <url>/passages/SpringBoot%E4%BC%98%E9%9B%85%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C-validation/</url>
+    <content><![CDATA[<h1 id="SpringBoot优雅的参数校验-validation"><a href="#SpringBoot优雅的参数校验-validation" class="headerlink" title="SpringBoot优雅的参数校验-validation"></a>SpringBoot优雅的参数校验-validation</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;在后端开发过程中，我们避免不了对前端传过来的参数进行检验。有的人会说，前端检验不就行了吗，为啥还要后端检验一遍？我们前端经常对我说的一句话：”后端不要信任前端，你怎么知道接口不会被拦截，前端就一定不会传错。“。因此，参数校验是非常重要的一个环节，严格参数校验会减少很多出bug的概率，增加接口的安全性，增强程序的健壮性。</p>
+<p>&ensp;&ensp;&ensp;&ensp;当我们在做参数检验的时候，可能会出现这种情况：参数太多，我们要写很多条件判断语句，这样就会显得代码不够整洁，阅读体验也不是很好。<br><img src="http://img.rogermaster.top/uPic/SKO0yt.png" alt="SKO0yt"><br>&ensp;&ensp;&ensp;&ensp;因此我们需要一种优雅的方式来处理上面的问题，进行SpringBoot统一参数校验。那就是今天我们的主角validation啦。</p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>&ensp;&ensp;&ensp;&ensp;通过@Validated这一注解配合一些参数校验注解(PS:@NotNull，@NotEmpty)。然后对抛出的异常进行全局统一捕获然后返回错误信息。</p>
+<h3 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Validation --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="PostParams"><a href="#PostParams" class="headerlink" title="PostParams"></a>PostParams</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.spring_boot_validation.entity.params;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Valid;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotEmpty;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: Roger</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: post参数类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span>: 2020/7/25 4:31 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PostParams</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ID</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"ID不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"名称不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotEmpty</span>(message = <span class="string">"数组里面至少有一个元素"</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; array;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Valid</span></span><br><span class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"item不能为空"</span>)</span><br><span class="line">    <span class="keyword">private</span> Item item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TestController"><a href="#TestController" class="headerlink" title="TestController"></a>TestController</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Validated</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"limit不能为空"</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/post-test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">postTest</span><span class="params">(@Valid @RequestBody PostParams postParams)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(HttpStatus.CREATED);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest2</span><span class="params">(@RequestParam(required = <span class="keyword">false</span>)</span> @<span class="title">NotNull</span><span class="params">(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                          @<span class="title">RequestParam</span><span class="params">(required = <span class="keyword">false</span>)</span> Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test3"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest3</span><span class="params">(@Valid Item item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/get-test4"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Object&gt; <span class="title">getTest4</span><span class="params">(@NotNull(message = <span class="string">"offset不能为空"</span>)</span> Integer offset,</span></span><br><span class="line"><span class="function">                                           Integer limit)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"ok"</span>, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="ControllerAdvice"></a>ControllerAdvice</h3><p>参数检验异常统一拦截处理</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ControllerAdvice</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestParam上validate失败后抛出的异常是javax.validation.ConstraintViolationException</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerMethodArgumentNotValidException</span><span class="params">(<span class="keyword">final</span> MethodArgumentNotValidException e)</span> </span>&#123;</span><br><span class="line">        List&lt;ObjectError&gt; objectErrors = e.getBindingResult().getAllErrors();</span><br><span class="line">        StringBuilder errorMessages = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        objectErrors.forEach(objectError -&gt; errorMessages.append(objectError.getDefaultMessage()).append(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 @RequestBody上validate失败后抛出的异常是MethodArgumentNotValidException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> ConstraintViolationException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//参数检验错误 validate失败后抛出的异常是BindException异常。</span></span><br><span class="line">    <span class="meta">@ResponseStatus</span>(HttpStatus.BAD_REQUEST)</span><br><span class="line">    <span class="meta">@ExceptionHandler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultVo&lt;Object&gt; <span class="title">handlerConstraintViolationException</span> <span class="params">(<span class="keyword">final</span> BindException e)</span> </span>&#123;</span><br><span class="line">        String errorMessages = e.getBindingResult().getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(<span class="string">";"</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResultVo&lt;&gt;(<span class="number">0</span>,String.valueOf(errorMessages),<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    在使用参数检验的过程中，主要会抛出以上三种异常BindException、MethodArgumentNotValidException、ConstraintViolationException。原因主要是因为跟请求发起的数据格式（content-type）有关系，对于不同的传输数据的格式spring采用不同的HttpMessageConverter（http参数转换器）来进行处理。</p>
+<p>​    请求体(@RequestBody)绑定到java bean上失败时抛出MethodArgumentNotValidException；普通参数(@RequestParam)(非 java bean)校验出错时抛出ConstraintViolationException；请求参数绑定到java bean上失败时抛出BindException；</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>请求POST: <a href="http://localhost:8080/post-test" target="_blank" rel="noopener">http://localhost:8080/post-test</a> ,结果如下</p>
+<p><img src="http://img.rogermaster.top/uPic/QwBokF.png" alt="QwBokF"></p>
+<h3 id="常用的一些注解解析"><a href="#常用的一些注解解析" class="headerlink" title="常用的一些注解解析"></a>常用的一些注解解析</h3><h5 id="Validated-和-Valid-的异同"><a href="#Validated-和-Valid-的异同" class="headerlink" title="@Validated 和 @Valid 的异同"></a>@Validated 和 @Valid 的异同</h5><table>
+<thead>
+<tr>
+<th align="left"><strong>注解</strong></th>
+<th align="left"><strong>范围</strong></th>
+<th><strong>嵌套</strong></th>
+<th><strong>校验组</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">@Validated</td>
+<td align="left">可以标记类、方法、方法参数，不能用在成员属性（字段）上</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td align="left">@Valid</td>
+<td align="left">可以标记方法、构造函数、方法参数和成员属性（字段）上</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+</tbody></table>
+<p>通常在使用过程中，我们把@Validated标记在类上，然后@Valid标记在实体中的属性上。在Controller中使用，把@Validated标记在类上。然后针对java bean的参数就用@Valid注解。如下所示：</p>
+<p><img src="http://img.rogermaster.top/uPic/0LcqcD.png" alt="0LcqcD"></p>
+<h4 id="校验注解一览表"><a href="#校验注解一览表" class="headerlink" title="校验注解一览表"></a>校验注解一览表</h4><table>
+<thead>
+<tr>
+<th><strong>注解</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Valid</td>
+<td>被注释的元素是一个对象，需要检查此对象的所有字段值</td>
+</tr>
+<tr>
+<td>@Null</td>
+<td>被注释的元素必须为 null</td>
+</tr>
+<tr>
+<td>@NotNull</td>
+<td>被注释的元素必须不为 null</td>
+</tr>
+<tr>
+<td>@AssertTrue</td>
+<td>被注释的元素必须为 true</td>
+</tr>
+<tr>
+<td>@AssertFalse</td>
+<td>被注释的元素必须为 false</td>
+</tr>
+<tr>
+<td>@Min(value)</td>
+<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td>@Max(value)</td>
+<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td>@DecimalMin(value)</td>
+<td>被注释的元素必须是一个数字，其值必须大于等于指定的最小值</td>
+</tr>
+<tr>
+<td>@DecimalMax(value)</td>
+<td>被注释的元素必须是一个数字，其值必须小于等于指定的最大值</td>
+</tr>
+<tr>
+<td>@Size(max, min)</td>
+<td>被注释的元素的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td>@Digits (integer, fraction)</td>
+<td>被注释的元素必须是一个数字，其值必须在可接受的范围内</td>
+</tr>
+<tr>
+<td>@Past</td>
+<td>被注释的元素必须是一个过去的日期</td>
+</tr>
+<tr>
+<td>@Future</td>
+<td>被注释的元素必须是一个将来的日期</td>
+</tr>
+<tr>
+<td>@Pattern(value)</td>
+<td>被注释的元素必须符合指定的正则表达式</td>
+</tr>
+<tr>
+<td>@Email</td>
+<td>被注释的元素必须是电子邮箱地址</td>
+</tr>
+<tr>
+<td>@Length(min=, max=)</td>
+<td>被注释的字符串的大小必须在指定的范围内</td>
+</tr>
+<tr>
+<td>@NotEmpty</td>
+<td>被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td>@Range(min=, max=)</td>
+<td>被注释的元素必须在合适的范围内</td>
+</tr>
+<tr>
+<td>@NotBlank</td>
+<td>被注释的字符串的必须非空</td>
+</tr>
+<tr>
+<td>@URL(protocol=,host=, port=,regexp=, flags=)</td>
+<td>被注释的字符串必须是一个有效的url</td>
+</tr>
+</tbody></table>
+<h3 id="嵌套验证"><a href="#嵌套验证" class="headerlink" title="嵌套验证"></a>嵌套验证</h3><p>我们很多时候会存在这样的业务场景，前端会给后端传递一个list，我们不仅要限制每次请求list内的个数，同时还要对list内基本元素的属性值进行校验。这个时候就需要进行嵌套验证了，实现的方式很简单。在list上添加@Vaild就可以实现了。</p>
+<p><img src="http://img.rogermaster.top/uPic/UqPx8n.png" alt="UqPx8n"></p>
+]]></content>
+      <categories>
+        <category>spring boot</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>anconda常用命令</title>
+    <url>/passages/anconda%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h3 id="一览图"><a href="#一览图" class="headerlink" title="一览图"></a>一览图</h3><p><img src="http://pvqnwtxgq.bkt.clouddn.com/conda.png" alt="常用命令图"></p>
+<h3 id="conda环境使用基本命令："><a href="#conda环境使用基本命令：" class="headerlink" title="conda环境使用基本命令："></a>conda环境使用基本命令：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda create -n xxxx python=[python_version]   /<span class="regexp">/创建python的xxxx虚拟环境</span></span><br><span class="line"><span class="regexp">conda activate xxxx               /</span><span class="regexp">/开启xxxx环境</span></span><br><span class="line"><span class="regexp">conda deactivate                  /</span><span class="regexp">/关闭环境</span></span><br><span class="line"><span class="regexp">conda env list                    /</span><span class="regexp">/显示所有的虚拟环境</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="更新，卸载安装包："><a href="#更新，卸载安装包：" class="headerlink" title="更新，卸载安装包："></a>更新，卸载安装包：</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda list         /<span class="regexp">/查看已经安装的文件包</span></span><br><span class="line"><span class="regexp">conda update xxx   /</span><span class="regexp">/更新xxx文件包</span></span><br><span class="line"><span class="regexp">conda uninstall xxx   /</span><span class="regexp">/卸载xxx文件包</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda remove -n xxxx --all /<span class="regexp">/创建xxxx虚拟环境</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="清理（conda瘦身）"><a href="#清理（conda瘦身）" class="headerlink" title="清理（conda瘦身）"></a>清理（conda瘦身）</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">conda clean  /<span class="regexp">/就可以轻松搞定！第一步：通过conda clean -p来删除一些没用的包，这个命令会检查哪些包没有在包缓存中被硬依赖到其他地方，并删除它们。第二步：通过conda clean -t可以将conda保存下来的tar包。</span></span><br><span class="line"><span class="regexp">conda clean -p      /</span><span class="regexp">/删除没有用的包</span></span><br><span class="line"><span class="regexp">conda clean -t      /</span><span class="regexp">/tar打包</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>anaconda</category>
+      </categories>
+      <tags>
+        <tag>anaconda</tag>
+        <tag>命令行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/passages/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>apache2 常用操作命令</title>
+    <url>/passages/apache2%20%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<p>sudo systemctl start apache2 将此命令用作sudo以启动Apache服务器。<br>sudo systemctl stop apache2 将此命令用作sudo，以便在Apache服务器处于启动模式时停止它。<br>sudo systemctl restart apache2 将此命令用作sudo以便停止然后再次启动Apache服务。<br>sudo systemctl reload apache2 将此命令用作sudo，以便在不重新启动连接的情况下应用配置更改。<br>sudo systemctl启用apache2 将此命令用作sudo，以便在每次启动系统时启用Apache。<br>sudo systemctl disable apache2 将Apache设置为每次启动系统时启动</p>
+]]></content>
+      <categories>
+        <category>服务器部署</category>
+      </categories>
+      <tags>
+        <tag>服务器部署</tag>
+        <tag>liunx</tag>
       </tags>
   </entry>
   <entry>
